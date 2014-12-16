@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_grey_color"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/sch_repeat"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/input_fields_gray"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/sch_repeat_img"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/repeat" />
+
+        <TextView
+            android:id="@+id/sch_repeat_txt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            android:hint="Repeat"
+            android:paddingLeft="15dp"
+            android:textColor="@color/caldroid_gray"
+            android:textColorHint="@color/hint_color"
+            android:textSize="17.78sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/sch_repeat_grid_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <GridView
+            android:id="@+id/sch_repeat_grid"
+            android:layout_width="fill_parent"
+            android:layout_height="85dp"
+            android:layout_marginBottom="5dp"
+            android:listSelector="@drawable/round_buttons"
+            android:numColumns="5"
+            android:paddingTop="25dp"
+            android:scrollbars="none"
+            android:stretchMode="columnWidth" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:padding="5dp"
+                android:paddingRight="20dp"
+                android:text="Until"
+                android:textColor="@color/_4d4d4d"
+                android:textSize="17.78sp" />
+
+            <RadioGroup
+                android:id="@+id/forever_radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@id/textView1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="5dp" >
+
+                <RadioButton
+                    android:id="@+id/sch_repeat_forever_radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:button="@drawable/blue_chechk_box"
+                    android:checked="true"
+                    android:paddingLeft="@dimen/check_box_padding"
+                    android:text=" Forever"
+                    android:textColor="@color/_4d4d4d" />
+
+                <RadioButton
+                    android:id="@+id/sch_repeat_time_radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="10dp"
+                    android:button="@drawable/blue_chechk_box"
+                    android:paddingLeft="@dimen/check_box_padding"
+                    android:paddingRight="0dp"
+                    android:text=" Set Date"
+                    android:textColor="@color/_4d4d4d" />
+            </RadioGroup>
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

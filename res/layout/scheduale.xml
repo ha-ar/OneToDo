@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_container_scheduale"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/deep_sky_blue"
+    android:foreground="@drawable/dim_background" >
+
+    <RelativeLayout
+        android:id="@+id/header_scheduale"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+      
+        <TextView
+            android:id="@+id/page_title_scheduale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:textSize="24sp"
+            android:padding="5dp"
+            android:textColor="@android:color/white"
+            android:text="Sceduale" />
+
+        <com.viewpagerindicator.CirclePageIndicator
+            android:id="@+id/indicator_scheduale"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:layout_below="@id/page_title_scheduale"
+            android:layout_gravity="bottom|center_horizontal" />
+
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/add_appoinment_pager_scheduale"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/indicator_scheduale" />
+
+        <ImageView
+            android:id="@+id/imageView1_scheduale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/indicator_scheduale"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="8dp"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:id="@+id/textView1_scheduale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/indicator_scheduale"
+            android:layout_toRightOf="@+id/page_title_scheduale"
+            android:textSize="10dp"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:background="@drawable/rounded_personal_button"
+            android:text="Save and Add new" />
+
+    </RelativeLayout>
+
+</FrameLayout>

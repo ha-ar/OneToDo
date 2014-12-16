@@ -1,0 +1,49 @@
+Current Alarm Manager state:
+ 
+  Realtime wakeup (now=2014-07-09 12:45:01):
+  RTC_WAKEUP #0: Alarm{536d3e50 type 0 com.android.providers.calendar}
+    type=0 when=+21h20m56s861ms repeatInterval=0 count=0
+    operation=PendingIntent{536d3e48: PendingIntentRecord{536d3dd0 com.android.providers.calendar broadcastIntent}}
+  RTC #1: Alarm{5358e298 type 1 android}
+    type=1 when=+23h14m58s144ms repeatInterval=0 count=0
+    operation=PendingIntent{535b4158: PendingIntentRecord{53551b2c android broadcastIntent}}
+  RTC #0: Alarm{536b6288 type 1 com.android.calendar}
+    type=1 when=+11h14m58s144ms repeatInterval=0 count=0
+    operation=PendingIntent{535eb0e4: PendingIntentRecord{53661e38 com.android.calendar broadcastIntent}}
+ 
+  Elapsed realtime wakeup (now=+40m16s748ms):
+  ELAPSED_WAKEUP #2: Alarm{536ef16c type 2 android}
+    type=2 when=+10h51m2s670ms repeatInterval=0 count=0
+    operation=PendingIntent{536000bc: PendingIntentRecord{5361e3bc android broadcastIntent}}
+  ELAPSED_WAKEUP #1: Alarm{535eb448 type 2 android}
+    type=2 when=+1h19m51s614ms repeatInterval=0 count=0
+    operation=PendingIntent{535b210c: PendingIntentRecord{535aef0c android broadcastIntent}}
+  ELAPSED_WAKEUP #0: Alarm{536d45d8 type 2 android}
+    type=2 when=+4m43s252ms repeatInterval=1800000 count=0
+    operation=PendingIntent{53606088: PendingIntentRecord{536d4598 android broadcastIntent}}
+  ELAPSED #3: Alarm{536eef7c type 3 android}
+    type=3 when=+23h19m53s938ms repeatInterval=0 count=0
+    operation=PendingIntent{5355c510: PendingIntentRecord{53646ebc android broadcastIntent}}
+  ELAPSED #2: Alarm{536b9608 type 3 com.android.phone}
+    type=3 when=+7h34m43s252ms repeatInterval=28800000 count=0
+    operation=PendingIntent{536b9600: PendingIntentRecord{536b95b0 com.android.phone broadcastIntent}}
+  ELAPSED #1: Alarm{536eef38 type 3 android}
+    type=3 when=+1m20s645ms repeatInterval=0 count=0
+    operation=PendingIntent{5361a484: PendingIntentRecord{5361a40c android broadcastIntent}}
+  ELAPSED #0: Alarm{5373b610 type 3 android}
+    type=3 when=+58s143ms repeatInterval=0 count=0
+    operation=PendingIntent{535b4284: PendingIntentRecord{5355b5b0 android broadcastIntent}}
+ 
+  Broadcast ref count: 0
+ 
+  Alarm Stats:
+  android
+    1458ms running, 0 wakeups
+    43 alarms: act=android.intent.action.TIME_TICK flg=0x40000014
+    3 alarms: act=com.android.server.ThrottleManager.action.POLL flg=0x14
+  com.android.providers.calendar
+    2ms running, 1 wakeups
+    1 alarms: act=com.android.providers.calendar.intent.CalendarProvider2 flg=0x14
+  com.vector.onetodo
+    13ms running, 1 wakeups
+    1 alarms: flg=0x14

@@ -1,0 +1,122 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/input_fields_normal"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/input_fields_gray"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/repeat_image"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/repeat" />
+
+        <TextView
+            android:id="@+id/repeat_event"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:hint="Repeat"
+            android:paddingLeft="10dp"
+            android:textColorHint="@color/hint_color"
+            android:textSize="22.22sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/repeat_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/input_fields_normal"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <GridView
+            android:id="@+id/repeat_grid_view"
+            android:layout_width="fill_parent"
+            android:layout_height="80dp"
+            android:listSelector="@drawable/round_buttons"
+            android:numColumns="5"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:scrollbars="none"
+            android:stretchMode="columnWidth" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/input_fields_normal"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="2dp" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:padding="10dp"
+                android:text="Until:"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="18sp" />
+
+            <RadioGroup
+                android:id="@+id/forever_radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@id/textView1"
+                android:orientation="horizontal"
+                android:padding="5dp" >
+
+                <RadioButton
+                    android:id="@+id/forever_radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/blue_chechk_box"
+                    android:checked="true"
+                    android:paddingLeft="@dimen/check_box_padding"
+                    android:paddingRight="0dp"
+                    android:text="Forever"
+                    android:textColor="@color/mountain_mist" />
+
+                <RadioButton
+                    android:id="@+id/time_radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:button="@drawable/blue_chechk_box"
+                    android:paddingLeft="@dimen/check_box_padding"
+                    android:paddingRight="0dp"
+                    android:text="Set Date"
+                    android:textColor="@color/mountain_mist" />
+            </RadioGroup>
+
+            <!--
+                 <TextView
+                android:id="@+id/forever"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/unchecked_blue"
+                android:padding="10dp"
+                android:text="Forever"
+                android:textColor="@color/dark_grey_color"
+                android:textColorHighlight="@color/light_grey_color"
+                android:textSize="18sp" />
+            -->
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>
