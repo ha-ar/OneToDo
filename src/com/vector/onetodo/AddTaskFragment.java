@@ -226,13 +226,14 @@ public class AddTaskFragment extends Fragment {
 		currentMin = Utils.getCurrentMins();
 
 		inflatingLayouts.put(0, R.layout.add_task_title);
-		inflatingLayouts.put(1, R.layout.add_task_time_date);
-		inflatingLayouts.put(2, R.layout.add_task_before);
-		inflatingLayouts.put(3, R.layout.add_task_repeat);
-		inflatingLayouts.put(4, R.layout.add_task_label);
-		inflatingLayouts.put(5, R.layout.add_task_notes);
+		inflatingLayouts.put(1, R.layout.add_task_title);
+		inflatingLayouts.put(2, R.layout.add_task_time_date);
+		inflatingLayouts.put(3, R.layout.add_task_before);
+		inflatingLayouts.put(4, R.layout.add_task_repeat);
+		inflatingLayouts.put(5, R.layout.add_task_label);
+		inflatingLayouts.put(6, R.layout.add_task_notes);
 		//inflatingLayouts.put(6, R.layout.add_task_image);
-		inflatingLayouts.put(6, R.layout.add_task_attach);
+		inflatingLayouts.put(7, R.layout.add_task_attach);
 
 		inflateLayouts();
 
