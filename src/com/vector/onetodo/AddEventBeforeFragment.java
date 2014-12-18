@@ -222,13 +222,13 @@ public class AddEventBeforeFragment extends Fragment {
 									before.setText("Reminde before "
 											+ beforeArray[position]);
 								}
-								before.setTextColor(getResources().getColor(
+								/*before.setTextColor(getResources().getColor(
 										R.color.active));
 								ImageView reminderImage = (ImageView) getActivity()
 										.findViewById(R.id.reminder_image);
 
 								reminderImage.setBackground(getResources()
-										.getDrawable(R.drawable.reminder_blue));
+										.getDrawable(R.drawable.reminder_blue));*/
 							}
 
 						}
@@ -252,13 +252,14 @@ public class AddEventBeforeFragment extends Fragment {
 					customDays.clearFocus();
 					TextView before = (TextView) AddEventFragment.allView
 							.findViewById(R.id.before_event);
-					ImageView reminderImage = (ImageView) getActivity()
+					/*ImageView reminderImage = (ImageView) getActivity()
 							.findViewById(R.id.before_event_image);
 
 					reminderImage.setBackground(getResources().getDrawable(
-							R.drawable.reminder_blue));
-					before.setText("Reminde before " + numberPicker.getValue()
-							+ " " + values[customDays.getValue()]);
+							R.drawable.reminder_blue));*/
+					before.setVisibility(View.VISIBLE);
+					before.setText(numberPicker.getValue()
+							+ " " + values[customDays.getValue()]+" Before" );
 					numberPicker.getValue();
 					alert.dismiss();
 				}
@@ -361,16 +362,17 @@ public class AddEventBeforeFragment extends Fragment {
 									.setTextColor(Color.WHITE);
 							TextView before = (TextView) getActivity()
 									.findViewById(R.id.before_event);
+							before.setVisibility(View.VISIBLE);
 							before.setText("On "
 									+ aq.id(checkedId).getText().toString());
 							previousSelectedLocation = group
 									.findViewById(checkedId);
-							before.setTextColor(getResources().getColor(
-									R.color.deep_sky_blue));
-							ImageView reminderImage = (ImageView) getActivity()
+							/*before.setTextColor(getResources().getColor(
+									R.color.deep_sky_blue));*/
+							/*ImageView reminderImage = (ImageView) getActivity()
 									.findViewById(R.id.reminder_image);
 							reminderImage.setBackground(getResources()
-									.getDrawable(R.drawable.reminder_blue));
+									.getDrawable(R.drawable.reminder_blue));*/
 						}
 					});
 		}

@@ -3,7 +3,7 @@
     android:id="@+id/prior_label_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/light_grey_color"
+    android:background="@drawable/input_fields_gray"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -30,25 +30,36 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="6dp"
             android:gravity="center"
-            android:hint="Label"
-            android:textColor="@color/grey"
-            android:textColorHint="#bababa"
+            android:text="Label"
+            android:textColor="@color/_4d4d4d"
+            android:textColorHint="@color/_999999"
             android:textSize="17.78sp" />
     </LinearLayout>
 
-    <GridView
-        android:id="@+id/label_event_grid_view"
+    <LinearLayout
+        android:id="@+id/label_grid_view3"
         android:layout_width="fill_parent"
         android:layout_height="130dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="10dp"
-        android:horizontalSpacing="5dp"
-        android:listSelector="@android:color/transparent"
-        android:numColumns="3"
-        android:scrollbars="none"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp"
-        android:visibility="gone" />
+        android:background="@android:color/transparent"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <GridView
+            android:id="@+id/label_event_grid_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
+            android:horizontalSpacing="5dp"
+            android:listSelector="@android:color/transparent"
+            android:numColumns="3"
+            android:scrollbars="none"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="10dp"
+            android:visibility="visible" />
+        <!-- android:listSelector="@drawable/label_background_dotted" -->
+
+    </LinearLayout>
 
 </LinearLayout>

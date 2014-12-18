@@ -35,7 +35,6 @@ import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
@@ -59,6 +58,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -74,6 +74,8 @@ import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -95,9 +97,9 @@ import com.vector.onetodo.utils.Utils;
 
 public class AddEventFragment extends Fragment {
 
-	
-	// iMageview menu_dots_task,event_attachment edittext task_comment  linearlayout comment_box
-	public AQuery aq, AQlabel, AQlabel_edit, AQlabel_del, AQ_attach;
+	// iMageview menu_dots_task,event_attachment edittext task_comment
+	// linearlayout comment_box
+	public AQuery aq, AQlabel, AQlabel_edit, AQlabel_del, aq_attach,aq_menu;
 
 	// HttpClient client;
 	HttpPost post;
@@ -105,9 +107,14 @@ public class AddEventFragment extends Fragment {
 	HttpResponse response = null;
 	static int FragmentCheck = 0;
 	Uri filename;
-	EditText taskTitle;
+	static EditText taskTitle;
 
-	static String checkedId2 = null;
+	private static int Tag = 0;
+	private PopupWindow popupWindowAttach;
+	static LinearLayout ll_iner;
+	
+	private static View previousSelected;
+	static String checkedId2 = null, setmon1;
 	View label_view, viewl;;
 	GradientDrawable label_color;
 	int Label_postion = -1;
@@ -118,6 +125,8 @@ public class AddEventFragment extends Fragment {
 			"#E0D400", "#0000FF", "#4B0049", "#005B7F", "#603913", "#005952" };
 	ImageView last;
 	String plabel = null;
+
+	static String repeatdate = "";
 	int pposition = -1;
 	int itempos = -1;
 	int MaxId = -1;
@@ -125,27 +134,26 @@ public class AddEventFragment extends Fragment {
 
 	static ContactsCompletionView completionAssignView, completionShareView;
 
-	AlertDialog add_new_label_alert, date_time_alert,
-			label_edit, location_del, attach_alert;
+	AlertDialog add_new_label_alert, date_time_alert, label_edit, location_del,
+			attach_alert;
 	static int currentHours, currentMin, currentDayDigit, currentYear,
 			currentMonDigit;
 
 	private String currentDay, currentMon;
 
 	private int[] collapsingViews = { R.id.date_time_include_to,
-			R.id.date_time_include_from,
-			R.id.before_grid_view_linear_event, R.id.repeat_linear_layout,
-			R.id.label_event_grid_view };
+			R.id.date_time_include_from, R.id.before_grid_view_linear_event,
+			R.id.repeat_linear_layout, R.id.label_grid_view3 };
 
 	private int[] allViews = { R.id.event_title, R.id.time_date_to,
-			R.id.time_date_from, R.id.before_event, R.id.spinner_labels_event,
-			R.id.spinner_label_layout };
+			R.id.time_date_from, R.id.before_event_lay, R.id.repeat_event_lay,
+			R.id.spinner_labels_event, R.id.spinner_label_layout };
 
 	public static HashMap<Integer, Integer> inflatingLayoutsEvents = new HashMap<Integer, Integer>();
 
 	public static View parentView;
 
-	static final String[] repeatArray = new String[] { "Once", "Daily",
+	static final String[] repeatArray = new String[] { "Never", "Daily",
 			"Weekly", "Monthly", "Yearly" };
 
 	private final String[] labels_array = new String[] { "Personal", "Home",
@@ -201,11 +209,18 @@ public class AddEventFragment extends Fragment {
 		currentMin = Utils.getCurrentMins();
 
 		inflatingLayoutsEvents.put(0, R.layout.add_event_title);
-		inflatingLayoutsEvents.put(1, R.layout.add_event_time_date);
-		inflatingLayoutsEvents.put(2, R.layout.add_event_before);
-		inflatingLayoutsEvents.put(3, R.layout.add_event_label);
-		inflatingLayoutsEvents.put(4, R.layout.add_event_notes);
-		inflatingLayoutsEvents.put(5, R.layout.add_event_image);
+		inflatingLayoutsEvents.put(1, R.layout.add_event_assign);
+		inflatingLayoutsEvents.put(2, R.layout.add_event_details);
+
+		inflatingLayoutsEvents.put(3, R.layout.add_event_time_date);
+		inflatingLayoutsEvents.put(4, R.layout.add_event_location1);
+		inflatingLayoutsEvents.put(5, R.layout.add_event_before);
+		inflatingLayoutsEvents.put(6, R.layout.add_event_repeat);
+		inflatingLayoutsEvents.put(7, R.layout.add_event_label);
+		inflatingLayoutsEvents.put(8, R.layout.add_event_subtask);
+
+		inflatingLayoutsEvents.put(9, R.layout.add_event_notes);
+		inflatingLayoutsEvents.put(10, R.layout.add_event_image);
 
 		inflateLayouts();
 
@@ -243,14 +258,8 @@ public class AddEventFragment extends Fragment {
 				.typeface(
 						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
 				.clicked(new GeneralOnClickListner());
-		aq.id(R.id.before_event)
-				.typeface(
-						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
-				.clicked(new GeneralOnClickListner());
-		aq.id(R.id.repeat_event)
-				.typeface(
-						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
-				.clicked(new GeneralOnClickListner());
+		aq.id(R.id.before_event_lay).clicked(new GeneralOnClickListner());
+		aq.id(R.id.repeat_event_lay).clicked(new GeneralOnClickListner());
 
 		aq.id(R.id.grid_text)
 				.typeface(
@@ -259,6 +268,8 @@ public class AddEventFragment extends Fragment {
 
 		// **************************************TypeFaces
 
+		
+	
 		// *****************Title
 		taskTitle = (EditText) aq.id(R.id.event_title).getView();
 
@@ -305,9 +316,11 @@ public class AddEventFragment extends Fragment {
 
 					try {
 						String name = typedWords[typedWords.length - 1];
-						/*if (name.equalsIgnoreCase(words))
-							showCurrentView(aq.id(R.id.contacts_layout_include)
-									.getView());*/
+						/*
+						 * if (name.equalsIgnoreCase(words))
+						 * showCurrentView(aq.id(R.id.contacts_layout_include)
+						 * .getView());
+						 */
 					} catch (ArrayIndexOutOfBoundsException aiobe) {
 
 					}
@@ -340,10 +353,13 @@ public class AddEventFragment extends Fragment {
 				// TODO Auto-generated method stub
 
 				if (isChecked == true) {
-
-					aq.id(R.id.all_day_all).textColorId(R.color.blue_color);
-					aq.id(R.id.all_day_image)
-							.background(R.drawable.allday_blue);
+					/*
+					 * aq.id(R.id.all_day_all).textColorId(R.color.blue_color);
+					 */
+					/*
+					 * aq.id(R.id.all_day_image)
+					 * .background(R.drawable.allday_blue);
+					 */
 					aq.id(R.id.time_from).getTextView()
 							.setVisibility(View.GONE);
 					aq.id(R.id.time_to).getTextView().setVisibility(View.GONE);
@@ -357,8 +373,12 @@ public class AddEventFragment extends Fragment {
 					aq.id(R.id.time_picker).getView()
 							.setVisibility(View.VISIBLE);
 					aq.id(R.id.time_picker_event_end).getView()
-							.setVisibility(View.VISIBLE);
-					aq.id(R.id.all_day_all).textColorId(R.color.hint_color);
+							.setVisibility(View.VISIBLE);/*
+														 * aq.id(R.id.all_day_all
+														 * )
+														 * .textColorId(R.color.
+														 * hint_color);
+														 */
 					aq.id(R.id.all_day_image).background(R.drawable.allday);
 					aq.id(R.id.time_from).getTextView()
 							.setVisibility(View.VISIBLE);
@@ -468,6 +488,177 @@ public class AddEventFragment extends Fragment {
 
 		// ************************** Date TIme END
 
+		// ****************************Repeat Start
+		aq.id(R.id.repeat_grid_view)
+				.getGridView()
+				.setAdapter(
+						new ArrayAdapter<String>(getActivity(),
+								R.layout.grid_layout_textview, repeatArray) {
+
+							@Override
+							public View getView(int position, View convertView,
+									ViewGroup parent) {
+
+								TextView textView = (TextView) super.getView(
+										position, convertView, parent);
+								if (position == 2) {
+									previousSelected = textView;
+									((TextView) textView)
+											.setBackgroundResource(R.drawable.round_buttons_blue);
+									((TextView) textView)
+											.setTextColor(Color.WHITE);
+
+								} else
+									((TextView) textView)
+											.setTextColor(getResources()
+													.getColor(R.color._4d4d4d));
+								return textView;
+							}
+
+						});
+
+		aq.id(R.id.repeat_grid_view).itemClicked(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+
+				if (((TextView) previousSelected).getText().toString()
+						.equals("Weekly")) {
+
+					((TextView) previousSelected)
+							.setBackgroundResource(R.drawable.round_buttons_white);
+					((TextView) previousSelected).setTextColor(getResources()
+							.getColor(R.color._4d4d4d));
+				} else if (previousSelected != null) {
+					((TextView) previousSelected).setTextColor(getResources()
+							.getColor(R.color._4d4d4d));
+				}
+				if (((TextView) view).getText().toString().equals("Weekly")) {
+					((TextView) view)
+							.setBackgroundResource(R.drawable.round_buttons_blue);
+				}
+
+				if (((TextView) view).getText().toString().equals("Never")) {
+					aq.id(R.id.forever_radio).checked(true);
+					aq.id(R.id.time_radio).textColor(
+							Color.parseColor("#bababa"));
+					aq.id(R.id.forever_radio).textColor(
+							(getResources().getColor(R.color._777777)));
+				}
+				((TextView) view).setTextColor(Color.WHITE);
+				view.setSelected(true);
+				if (repeatArray[position] == "Never") {
+					aq.id(R.id.repeat_event).text(repeatArray[position]);
+				} else {
+					aq.id(R.id.repeat_event).text(repeatArray[position]);
+				}
+				previousSelected = view;
+
+			}
+
+		});
+
+		LayoutInflater inflater4 = getActivity().getLayoutInflater();
+		View dateTimePickerDialog = inflater4.inflate(
+				R.layout.date_time_layout_dialog, null, false);
+		AlertDialog.Builder builder4 = new AlertDialog.Builder(getActivity());
+		builder4.setView(dateTimePickerDialog);
+		date_time_alert = builder4.create();
+		// Date picker implementation for forever dialogdate_picker
+		final DatePicker dialogDatePicker = (DatePicker) dateTimePickerDialog
+				.findViewById(R.id.date_picker_dialog);
+		showRightDateAndTimeForDialog();
+		dialogDatePicker.init(currentYear, currentMonDigit, currentDayDigit,
+				new OnDateChangedListener() {
+
+					@Override
+					public void onDateChanged(DatePicker view, int year,
+							int monthOfYear, int dayOfMonth) {
+						currentYear = year;
+						currentMonDigit = monthOfYear;
+						currentDayDigit = dayOfMonth;
+
+						Calendar cal = Calendar.getInstance();
+						cal.set(year, monthOfYear, dayOfMonth);
+						currentDay = cal.getDisplayName(Calendar.DAY_OF_WEEK,
+								Calendar.SHORT, Locale.US);
+						currentMon = cal.getDisplayName(Calendar.MONTH,
+								Calendar.SHORT, Locale.US);
+						showRightDateAndTimeForDialog();
+					}
+
+				});
+
+		aq.id(R.id.time_radio).textColor(Color.parseColor("#bababa"));
+		final TextView set = (TextView) dateTimePickerDialog
+				.findViewById(R.id.set);
+		set.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				dialogDatePicker.clearFocus();
+				set.requestFocus();
+				date_time_alert.dismiss();
+
+				aq.id(R.id.repeat_event).text(
+						((TextView) previousSelected).getText().toString()
+								+ " until " + setmon1);
+				RadioButton rb = (RadioButton) aq.id(R.id.time_radio).getView();
+				rb.setText(setmon1);
+			}
+		});
+		TextView cancel = (TextView) dateTimePickerDialog
+				.findViewById(R.id.cancel);
+		cancel.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				date_time_alert.cancel();
+			}
+		});
+		aq.id(R.id.forever_radio).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				if (aq.id(R.id.repeat_event).getText().toString() == "Never") {
+				} else {
+					aq.id(R.id.repeat_event).text(
+							((TextView) previousSelected).getText().toString());
+				}
+
+				aq.id(R.id.time_radio).textColor(Color.parseColor("#bababa"));
+				aq.id(R.id.forever_radio).textColor(
+						getResources().getColor(R.color._777777));
+			}
+		});
+
+		aq.id(R.id.time_radio).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (aq.id(R.id.repeat_event).getText().toString()
+						.equals("Never")) {
+					Toast.makeText(getActivity(), "Please Select ...",
+							Toast.LENGTH_SHORT).show();
+					aq.id(R.id.time_radio).checked(false);
+					aq.id(R.id.forever_radio).checked(true);
+					aq.id(R.id.time_radio).textColor(
+							Color.parseColor("#bababa"));
+					aq.id(R.id.forever_radio).textColor(
+							getResources().getColor(R.color._777777));
+				} else {
+
+					aq.id(R.id.time_radio).textColor(
+							getResources().getColor(R.color._777777));
+					aq.id(R.id.forever_radio).textColor(
+							Color.parseColor("#bababa"));
+					date_time_alert.show();
+				}
+			}
+		});
+
 		// ****************************** Label Dialog
 		GridView gridView;
 
@@ -512,7 +703,7 @@ public class AddEventFragment extends Fragment {
 		builderLabel.setView(vie);
 		add_new_label_alert = builderLabel.create();
 
-		add_new_label_alert.setOnDismissListener(new OnDismissListener() {
+		add_new_label_alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
 			@Override
 			public void onDismiss(DialogInterface arg0) {
@@ -548,8 +739,10 @@ public class AddEventFragment extends Fragment {
 								.setBackground(label_view.getBackground());
 						aq.id(R.id.spinner_labels_event).getTextView()
 								.setTextColor(Color.WHITE);
-						aq.id(R.id.label_image).background(
-								R.drawable.label_blue);
+						/*
+						 * aq.id(R.id.label_image).background(
+						 * R.drawable.label_blue);
+						 */
 
 					}
 				}
@@ -625,8 +818,10 @@ public class AddEventFragment extends Fragment {
 									.setBackground(view.getBackground());
 							aq.id(R.id.spinner_labels_event).getTextView()
 									.setTextColor(Color.WHITE);
-							aq.id(R.id.label_image).background(
-									R.drawable.label_blue);
+							/*
+							 * aq.id(R.id.label_image).background(
+							 * R.drawable.label_blue);
+							 */
 						} else {
 							add_new_label_alert.show();
 						}
@@ -707,11 +902,31 @@ public class AddEventFragment extends Fragment {
 
 		// ********************************* Label END
 
+		//+++++++++++++++Attachment
+		final View view12 = getActivity().getLayoutInflater().inflate(
+				R.layout.landing_menu, null, false);
+		aq_menu = new AQuery(getActivity(), view12);
+		popupWindowAttach = new PopupWindow(view12, Utils.getDpValue(200,
+				getActivity()), WindowManager.LayoutParams.WRAP_CONTENT, true);
+
+		popupWindowAttach.setBackgroundDrawable(getResources().getDrawable(
+				android.R.drawable.dialog_holo_light_frame));
+		popupWindowAttach.setOutsideTouchable(true);
+		popupWindowAttach.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss() {
+				// TODO Auto-generated method stub
+
+			}
+
+			
+		});
+		
 		// Show image choose options
-		aq.id(R.id.image_event)
-				.typeface(
-						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
-				.clicked(new GeneralOnClickListner());
+	/*	aq.id(R.id.event_attachment)
+				.clicked(new GeneralOnClickListner());*/
+		
 
 		// Gallery and Camera intent
 
@@ -719,10 +934,10 @@ public class AddEventFragment extends Fragment {
 
 		View attachment = inflater
 				.inflate(R.layout.add_attachment, null, false);
-		AQ_attach = new AQuery(attachment);
+		aq_attach = new AQuery(attachment);
 
 		// Gallery and Camera intent
-		AQ_attach
+		aq_attach
 				.id(R.id.gallery1)
 				.typeface(
 						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
@@ -737,7 +952,7 @@ public class AddEventFragment extends Fragment {
 						startActivityForResult(galleryIntent, RESULT_GALLERY);
 					}
 				});
-		AQ_attach
+		aq_attach
 				.id(R.id.camera1)
 				.typeface(
 						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
@@ -769,15 +984,25 @@ public class AddEventFragment extends Fragment {
 				getActivity());
 		attach_builder.setView(attachment);
 		attach_alert = attach_builder.create();
-
-		/*aq.id(R.id.event_attachment).clicked(new OnClickListener() {
+		
+		
+	
+		aq.id(R.id.event_attachment).clicked(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// slideUpDown(aq.id(R.id.attachement_layout_include).getView());
 				attach_alert.show();
 			}
-		});*/
+		});
+
+		/*
+		 * aq.id(R.id.event_attachment).clicked(new OnClickListener() {
+		 * 
+		 * @Override public void onClick(View v) { //
+		 * slideUpDown(aq.id(R.id.attachement_layout_include).getView());
+		 * attach_alert.show(); } });
+		 */
 
 		// *********************Priority*******
 		/*
@@ -824,10 +1049,12 @@ public class AddEventFragment extends Fragment {
 		tabs.setShouldExpand(true);
 		tabs.setViewPager(pager);
 
-		LayoutInflater inflater4 = getActivity().getLayoutInflater();
-		View dateTimePickerDialog = inflater4.inflate(
-				R.layout.date_time_layout_dialog, null, false);
-		AlertDialog.Builder builder4 = new AlertDialog.Builder(getActivity());
+		/*
+		 * LayoutInflater inflater4 = getActivity().getLayoutInflater(); View
+		 * dateTimePickerDialog = inflater4.inflate(
+		 * R.layout.date_time_layout_dialog, null, false); AlertDialog.Builder
+		 * builder4 = new AlertDialog.Builder(getActivity());
+		 */
 		builder4.setView(dateTimePickerDialog);
 		date_time_alert = builder4.create();
 		final TextView dayField = (TextView) dateTimePickerDialog
@@ -836,8 +1063,10 @@ public class AddEventFragment extends Fragment {
 				.findViewById(R.id.month_year_field);
 
 		// Date picker implementation for forever dialog
-		final DatePicker dialogDatePicker = (DatePicker) dateTimePickerDialog
-				.findViewById(R.id.date_picker_dialog);
+		/*
+		 * final DatePicker dialogDatePicker = (DatePicker) dateTimePickerDialog
+		 * .findViewById(R.id.date_picker_dialog);
+		 */
 		showRightDateAndTimeForDialog(dayField, monthField);
 		dialogDatePicker.init(currentYear, currentMonDigit, currentDayDigit,
 				new OnDateChangedListener() {
@@ -859,28 +1088,20 @@ public class AddEventFragment extends Fragment {
 					}
 
 				});
-		final TextView set = (TextView) dateTimePickerDialog
-				.findViewById(R.id.set);
-		set.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO
-				set.requestFocus();
-				dialogDatePicker.clearFocus();
-				date_time_alert.dismiss();
-			}
-		});
-		TextView cancel = (TextView) dateTimePickerDialog
-				.findViewById(R.id.cancel);
-		cancel.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				date_time_alert.cancel();
-			}
-		});
-
+		/*
+		 * final TextView set1 = (TextView) dateTimePickerDialog
+		 * .findViewById(R.id.set); set1.setOnClickListener(new
+		 * OnClickListener() {
+		 * 
+		 * @Override public void onClick(View v) { // TODO set.requestFocus();
+		 * dialogDatePicker.clearFocus(); date_time_alert.dismiss(); } });
+		 * TextView cancel1 = (TextView) dateTimePickerDialog
+		 * .findViewById(R.id.cancel); cancel1.setOnClickListener(new
+		 * OnClickListener() {
+		 * 
+		 * @Override public void onClick(View v) { date_time_alert.cancel(); }
+		 * });
+		 */
 		// ************ Location
 
 		/*
@@ -939,45 +1160,46 @@ public class AddEventFragment extends Fragment {
 
 		if (aq.id(R.id.date_time_include_to).getView().getVisibility() == 0) {
 			aq.id(R.id.day_field_to).text(currentDay)
-					.textColor(getResources().getColor(R.color.deep_sky_blue));
-			aq.id(R.id.date_field_to)
-					.text(tempCurrentDayDigit
+			/* .textColor(getResources().getColor(R.color.deep_sky_blue)) */;
+			aq.id(R.id.date_field_to).text(
+					tempCurrentDayDigit
 							+ Utils.getDayOfMonthSuffix(currentDayDigit))
-					.textColor(getResources().getColor(R.color.deep_sky_blue));
+			/* .textColor(getResources().getColor(R.color.deep_sky_blue)) */;
 			aq.id(R.id.month_year_field_to).text(currentMon)
-					.textColor(getResources().getColor(R.color.deep_sky_blue));
-			aq.id(R.id.date_time_to)
-					.getImageView()
-					.setBackground(
-							getResources()
-									.getDrawable(R.drawable.calendar_blue));
-			aq.id(R.id.to).textColor(
-					getResources().getColor(R.color.deep_sky_blue));
+			/* .textColor(getResources().getColor(R.color.deep_sky_blue)) */;
+			/*
+			 * aq.id(R.id.date_time_to) .getImageView() .setBackground(
+			 * getResources() .getDrawable(R.drawable.calendar_blue))
+			 */;
+			/*
+			 * aq.id(R.id.to).textColor(
+			 * getResources().getColor(R.color.deep_sky_blue));
+			 */
 			aq.id(R.id.time_to)
 					.text(tempCurrentHours + " : " + tempCurrentMins)
-					.textColor(getResources().getColor(R.color.deep_sky_blue));
+			/* .textColor(getResources().getColor(R.color.deep_sky_blue)) */;
 
 		}
 
 		if (aq.id(R.id.date_time_include_from).getView().getVisibility() == 0) {
 			aq.id(R.id.day_field_from).text(currentDay)
-					.textColor(getResources().getColor(R.color.deep_sky_blue));
-			aq.id(R.id.date_field_from)
-					.text(tempCurrentDayDigit
-							+ Utils.getDayOfMonthSuffix(currentDayDigit))
-					.textColor(getResources().getColor(R.color.deep_sky_blue));
+			/* .textColor(getResources().getColor(R.color.deep_sky_blue)) */;
+			aq.id(R.id.date_field_from).text(
+					tempCurrentDayDigit
+							+ Utils.getDayOfMonthSuffix(currentDayDigit));
 			aq.id(R.id.month_year_field_from).text(currentMon)
-					.textColor(getResources().getColor(R.color.deep_sky_blue));
-			aq.id(R.id.date_time_from)
-					.getImageView()
-					.setBackground(
-							getResources()
-									.getDrawable(R.drawable.calendar_blue));
-			aq.id(R.id.from).textColor(
-					getResources().getColor(R.color.deep_sky_blue));
-			aq.id(R.id.time_from)
-					.text(tempCurrentHours + " : " + tempCurrentMins)
-					.textColor(getResources().getColor(R.color.deep_sky_blue));
+			/* .textColor(getResources().getColor(R.color.deep_sky_blue)) */;
+			/*
+			 * aq.id(R.id.date_time_from) .getImageView() .setBackground(
+			 * getResources() .getDrawable(R.drawable.calendar_blue));
+			 */
+			/*
+			 * aq.id(R.id.from).textColor(
+			 * getResources().getColor(R.color.deep_sky_blue));
+			 */
+			aq.id(R.id.time_from).text(
+					tempCurrentHours + " : " + tempCurrentMins)
+			/* .textColor(getResources().getColor(R.color.deep_sky_blue)) */;
 		}
 	}
 
@@ -1110,22 +1332,69 @@ public class AddEventFragment extends Fragment {
 		if (FragmentCheck == 0) {
 			try {
 				bitmap = Utils.getBitmap(selectedImage, getActivity(), cr);
-				aq.id(R.id.attach_event).visible();
 				final LinearLayout item = (LinearLayout) aq
 						.id(R.id.added_image_outer_event).visible().getView();
 
 				final View child = getActivity().getLayoutInflater().inflate(
 						R.layout.image_added_layout, null);
+
 				ImageView image = (ImageView) child
 						.findViewById(R.id.image_added);
-				aq.id(image).image(Utils.getRoundedCornerBitmap(bitmap, 20));
+				ImageView imagemenu = (ImageView) child
+						.findViewById(R.id.image_menu);
+				Tag = Tag + 1;
+				imagemenu.setTag(Tag);
+				child.setId(Tag);
+				
+				imagemenu.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View arg0) {
+						// TODO Auto-generated method stub
+						Toast.makeText(getActivity(),
+								arg0.getId() + "     " + arg0.getTag(),
+								Toast.LENGTH_LONG).show();
+						ll_iner = (LinearLayout) item.findViewById(Integer
+								.parseInt(arg0.getTag().toString()));
+						
+						if (popupWindowAttach.isShowing()) {
+							popupWindowAttach.dismiss();
+
+						} else {
+							// layout_MainMenu.getForeground().setAlpha(150);
+							popupWindowAttach.showAsDropDown(arg0, 5, 0);
+						}
+					}
+				});
+
+				aq_menu.id(R.id.menu_item1).text("Save file")
+						.clicked(new OnClickListener() {
+
+							@Override
+							public void onClick(View arg0) {
+								// TODO Auto-generated method stub
+								popupWindowAttach.dismiss();
+							}
+						});
+				aq_menu.id(R.id.menu_item2).text("Delete")
+						.clicked(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+								if (ll_iner != null)
+									item.removeView(ll_iner);
+								popupWindowAttach.dismiss();
+							}
+						});
+
+				aq.id(image).image(Utils.getRoundedCornerBitmap(bitmap, 7));
 				TextView text = (TextView) child
 						.findViewById(R.id.image_added_text);
 				TextView by = (TextView) child
-						.findViewById(R.id.image_added_by);/*
+						.findViewById(R.id.image_added_by);
 				TextView size = (TextView) child
 						.findViewById(R.id.image_added_size);
-				size.setText("" + new File(selectedImage.getPath()).length());*/
 				Calendar cal = Calendar.getInstance();
 				SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy");
 				by.setText("By Usman Ameer on " + sdf.format(cal.getTime()));
@@ -1134,16 +1403,18 @@ public class AddEventFragment extends Fragment {
 				File myFile = new File(selectedImage.toString());
 
 				myFile.getAbsolutePath();
-				/*
-				 * Toast.makeText(getActivity(), filename + "  ---   ",
-				 * Toast.LENGTH_LONG).show();
-				 */
-				/*
-				 * ImageUploadTask asyn=new ImageUploadTask(); asyn.execute();
-				 */
 				imageupload();
-				// text.setText(returnCursor.getString(returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)));
-				text.setText(selectedImage.getLastPathSegment() + "." + type);
+				if (selectedImage.getLastPathSegment().contains(".")) {
+					text.setText(selectedImage.getLastPathSegment());
+
+				} else {
+					text.setText(selectedImage.getLastPathSegment() + "."
+							+ type);
+
+				}
+
+				size.setText("(" + (new File(selectedImage.getPath()).length())
+						/ 1024 + " KB)");
 				child.findViewById(R.id.image_cancel).setOnClickListener(
 						new OnClickListener() {
 
@@ -1153,6 +1424,7 @@ public class AddEventFragment extends Fragment {
 								// child.setVisibility(View.GONE);
 							}
 						});
+
 				item.addView(child);
 			} catch (Exception e) {
 				Toast.makeText(getActivity(), "Failed to load",
@@ -1171,6 +1443,13 @@ public class AddEventFragment extends Fragment {
 						.startAnimation(
 								new ScaleAnimToHide(1.0f, 1.0f, 1.0f, 0.0f,
 										200, aq.id(view).getView(), true));
+		aq.id(R.id.to_layout).background(R.drawable.input_fields_gray);
+		aq.id(R.id.from_layout).background(R.drawable.input_fields_gray);
+		aq.id(R.id.before_event_layout)
+				.background(R.drawable.input_fields_gray);
+		aq.id(R.id.repeat_layout).background(R.drawable.input_fields_gray);
+		aq.id(R.id.spinner_label_layout).background(
+				R.drawable.input_fields_gray);
 	}
 
 	private void showCurrentView(View v) {
@@ -1179,34 +1458,38 @@ public class AddEventFragment extends Fragment {
 
 		switch (v.getId()) {
 		case R.id.time_date_to:
-			if (aq.id(R.id.date_time_include_to).getView().getVisibility() == View.GONE)
+			if (aq.id(R.id.date_time_include_to).getView().getVisibility() == View.GONE) {
 				aq.id(R.id.date_time_include_to)
 						.getView()
 						.startAnimation(
 								new ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f,
 										200, aq.id(R.id.date_time_include_to)
 												.getView(), true));
+
+				aq.id(R.id.to_layout).background(R.drawable.input_fields_blue);
+
+			}
 			break;
 		case R.id.time_date_from:
-			if (aq.id(R.id.date_time_include_from).getView().getVisibility() == View.GONE)
+			if (aq.id(R.id.date_time_include_from).getView().getVisibility() == View.GONE) {
 				aq.id(R.id.date_time_include_from)
 						.getView()
 						.startAnimation(
 								new ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f,
 										200, aq.id(R.id.date_time_include_from)
 												.getView(), true));
-			break;
-		/*case R.id.contacts_layout_include:
-			if (aq.id(R.id.contacts_layout_include).getView().getVisibility() == View.GONE) {
-				aq.id(R.id.contacts_layout_include)
-						.getView()
-						.startAnimation(
-								new ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f,
-										200,
-										aq.id(R.id.contacts_layout_include)
-												.getView(), true));
+				aq.id(R.id.from_layout)
+						.background(R.drawable.input_fields_blue);
+
 			}
-			break;*/
+			break;
+		/*
+		 * case R.id.contacts_layout_include: if
+		 * (aq.id(R.id.contacts_layout_include).getView().getVisibility() ==
+		 * View.GONE) { aq.id(R.id.contacts_layout_include) .getView()
+		 * .startAnimation( new ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f, 200,
+		 * aq.id(R.id.contacts_layout_include) .getView(), true)); } break;
+		 */
 		/*
 		 * case R.id.image: if
 		 * (aq.id(R.id.gallery_include).getView().getVisibility() == View.GONE)
@@ -1214,16 +1497,17 @@ public class AddEventFragment extends Fragment {
 		 * ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f, 200,
 		 * aq.id(R.id.gallery_include) .getView(), true)); break;
 		 */
-		case R.id.before_event:
+		case R.id.before_event_lay:
 			if (aq.id(R.id.before_grid_view_linear_event).getView()
 					.getVisibility() == View.GONE) {
 				if (aq.id(R.id.before_event).getText().toString() == "") {
 					aq.id(R.id.before_event)
-							.text("Reminde before "
-									+ AddEventBeforeFragment.beforeArray[1])
-							.textColorId(R.color.deep_sky_blue);
-					aq.id(R.id.before_event_image).background(
-							R.drawable.reminder_blue);
+							.text(AddEventBeforeFragment.beforeArray[1]
+									+ " Before").visibility(View.VISIBLE);
+					/*
+					 * aq.id(R.id.before_event_image).background(
+					 * R.drawable.reminder_blue);
+					 */
 
 				}
 				aq.id(R.id.before_grid_view_linear_event)
@@ -1237,14 +1521,17 @@ public class AddEventFragment extends Fragment {
 										200,
 										aq.id(R.id.before_grid_view_linear_event)
 												.getView(), true));
+
+				aq.id(R.id.before_event_layout).background(
+						R.drawable.input_fields_blue);
+
 			}
 			break;
-		case R.id.repeat_event:
+		case R.id.repeat_event_lay:
 			if (aq.id(R.id.repeat_linear_layout).getView().getVisibility() == View.GONE) {
 				if (aq.id(R.id.repeat_event).getText().toString() == "") {
-					aq.id(R.id.repeat_event).text(repeatArray[0])
-							.textColorId(R.color.deep_sky_blue);
-					aq.id(R.id.repeat_image).background(R.drawable.repeat_blue);
+					aq.id(R.id.repeat_event).text(repeatArray[2])
+							.visibility(View.VISIBLE);
 
 				}
 				aq.id(R.id.repeat_linear_layout)
@@ -1253,16 +1540,23 @@ public class AddEventFragment extends Fragment {
 								new ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f,
 										200, aq.id(R.id.repeat_linear_layout)
 												.getView(), true));
+				aq.id(R.id.repeat_layout).background(
+						R.drawable.input_fields_blue);
+
 			}
 			break;
 		case R.id.spinner_label_layout:
-			if (aq.id(R.id.label_event_grid_view).getView().getVisibility() == View.GONE)
-				aq.id(R.id.label_event_grid_view)
+			if (aq.id(R.id.label_grid_view3).getView().getVisibility() == View.GONE) {
+				aq.id(R.id.label_grid_view3)
 						.getView()
 						.startAnimation(
 								new ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f,
-										200, aq.id(R.id.label_event_grid_view)
+										200, aq.id(R.id.label_grid_view3)
 												.getView(), true));
+
+				aq.id(R.id.spinner_label_layout).background(
+						R.drawable.input_fields_blue);
+			}
 		default:
 			break;
 		}
@@ -1517,6 +1811,13 @@ public class AddEventFragment extends Fragment {
 			return imageView;
 		}
 
+	}
+
+	private void showRightDateAndTimeForDialog() {
+		String fff = String.valueOf(currentDayDigit).replace("th", "");
+		setmon1 = fff + " " + currentMon + " " + currentYear;
+		repeatdate = currentYear + "-" + (currentMonDigit + 1) + "-"
+				+ currentDayDigit + " 00:00:00";
 	}
 
 	public void imageupload() {

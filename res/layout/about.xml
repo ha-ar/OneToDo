@@ -73,7 +73,7 @@
         android:layout_marginTop="10dp"
         android:background="@android:color/white"
         android:hint="Phone number"
-        android:inputType="phone"
+        android:inputType="phone|text"
         android:paddingLeft="10dp"
         android:textColor="@color/_4d4d4d"
         android:textColorHint="@color/_999999"

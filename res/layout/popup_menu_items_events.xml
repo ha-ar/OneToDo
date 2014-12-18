@@ -1,118 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/popup_menu_layout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:orientation="vertical"
-    android:padding="10dp" >
-
-    <CheckBox
-        android:id="@+id/date_time_checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:button="@drawable/blue_chechk_box"
-        android:padding="10dp"
-        android:text="Date &amp; Time"
-        android:textColor="@color/dark_grey_color"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <CheckBox
-        android:id="@+id/location_checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:button="@drawable/blue_chechk_box"
-        android:padding="10dp"
-        android:text="Location"
-        android:textColor="@color/dark_grey_color"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <CheckBox
-        android:id="@+id/repeat_reminder_checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:button="@drawable/blue_chechk_box"
-        android:padding="10dp"
-        android:text="Repeat &amp; Reminder"
-        android:textColor="@color/dark_grey_color"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <CheckBox
-        android:id="@+id/notes_checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:button="@drawable/blue_chechk_box"
-        android:padding="10dp"
-        android:text="Notes"
-        android:textColor="@color/dark_grey_color"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <CheckBox
-        android:id="@+id/image_checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:button="@drawable/blue_chechk_box"
-        android:padding="10dp"
-        android:text="Image"
-        android:textColor="@color/dark_grey_color"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <CheckBox
-        android:id="@+id/assign_share_checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:button="@drawable/blue_chechk_box"
-        android:padding="10dp"
-        android:text="Assign &amp; Share Task"
-        android:textColor="@color/dark_grey_color"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-</GridLayout>
--->
-
 <com.vector.onetodo.utils.CheckableLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="50dp"
+    android:layout_height="45dp"
+    android:animateLayoutChanges="true"
     android:background="@android:color/white"
     android:orientation="horizontal"
-    android:animateLayoutChanges="true"
-    android:weightSum="3"
-    android:paddingLeft="5dp" >
-    
+    android:paddingLeft="15dp"
+    android:paddingRight="0dp"
+    android:weightSum="3" >
+
     <CheckedTextView
         android:id="@+id/checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:checked="true"
+        android:layout_gravity="center"
         android:background="@drawable/blue_chechk_box"
-        android:layout_gravity="center" />
+        android:checked="true" />
 
     <TextView
         android:id="@+id/text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:checkMark="@drawable/blue_chechk_box"
         android:layout_gravity="center_vertical|left"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="3.14"
+        android:checkMark="@drawable/blue_chechk_box"
         android:padding="10dp"
-        android:textColor="@color/dark_grey_color"
-        android:textSize="16sp" />
+        android:text="Checking"
+        android:textColor="@color/_777777"
+        android:textSize="17.78sp" />
 
-    <ImageView
+   <!--  <ImageView
         android:id="@+id/drag_handle"
         android:layout_width="25dp"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:background="@drawable/drag"
         android:gravity="left|center_vertical"
-        android:padding="5dp" />
+        android:padding="5dp" /> -->
 
     <!--
          <ImageView

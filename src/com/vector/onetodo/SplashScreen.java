@@ -2,14 +2,15 @@ package com.vector.onetodo;
 
 import java.io.IOException;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +30,7 @@ public class SplashScreen extends BaseActivity {
 	static SharedPreferences regid;
 	static GoogleCloudMessaging gcm=null;
 	static String regId;
+	public static String country=null,code=null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +105,8 @@ public class SplashScreen extends BaseActivity {
 		
 		
 		Fragment fr = new about();
-		FragmentTransaction trans = getFragmentManager().beginTransaction();
+		FragmentManager manager=getSupportFragmentManager();
+		FragmentTransaction trans = manager.beginTransaction();
 		trans.replace(R.id.container, fr);
 		trans.addToBackStack("");
 		trans.commit();

@@ -275,8 +275,8 @@ public class AddScheduleFragment extends Fragment {
 
 				if (isChecked == true) {
 					aq.id(R.id.sch_allday_txt).textColorId(R.color.blue_color);
-					aq.id(R.id.sch_allday_img).background(
-							R.drawable.allday_blue);
+					/*aq.id(R.id.sch_allday_img).background(
+							R.drawable.allday_blue);*/
 					aq.id(R.id.sch_time_from).getTextView()
 							.setVisibility(View.GONE);
 					aq.id(R.id.sch_time_to).getTextView()
@@ -1238,11 +1238,11 @@ public class AddScheduleFragment extends Fragment {
 					.textColor(getResources().getColor(R.color.deep_sky_blue));
 			aq.id(R.id.sch_time_to_month).text(currentMon)
 					.textColor(getResources().getColor(R.color.deep_sky_blue));
-			aq.id(R.id.sch_time_to_img)
+			/*aq.id(R.id.sch_time_to_img)
 					.getImageView()
 					.setBackground(
 							getResources()
-									.getDrawable(R.drawable.calendar_blue));
+									.getDrawable(R.drawable.calendar_blue));*/
 			aq.id(R.id.sch_time_to_txt).textColor(
 					getResources().getColor(R.color.deep_sky_blue));
 			aq.id(R.id.sch_time_to)
@@ -1260,11 +1260,11 @@ public class AddScheduleFragment extends Fragment {
 					.textColor(getResources().getColor(R.color.deep_sky_blue));
 			aq.id(R.id.sch_time_from_month).text(currentMon)
 					.textColor(getResources().getColor(R.color.deep_sky_blue));
-			aq.id(R.id.sch_time_from_img)
+			/*aq.id(R.id.sch_time_from_img)
 					.getImageView()
 					.setBackground(
 							getResources()
-									.getDrawable(R.drawable.calendar_blue));
+									.getDrawable(R.drawable.calendar_blue))*/;
 			aq.id(R.id.sch_time_from_txt).textColor(
 					getResources().getColor(R.color.deep_sky_blue));
 			aq.id(R.id.sch_time_from)

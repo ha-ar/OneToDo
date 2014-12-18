@@ -896,8 +896,8 @@ public class Appoinment1 extends Fragment {
 		aq.id(R.id.time_field_appoinment)
 				.text(tempCurrentHours + ":" + tempCurrentMins)
 				.textColorId(R.color.deep_sky_blue);
-		aq.id(R.id.calendare_image_appoinment).background(
-				R.drawable.calendar_blue);
+		/*aq.id(R.id.calendare_image_appoinment).background(
+				R.drawable.calendar_blue);*/
 	}
 
 	public class Appoinmentbeforefragment extends FragmentStatePagerAdapter {

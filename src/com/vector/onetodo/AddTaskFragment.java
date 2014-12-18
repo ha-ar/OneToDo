@@ -36,7 +36,7 @@ import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
+import android.widget.PopupWindow.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
@@ -63,13 +63,11 @@ import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.MimeTypeMap;
@@ -85,6 +83,7 @@ import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -97,7 +96,6 @@ import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 import com.astuetz.PagerSlidingTabStrip;
 import com.devspark.appmsg.AppMsg;
-import com.google.android.gms.drive.internal.ad;
 import com.vector.onetodo.AddTask.add;
 import com.vector.onetodo.db.gen.LabelName;
 import com.vector.onetodo.utils.Constants;
@@ -122,13 +120,18 @@ public class AddTaskFragment extends Fragment {
 	int pposition = -1;
 	int itempos = -1;
 	int MaxId = -1;
-
-	public static AQuery aq, popupAQ, aq_edit, aqd, aq_del, att, aqa;
+	private static int Tag = 0;
+	private PopupWindow popupWindowAttach;
+	
+	
+	// public PopupWindow popupImage;
+	public static AQuery aq, popupAQ, aq_edit, aqd, aq_del, att, aqa, aq_menu;
 
 	static List<java.lang.Object> names;
 	int Label_postion = -1;
 	ImageView last;
 
+	static LinearLayout ll_iner;
 	String[] colors1 = { "#790000", "#005826", "#0D004C", "#ED145B", "#E0D400",
 			"#0000FF", "#4B0049", "#005B7F", "#603913", "#005952" };
 
@@ -149,12 +152,12 @@ public class AddTaskFragment extends Fragment {
 	int dayPosition;
 	private String currentDay, currentMon, setmon1;
 
-	private int[] collapsingViews = {R.id.title_task_layout1, R.id.date_time_include,
-			R.id.before_grid_view_linear, R.id.repeat_linear_layout,
-			R.id.label_grid_view3 };
+	private int[] collapsingViews = { R.id.title_task_layout1,
+			R.id.date_time_include, R.id.before_grid_view_linear,
+			R.id.repeat_linear_layout, R.id.label_grid_view3 };
 
 	private int[] allViews = { R.id.task_title1, R.id.time_date,
-			R.id.location_task, R.id.image, R.id.before1, R.id.repeat,
+			R.id.location_task, R.id.image, R.id.before1, R.id.repeat_task_lay,
 			R.id.spinner_labels_task };
 
 	public static EditText taskTitle;
@@ -226,14 +229,16 @@ public class AddTaskFragment extends Fragment {
 		currentMin = Utils.getCurrentMins();
 
 		inflatingLayouts.put(0, R.layout.add_task_title);
-		inflatingLayouts.put(1, R.layout.add_task_title);
-		inflatingLayouts.put(2, R.layout.add_task_time_date);
-		inflatingLayouts.put(3, R.layout.add_task_before);
-		inflatingLayouts.put(4, R.layout.add_task_repeat);
-		inflatingLayouts.put(5, R.layout.add_task_label);
-		inflatingLayouts.put(6, R.layout.add_task_notes);
-		//inflatingLayouts.put(6, R.layout.add_task_image);
-		inflatingLayouts.put(7, R.layout.add_task_attach);
+		inflatingLayouts.put(1, R.layout.add_task_assign1);
+		inflatingLayouts.put(2, R.layout.add_task_details);
+		inflatingLayouts.put(3, R.layout.add_task_time_date);
+		inflatingLayouts.put(4, R.layout.add_task_location1);
+		inflatingLayouts.put(5, R.layout.add_task_before);
+		inflatingLayouts.put(6, R.layout.add_task_repeat);
+		inflatingLayouts.put(7, R.layout.add_task_label);
+		inflatingLayouts.put(8, R.layout.add_task_subtask);
+		inflatingLayouts.put(9, R.layout.add_task_notes);
+		inflatingLayouts.put(10, R.layout.add_task_attach);
 
 		inflateLayouts();
 
@@ -289,15 +294,32 @@ public class AddTaskFragment extends Fragment {
 
 		aq.id(R.id.before1).clicked(new GeneralOnClickListner());
 
-		aq.id(R.id.repeat)
-				.typeface(
-						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
-				.clicked(new GeneralOnClickListner());
+		aq.id(R.id.repeat_task_lay).clicked(new GeneralOnClickListner());
 
 		aq.id(R.id.grid_text)
 				.typeface(
 						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
 				.clicked(new GeneralOnClickListner());
+		final View view12 = getActivity().getLayoutInflater().inflate(
+				R.layout.landing_menu, null, false);
+		aq_menu = new AQuery(getActivity(), view12);
+		popupWindowAttach = new PopupWindow(view12, Utils.getDpValue(200,
+				getActivity()), WindowManager.LayoutParams.WRAP_CONTENT, true);
+
+		popupWindowAttach.setBackgroundDrawable(getResources().getDrawable(
+				android.R.drawable.dialog_holo_light_frame));
+		popupWindowAttach.setOutsideTouchable(true);
+		popupWindowAttach.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss() {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		// popupWindowTask.setAnimationStyle(R.style.Animation);
+
 		/*
 		 * CheckBox cb=(CheckBox)
 		 * getActivity().findViewById(R.id.completed_task); aq.id(id)
@@ -493,15 +515,16 @@ public class AddTaskFragment extends Fragment {
 		builderLabel.setView(vie);
 
 		add_new_label_alert = builderLabel.create();
-		add_new_label_alert.setOnDismissListener(new OnDismissListener() {
+		add_new_label_alert
+				.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
-			@Override
-			public void onDismiss(DialogInterface arg0) {
-				// TODO Auto-generated method stub
+					@Override
+					public void onDismiss(DialogInterface arg0) {
+						// TODO Auto-generated method stub
 
-				label_text.setText("");
-			}
-		});
+						label_text.setText("");
+					}
+				});
 		TextView saveLabel = (TextView) vie.findViewById(R.id.save);
 		saveLabel.setOnClickListener(new OnClickListener() {
 
@@ -710,22 +733,6 @@ public class AddTaskFragment extends Fragment {
 		tabs.setShouldExpand(true);
 		tabs.setViewPager(pager);
 
-		/*
-		 * GridView gv = (GridView) aq.id(R.id.repeat_grid_view).getView();
-		 * gv.setAdapter(repeatAdapter);
-		 * 
-		 * View gridChild = (View) gv.getChildAt(0);
-		 * gv.getFirstVisiblePosition(); View view23 = gv.getSelectedView();
-		 * ((TextView) gridChild).setTextColor(Color.WHITE); //
-		 * gv.setSelected(true);
-		 */
-
-		/*
-		 * final ArrayAdapter<String> repeatAdapter = new ArrayAdapter<String>(
-		 * getActivity(), R.layout.grid_layout_textview, repeatArray);
-		 * aq.id(R.id.repeat_grid_view).getGridView().setAdapter(repeatAdapter);
-		 */
-
 		aq.id(R.id.repeat_grid_view)
 				.getGridView()
 				.setAdapter(
@@ -768,20 +775,6 @@ public class AddTaskFragment extends Fragment {
 
 						});
 
-		/*
-		 * View v = adapter.getView(0, null,
-		 * aq.id(R.id.repeat_grid_view).getGridView()); ((TextView)
-		 * v).setTextColor(Color.WHITE);
-		 */
-		/*
-		 * ; View view2312 = (View) aq.id(R.id.repeat_grid_view)
-		 * .getGridView().getChildAt(1);
-		 */
-
-		/*
-		 * ((TextView) aq.id(R.id.repeat_grid_view).getGridView().getChildAt(0))
-		 * .setTextColor(Color.WHITE);
-		 */
 		aq.id(R.id.repeat_grid_view).itemClicked(new OnItemClickListener() {
 
 			@Override
@@ -817,12 +810,8 @@ public class AddTaskFragment extends Fragment {
 					aq.id(R.id.repeat).text(repeatArray[position])
 					/* .textColorId(R.color.deep_sky_blue) */;
 				} else {
-					aq.id(R.id.repeat).text(
-							"Repeat " + repeatArray[position].toLowerCase())
-					/* .textColorId(R.color.deep_sky_blue) */;
-				}/*
-				 * aq.id(R.id.repeat_image).background(R.drawable.repeat_blue);
-				 */
+					aq.id(R.id.repeat).text(repeatArray[position]);
+				}
 				previousSelected = view;
 
 			}
@@ -833,16 +822,8 @@ public class AddTaskFragment extends Fragment {
 				R.layout.date_time_layout_dialog, null, false);
 		AlertDialog.Builder builder4 = new AlertDialog.Builder(getActivity());
 		builder4.setView(dateTimePickerDialog);
-		/*
-		 * date_time_alert.getWindow().setBackgroundDrawable(null);
-		 */
-		date_time_alert = builder4.create();
 
-		/*
-		 * final TextView dayField = (TextView) dateTimePickerDialog
-		 * .findViewById(R.id.day_field); final TextView monthField = (TextView)
-		 * dateTimePickerDialog .findViewById(R.id.month_year_field);
-		 */
+		date_time_alert = builder4.create();
 
 		// Date picker implementation for forever dialogdate_picker
 		final DatePicker dialogDatePicker = (DatePicker) dateTimePickerDialog
@@ -881,15 +862,10 @@ public class AddTaskFragment extends Fragment {
 				date_time_alert.dismiss();
 
 				aq.id(R.id.repeat).text(
-						"Repeat "
-								+ ((TextView) previousSelected).getText()
-										.toString().toLowerCase() + " until "
-								+ setmon1);
+						((TextView) previousSelected).getText().toString()
+								+ " until " + setmon1);
 				RadioButton rb = (RadioButton) aq.id(R.id.time_radio).getView();
-				rb.setText(setmon1);/*
-									 * aq.id(R.id.repeat).textColorId(R.color.active
-									 * );
-									 */
+				rb.setText(setmon1);
 			}
 		});
 		TextView cancel = (TextView) dateTimePickerDialog
@@ -909,9 +885,7 @@ public class AddTaskFragment extends Fragment {
 				if (aq.id(R.id.repeat).getText().toString() == "Never") {
 				} else {
 					aq.id(R.id.repeat).text(
-							"Repeat "
-									+ ((TextView) previousSelected).getText()
-											.toString().toLowerCase());
+							((TextView) previousSelected).getText().toString());
 				}
 
 				aq.id(R.id.time_radio).textColor(Color.parseColor("#bababa"));
@@ -1085,9 +1059,6 @@ public class AddTaskFragment extends Fragment {
 						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
 				.clicked(new ShareOnClickListner());
 
-		// **************Should be removed -- old
-		// design************************//
-
 		aq.id(R.id.assign_task_button).clicked(new OnClickListener() {
 
 			@Override
@@ -1104,11 +1075,32 @@ public class AddTaskFragment extends Fragment {
 			}
 		});
 
+		
+		
+		
+		
+		
+		
+		
+		//***************************** Attachment
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 
 		View attachment = inflater
 				.inflate(R.layout.add_attachment, null, false);
 		att = new AQuery(attachment);
+
+		LinearLayout ll = (LinearLayout) aq.id(R.id.added_image_outer)
+				.getView();
+		ll.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				LinearLayout lll = (LinearLayout) arg0;
+				Toast.makeText(getActivity(), lll.getChildCount() + "",
+						Toast.LENGTH_LONG).show();
+			}
+		});
 
 		// Gallery and Camera intent
 		att.id(R.id.gallery1)
@@ -1118,6 +1110,7 @@ public class AddTaskFragment extends Fragment {
 
 					@Override
 					public void onClick(View v) {
+
 						attach.dismiss();
 						Intent galleryIntent = new Intent(
 								Intent.ACTION_PICK,
@@ -1156,8 +1149,6 @@ public class AddTaskFragment extends Fragment {
 				getActivity());
 		attach_builder.setView(attachment);
 		attach = attach_builder.create();
-		/*aq.id(R.id.task_attachment).background((getResources().getDrawable(
-				android.R.drawable.dialog_holo_light_frame);*/
 		aq.id(R.id.task_attachment).clicked(new OnClickListener() {
 
 			@Override
@@ -1167,6 +1158,10 @@ public class AddTaskFragment extends Fragment {
 			}
 		});
 
+		//********************** Attachment End
+		
+		
+		//***************************** Priority
 		lastCheckedId = ((RadioGroup) aq.id(R.id.priority_radio_buttons)
 				.getView()).getCheckedRadioButtonId();
 		((RadioGroup) aq.id(R.id.priority_radio_buttons).getView())
@@ -1224,28 +1219,16 @@ public class AddTaskFragment extends Fragment {
 				}
 			}
 		});
-
-		/*
-		 * (new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) { Fragment fr = new
-		 * add_task_comment(); FragmentManager manager = getFragmentManager();
-		 * FragmentTransaction transaction = manager.beginTransaction();
-		 * transaction.replace(R.id.main_container, fr);
-		 * transaction.setCustomAnimations(R.anim.slide_in1, R.anim.slide_out1);
-		 * transaction.addToBackStack(null); transaction.commit(); } });
-		 */
-
 		View switchView = aq.id(R.id.add_sub_task).getView();
 		toggleCheckList(switchView);
-		
-		
+
 		aq.id(R.id.image_menu).clicked(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Toast.makeText(getActivity(), ""+arg0.getId(), Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "" + arg0.getId(),
+						Toast.LENGTH_LONG).show();
 			}
 		});
 	}
@@ -1346,66 +1329,27 @@ public class AddTaskFragment extends Fragment {
 		String tempCurrentDayDigit = String.format("%02d", currentDayDigit);
 		String tempCurrentHours = String.format("%02d", currentHours);
 		String tempCurrentMins = String.format("%02d", currentMin);
-		String tempYear = String.valueOf(currentYear).substring(2, 4);/*
-																	 * aq.id(R.id
-																	 * .
-																	 * da).text(
-																	 * "Due"
-																	 * ).textColorId
-																	 * (R.color.
-																	 * deep_sky_blue
-																	 * );
-																	 */
 		if (dayPosition == 0) {
-			aq.id(R.id.day_field).text("")/* .textColorId(R.color.deep_sky_blue) */;
-			aq.id(R.id.da)/* .textColorId(R.color.deep_sky_blue) */;
-			aq.id(R.id.day_field).text("Today")
-			/* .textColorId(R.color.deep_sky_blue) */;
+			aq.id(R.id.day_field).text("");
+			aq.id(R.id.da);
+			aq.id(R.id.day_field).text("Today");
 		} else if (dayPosition == 1) {
-			aq.id(R.id.day_field).text("");/*
-											 * .textColorId(R.color.deep_sky_blue
-											 * );
-											 *//*
-												 * aq.id(R.id.da).textColorId(R.
-												 * color.deep_sky_blue);
-												 */
-			aq.id(R.id.day_field).text("Tomorrow")
-			/* .textColorId(R.color.deep_sky_blue) */;
+			aq.id(R.id.day_field).text("");
+			aq.id(R.id.day_field).text("Tomorrow");
 		} else {
-			aq.id(R.id.day_field).text(currentDay)/*
-												 * .textColorId(R.color.
-												 * deep_sky_blue)
-												 */;/*
-													 * aq.id(R.id.da).textColorId
-													 * (R.color.deep_sky_blue);
-													 */
+			aq.id(R.id.day_field).text(currentDay);
 			aq.id(R.id.month_year_field).text(
 					tempCurrentDayDigit
 							+ Utils.getDayOfMonthSuffix(currentDayDigit) + " "
-							+ currentMon)/* .textColorId(R.color.deep_sky_blue) */;
+							+ currentMon);
 		}
-		aq.id(R.id.time_field).text(tempCurrentHours + ":" + tempCurrentMins)
-		/* .textColorId(R.color.deep_sky_blue) */;/*
-												 * aq.id(R.id.calendare_image).
-												 * background
-												 * (R.drawable.calendar_blue);
-												 */
+		aq.id(R.id.time_field).text(tempCurrentHours + ":" + tempCurrentMins);
+
 	}
 
 	private void showRightDateAndTimeForDialog() {
-		String tempCurrentDayDigit = String.format("%02d", currentDayDigit);
-		String tempYear = String.valueOf(currentYear).substring(2, 4);
-		// aq.id(day).text(currentDay);
-		/* setday = currentDay; */
-		/*
-		 * setmon = tempCurrentDayDigit +
-		 * Utils.getDayOfMonthSuffix(currentDayDigit) + " " + currentMon + "," +
-		 * tempYear;
-		 */
 		String fff = String.valueOf(currentDayDigit).replace("th", "");
-		setmon1 = fff
-		/* + Utils.getDayOfMonthSuffix(currentDayDigit) */+ " " + currentMon
-				+ " " + currentYear;
+		setmon1 = fff + " " + currentMon + " " + currentYear;
 		repeatdate = currentYear + "-" + (currentMonDigit + 1) + "-"
 				+ currentDayDigit + " 00:00:00";
 	}
@@ -1559,7 +1503,6 @@ public class AddTaskFragment extends Fragment {
 		getActivity().getContentResolver().notifyChange(selectedImage, null);
 		ContentResolver cr = getActivity().getContentResolver();
 		Cursor returnCursor = cr.query(selectedImage, null, null, null, null);
-		// returnCursor.moveToFirst();
 
 		MimeTypeMap mime = MimeTypeMap.getSingleton();
 
@@ -1570,14 +1513,62 @@ public class AddTaskFragment extends Fragment {
 		if (FragmentCheck == 0) {
 			try {
 				bitmap = Utils.getBitmap(selectedImage, getActivity(), cr);
-				//aq.id(R.id.attach).visible();
 				final LinearLayout item = (LinearLayout) aq
 						.id(R.id.added_image_outer).visible().getView();
 
 				final View child = getActivity().getLayoutInflater().inflate(
 						R.layout.image_added_layout, null);
+
 				ImageView image = (ImageView) child
 						.findViewById(R.id.image_added);
+				ImageView imagemenu = (ImageView) child
+						.findViewById(R.id.image_menu);
+				Tag = Tag + 1;
+				imagemenu.setTag(Tag);
+				child.setId(Tag);
+				
+				imagemenu.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View arg0) {
+						// TODO Auto-generated method stub
+						Toast.makeText(getActivity(),
+								arg0.getId() + "     " + arg0.getTag(),
+								Toast.LENGTH_LONG).show();
+						ll_iner = (LinearLayout) item.findViewById(Integer
+								.parseInt(arg0.getTag().toString()));
+						
+						if (popupWindowAttach.isShowing()) {
+							popupWindowAttach.dismiss();
+
+						} else {
+							// layout_MainMenu.getForeground().setAlpha(150);
+							popupWindowAttach.showAsDropDown(arg0, 5, 0);
+						}
+					}
+				});
+
+				aq_menu.id(R.id.menu_item1).text("Save file")
+						.clicked(new OnClickListener() {
+
+							@Override
+							public void onClick(View arg0) {
+								// TODO Auto-generated method stub
+								popupWindowAttach.dismiss();
+							}
+						});
+				aq_menu.id(R.id.menu_item2).text("Delete")
+						.clicked(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+								if (ll_iner != null)
+									item.removeView(ll_iner);
+								popupWindowAttach.dismiss();
+							}
+						});
+
 				aq.id(image).image(Utils.getRoundedCornerBitmap(bitmap, 7));
 				TextView text = (TextView) child
 						.findViewById(R.id.image_added_text);
@@ -1591,28 +1582,20 @@ public class AddTaskFragment extends Fragment {
 				filename = selectedImage;
 				// AddTask.path.add(filename);
 				File myFile = new File(selectedImage.toString());
-				
+
 				myFile.getAbsolutePath();
-				
-				/*
-				 * Toast.makeText(getActivity(), filename + "  ---   ",
-				 * Toast.LENGTH_LONG).show();
-				 */
-				/*
-				 * ImageUploadTask asyn=new ImageUploadTask(); asyn.execute();
-				 */
 				imageupload();
-				// text.setText(returnCursor.getString(returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)));
-				if(selectedImage.getLastPathSegment().contains(".")){
+				if (selectedImage.getLastPathSegment().contains(".")) {
 					text.setText(selectedImage.getLastPathSegment());
-					
-				}
-				else{
-					text.setText(selectedImage.getLastPathSegment() + "." + type);
-					
+
+				} else {
+					text.setText(selectedImage.getLastPathSegment() + "."
+							+ type);
+
 				}
 
-				size.setText("("+(new File(selectedImage.getPath()).length())/1024+" KB)");
+				size.setText("(" + (new File(selectedImage.getPath()).length())
+						/ 1024 + " KB)");
 				child.findViewById(R.id.image_cancel).setOnClickListener(
 						new OnClickListener() {
 
@@ -1622,6 +1605,7 @@ public class AddTaskFragment extends Fragment {
 								// child.setVisibility(View.GONE);
 							}
 						});
+
 				item.addView(child);
 			} catch (Exception e) {
 				Toast.makeText(getActivity(), "Failed to load",
@@ -1665,24 +1649,13 @@ public class AddTaskFragment extends Fragment {
 						R.drawable.input_fields_blue);
 			}
 			break;
-		/*
-		 * case R.id.contacts_layout_include: if
-		 * (aq.id(R.id.contacts_layout_include).getView().getVisibility() ==
-		 * View.GONE) { aq.id(R.id.contacts_layout_include) .getView()
-		 * .startAnimation( new ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f, 200,
-		 * aq.id(R.id.contacts_layout_include) .getView(), true)); } break;
-		 */
 		case R.id.before1:
 
 			if (aq.id(R.id.before_grid_view_linear).getView().getVisibility() == View.GONE) {
 				if (aq.id(R.id.before).getText().toString() == "") {
-					aq.id(R.id.before).text(
-							AddTaskBeforeFragment.beforeArray[1] + " Before")
-					/* .textColorId(R.color.deep_sky_blue) */;
-					/*
-					 * aq.id(R.id.reminder_image).background(
-					 * R.drawable.reminder_blue);
-					 */
+					aq.id(R.id.before)
+							.text(AddTaskBeforeFragment.beforeArray[1]
+									+ " Before").visibility(View.VISIBLE);
 
 				}
 				aq.id(R.id.before_grid_view_linear)
@@ -1698,18 +1671,11 @@ public class AddTaskFragment extends Fragment {
 			}
 
 			break;
-		case R.id.repeat:
+		case R.id.repeat_task_lay:
 			if (aq.id(R.id.repeat_linear_layout).getView().getVisibility() == View.GONE) {
 				if (aq.id(R.id.repeat).getText().toString() == "") {
-					aq.id(R.id.repeat).text(
-							"Repeat " + repeatArray[2].toLowerCase());
-					/* .textColorId(R.color.deep_sky_blue); *//*
-															 * aq.id(R.id.
-															 * repeat_image
-															 * ).background
-															 * (R.drawable
-															 * .repeat_blue);
-															 */
+					aq.id(R.id.repeat).text(repeatArray[2])
+							.visibility(View.VISIBLE);
 
 				}
 				aq.id(R.id.repeat_linear_layout)
@@ -1923,8 +1889,6 @@ public class AddTaskFragment extends Fragment {
 		pairs = new ArrayList<NameValuePair>();
 		pairs.add(new BasicNameValuePair("image", encoded));
 
-		// UrlEncodedFormEntity
-		// entity=null;
 		try {
 			entity = new UrlEncodedFormEntity(pairs, "UTF-8");
 			// entity.setContentType("application/json");
@@ -1943,14 +1907,11 @@ public class AddTaskFragment extends Fragment {
 					@Override
 					public void callback(String url, JSONObject json,
 							AjaxStatus status) {
-						// dismis();
 						String path = null;
 						try {
 
 							JSONObject obj1 = new JSONObject(json.toString());
 							path = obj1.getString("path");
-							// id = obj1.getInt("result");
-
 						} catch (Exception e) {
 						}
 
@@ -2036,14 +1997,11 @@ public class AddTaskFragment extends Fragment {
 		// create a new ImageView for each item referenced by the Adapter
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ImageView imageView;
-			if (convertView == null) { // if it's not recycled, initialize some
-										// attributes
+			if (convertView == null) {
 				imageView = new ImageView(mContext);
 				imageView.setLayoutParams(new GridView.LayoutParams(Utils
 						.convertDpToPixel(40, mContext), Utils
 						.convertDpToPixel(40, mContext)));
-				// imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-				// imageView.setPadding(8, 8, 8, 8);
 			} else {
 				imageView = (ImageView) convertView;
 			}
@@ -2052,8 +2010,6 @@ public class AddTaskFragment extends Fragment {
 					.getDrawable(R.drawable.label_background_dialog);
 			mDrawable.setColor(Color.parseColor(colors1[position]));
 			imageView.setBackground(mDrawable);
-
-			// imageView.setImageResource(mThumbIds[position]);
 			return imageView;
 		}
 

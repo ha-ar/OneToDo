@@ -6,17 +6,6 @@
     android:background="@drawable/input_fields_gray"
     android:orientation="vertical" >
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="27dp"
-        android:background="@drawable/underline_textview_lightgray"
-        android:paddingBottom="2dp"
-        android:text="DETAILS"
-        android:textColor="@color/active"
-        android:textSize="13.33sp"
-        android:typeface="monospace" />
-
     <LinearLayout
         android:id="@+id/calender_layout"
         android:layout_width="match_parent"

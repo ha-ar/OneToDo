@@ -18,16 +18,33 @@
             android:layout_height="20dp"
             android:background="@drawable/repeat1" />
 
-        <TextView
-            android:id="@+id/repeat"
+        <LinearLayout
+            android:id="@+id/repeat_task_lay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="Repeat"
-            android:paddingLeft="15dp"
-            android:textColor="@color/_4d4d4d"
-            android:textColorHint="@color/_999999"
-            android:textSize="17.78sp" />
+            android:gravity="center_vertical|left"
+            android:orientation="vertical"
+            android:paddingLeft="15dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:text="Repeat"
+                android:textColor="@color/_4d4d4d"
+                android:textColorHint="@color/_999999"
+                android:textSize="17.78sp" />
+
+            <TextView
+                android:id="@+id/repeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@color/_777777"
+                android:textColorHint="@color/_999999"
+                android:textSize="13.33sp"
+                android:visibility="gone" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout

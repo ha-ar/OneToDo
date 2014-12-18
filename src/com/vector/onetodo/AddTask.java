@@ -42,6 +42,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -55,13 +56,12 @@ import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
-import android.widget.ToggleButton;
 import android.widget.GridLayout.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
@@ -71,7 +71,6 @@ import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 import com.vector.model.TaskData;
 import com.vector.model.TaskData.Todos;
-import com.vector.onetodo.MainActivity.TabPagerAdapter;
 import com.vector.onetodo.db.gen.Assign;
 import com.vector.onetodo.db.gen.AssignDao;
 import com.vector.onetodo.db.gen.CheckList;
@@ -155,8 +154,8 @@ public class AddTask extends FragmentActivity {
 				String item = adapterTask.getItem(from);
 				adapterTask.remove(item);
 				adapterTask.insert(item, to);
-				//listViewTask.moveCheckState(from, to);
-				//AddTaskFragment.swapInflatedLayouts(mFrom, mTo);
+				// listViewTask.moveCheckState(from, to);
+				// AddTaskFragment.swapInflatedLayouts(mFrom, mTo);
 				inflateLayoutsTasks();
 			}
 		}
@@ -169,9 +168,12 @@ public class AddTask extends FragmentActivity {
 			if (from != to) {
 				String item = adapterEvent.getItem(from);
 				adapterEvent.remove(item);
-				adapterEvent.insert(item, to);
-				listViewEvent.moveCheckState(from, to);
-				AddEventFragment.swapInflatedLayouts(mFrom, mTo);
+				adapterEvent.insert(item, to);/*
+											 * listViewEvent.moveCheckState(from,
+											 * to);
+											 * AddEventFragment.swapInflatedLayouts
+											 * (mFrom, mTo);
+											 */
 				inflateLayoutsEvents();
 			}
 		}
@@ -282,20 +284,24 @@ public class AddTask extends FragmentActivity {
 		final LayoutInflater inflater = (LayoutInflater) AddTask.this
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		final View view = inflater.inflate(R.layout.popup_menu, null, false);
+		TextView cancel = (TextView) view.findViewById(R.id.cancel);
+		TextView ok = (TextView) view.findViewById(R.id.ok);
 
 		final LayoutInflater inflater2 = (LayoutInflater) AddTask.this
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		final View view2 = inflater2.inflate(R.layout.popup_menu_event, null,
 				false);
-
+		TextView cancel_event = (TextView) view2
+				.findViewById(R.id.cancel_event);
+		TextView ok_event = (TextView) view2.findViewById(R.id.ok_event);
 		TextView tx = (TextView) view.findViewById(R.id.show_hid_text);
 		tx.setTypeface(TypeFaces.get(this, Constants.MED_TYPEFACE));
 
-		final String[] array = {"Assign", "Due date", "Location", "Reminder", "Repeat",
-				"Label", "Subtasks", "Notes" };
+		final String[] array = { "Assign", "Due date", "Location", "Reminder",
+				"Repeat", "Label", "Subtasks", "Notes" };
 
-		String[] arrayEvent = { "Priority & Label", "Location",
-				"Reminder & Repeat", "Notes", "Image", "Assign & Share" };
+		String[] arrayEvent = { "Assign", "Due date", "Location", "Reminder",
+				"Repeat", "Label", "Subtasks", "Notes" };
 
 		ArrayList<String> arrayList = new ArrayList<String>(
 				Arrays.asList(array));
@@ -343,21 +349,32 @@ public class AddTask extends FragmentActivity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				if (AddTaskFragment.taskTitle.length() > 0) {
-					aq_menu.id(R.id.menu_item1).textColorId(R.color._4d4d4d);
-					aq_menu.id(R.id.menu_item2).textColorId(R.color._4d4d4d);
-				}
-					aq.id(R.id.imageView11234).image(
-							getResources()
-									.getDrawable(R.drawable.ic_show_black));
-					if (popupWindowAdd.isShowing())
-						popupWindowAdd.dismiss();
-					else {
-						popupWindowAdd.showAsDropDown(aq
-								.id(R.id.imageView11234).getView(), 0, 10);
+
+				if (Position == 0) {
+					if (AddTaskFragment.taskTitle.length() > 0) {
+						aq_menu.id(R.id.menu_item1)
+								.textColorId(R.color._4d4d4d);
+						aq_menu.id(R.id.menu_item2)
+								.textColorId(R.color._4d4d4d);
 					}
-				
+				} else if (Position == 1) {
+					if (AddEventFragment.taskTitle.length() > 0) {
+						aq_menu.id(R.id.menu_item1)
+								.textColorId(R.color._4d4d4d);
+						aq_menu.id(R.id.menu_item2)
+								.textColorId(R.color._4d4d4d);
+					}
+				}
+				aq.id(R.id.imageView11234).image(
+						getResources().getDrawable(R.drawable.ic_show_black));
+				if (popupWindowAdd.isShowing())
+					popupWindowAdd.dismiss();
+				else {
+					popupWindowAdd.showAsDropDown(aq.id(R.id.imageView11234)
+							.getView(), 0, 10);
+				}
 			}
+
 		});
 
 		aq_menu.id(R.id.menu_item1).clicked(new OnClickListener() {
@@ -374,13 +391,12 @@ public class AddTask extends FragmentActivity {
 				// TODO Auto-generated method stub
 			}
 		});
-		
 
-		popupWindowTask = new PopupWindow(view, Utils.getDpValue(250, this),
+		popupWindowTask = new PopupWindow(view, Utils.getDpValue(270, this),
 				WindowManager.LayoutParams.WRAP_CONTENT, true);
 		popupWindowTask.setBackgroundDrawable(new BitmapDrawable());
 		popupWindowTask.setOutsideTouchable(true);
-		popupWindowTask.setAnimationStyle(R.style.MainPopupAnimation);
+		// popupWindowTask.setAnimationStyle(R.style.MainPopupAnimation);
 		popupWindowTask.setOnDismissListener(new OnDismissListener() {
 
 			@Override
@@ -389,11 +405,50 @@ public class AddTask extends FragmentActivity {
 			}
 		});
 
-		popupWindowEvent = new PopupWindow(view2, Utils.getDpValue(250, this),
+		cancel_event.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				popupWindowEvent.dismiss();
+			}
+		});
+		ok_event.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+
+				popupWindowEvent.dismiss();
+			}
+		});
+
+		cancel.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				popupWindowTask.dismiss();
+			}
+		});
+		ok.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+
+				popupWindowTask.dismiss();
+			}
+		});
+		popupWindowEvent = new PopupWindow(view2, Utils.getDpValue(270, this),
 				WindowManager.LayoutParams.WRAP_CONTENT, true);
 		popupWindowEvent.setBackgroundDrawable(new BitmapDrawable());
-		popupWindowEvent.setOutsideTouchable(true);
-		popupWindowEvent.setAnimationStyle(R.style.MainPopupAnimation);
+		popupWindowEvent.setOutsideTouchable(true);/*
+													 * popupWindowEvent.
+													 * setAnimationStyle
+													 * (R.style.
+													 * MainPopupAnimation);
+													 */
 		popupWindowEvent.setOnDismissListener(new OnDismissListener() {
 
 			@Override
@@ -407,25 +462,47 @@ public class AddTask extends FragmentActivity {
 
 		listViewTask.setOnTouchListener(controllerTask);
 		listViewTask.setOnItemClickListener(new ListClickListenerTask());
-		
+
 		aq_menu.id(R.id.menu_item3).clicked(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Utils.hidKeyboard(AddTask.this);
-				if (popupWindowTask.isShowing())
-					popupWindowTask.dismiss();
-				else {
-					popupWindowAdd.dismiss();
-					layout_MainMenu.getForeground().setAlpha(150);
-					popupWindowTask.showAsDropDown(aq.id(R.id.menu_dots_task)
-							.getView(), 0, 10);
+				if (Position == 0) {
+					if (popupWindowTask.isShowing())
+						popupWindowTask.dismiss();
+					else {
+						popupWindowAdd.dismiss();
+						layout_MainMenu.getForeground().setAlpha(150);
+						/*
+						 * popupWindowTask.showAsDropDown(aq.id(R.id.main_container
+						 * ) .getView(), 0, 0,Gravity.CENTER);
+						 */
+						popupWindowTask.showAtLocation(
+								aq.id(R.id.menu_dots_task).getView(),
+								Gravity.CENTER_HORIZONTAL, 0, -3);
+					}
+				} else if (Position == 1) {
+
+					if (popupWindowEvent.isShowing())
+						popupWindowEvent.dismiss();
+					else {
+						popupWindowAdd.dismiss();
+						layout_MainMenu.getForeground().setAlpha(150);
+						/*
+						 * popupWindowTask.showAsDropDown(aq.id(R.id.main_container
+						 * ) .getView(), 0, 0,Gravity.CENTER);
+						 */
+						popupWindowEvent.showAtLocation(
+								aq.id(R.id.menu_dots_task).getView(),
+								Gravity.CENTER_HORIZONTAL, 0, -7);
+					}
+
 				}
-			
 			}
 		});
-		
+
 		aq.id(R.id.menu_dots_task).clicked(new OnClickListener() {
 
 			@Override
@@ -546,7 +623,15 @@ public class AddTask extends FragmentActivity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
+			position = position + 1;
+			if (position == 2) {
+				position = position + 1;
+			} else if (position > 1) {
+				position = position + 1;
+			}
+
 			int layoutId = AddTaskFragment.inflatingLayouts.get(position);
+
 			CheckedTextView checkedTextView = (CheckedTextView) view
 					.findViewById(R.id.checkbox);
 			if (checkedTextView.isChecked()) {
@@ -554,6 +639,7 @@ public class AddTask extends FragmentActivity {
 			} else {
 				aq.id(layoutId).gone();
 			}
+
 		}
 
 	}
@@ -563,8 +649,14 @@ public class AddTask extends FragmentActivity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
+			position = position + 1;
+			if (position == 2) {
+				position = position + 1;
+			} else if (position > 1) {
+				position = position + 1;
+			}
 			int layoutId = AddEventFragment.inflatingLayoutsEvents
-					.get(position + 1);
+					.get(position);
 			CheckedTextView checkedTextView = (CheckedTextView) view
 					.findViewById(R.id.checkbox);
 			if (checkedTextView.isChecked()) {

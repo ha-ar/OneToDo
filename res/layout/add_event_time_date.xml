@@ -3,19 +3,8 @@
     android:id="@+id/time_date_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/light_grey_color"
+    android:background="@drawable/input_fields_gray"
     android:orientation="vertical" >
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/underline_textview_lightgray"
-        android:paddingBottom="2dp"
-        android:text="DETAILS"
-        android:textColor="@color/active"
-        android:textSize="15.56sp"
-        android:typeface="monospace" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,8 +36,8 @@
                 android:layout_height="match_parent"
                 android:gravity="left|center_vertical"
                 android:text="All day"
-                android:textColor="@color/hint_color"
-                android:textColorHint="@color/hint_color"
+                android:textColor="@color/_4d4d4d"
+                android:textColorHint="@color/_999999"
                 android:textSize="17.78sp" />
 
             <ToggleButton
@@ -65,10 +54,9 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/schedule_date"
+        android:id="@+id/from_layout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:animateLayoutChanges="true"
         android:animationCache="true"
         android:background="@drawable/input_fields_gray"
         android:gravity="center_vertical"
@@ -86,7 +74,7 @@
         <RelativeLayout
             android:id="@+id/time_date_from"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:gravity="center_vertical|left"
             android:paddingLeft="15dp" >
 
@@ -96,8 +84,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|left"
                 android:text="From"
-                android:textColor="@color/hint_color"
-                android:textColorHint="@color/hint_color"
+                android:textColor="@color/_4d4d4d"
+                android:textColorHint="@color/_999999"
                 android:textSize="17.78sp" />
 
             <TextView
@@ -107,8 +95,8 @@
                 android:layout_marginRight="5dp"
                 android:layout_toRightOf="@+id/from"
                 android:hint="Day"
-                android:textColor="@color/dark_grey_color"
-                android:textColorHint="@color/hint_color"
+                android:textColor="@color/_4d4d4d"
+                android:textColorHint="@color/_999999"
                 android:textSize="17.78sp" />
 
             <TextView
@@ -118,8 +106,8 @@
                 android:layout_marginRight="5dp"
                 android:layout_toRightOf="@+id/day_field_from"
                 android:hint="26"
-                android:textColor="@color/dark_grey_color"
-                android:textColorHint="@color/hint_color"
+                android:textColor="@color/_4d4d4d"
+                android:textColorHint="@color/_999999"
                 android:textSize="17.78sp" />
 
             <TextView
@@ -128,8 +116,8 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/date_field_from"
                 android:hint="Month"
-                android:textColor="@color/dark_grey_color"
-                android:textColorHint="@color/hint_color"
+                android:textColor="@color/_4d4d4d"
+                android:textColorHint="@color/_999999"
                 android:textSize="17.78sp" />
 
             <TextView
@@ -138,8 +126,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:hint="00:00"
-                android:textColor="@color/dark_grey_color"
-                android:textColorHint="@color/hint_color"
+                android:textColor="@color/_4d4d4d"
+                android:textColorHint="@color/_999999"
                 android:textSize="17.78sp" />
         </RelativeLayout>
     </LinearLayout>
@@ -150,9 +138,11 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         layout="@layout/date_time_layout_event_end"
+        android:background="@android:color/transparent"
         android:visibility="gone" />
 
     <LinearLayout
+        android:id="@+id/to_layout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:animateLayoutChanges="true"
@@ -173,7 +163,7 @@
         <RelativeLayout
             android:id="@+id/time_date_to"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:gravity="center_vertical|left"
             android:paddingLeft="15dp" >
 
@@ -183,8 +173,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="left|center_vertical"
                 android:text="To"
-                android:textColor="@color/hint_color"
-                android:textColorHint="@color/hint_color"
+                android:textColor="@color/_4d4d4d"
+                android:textColorHint="@color/_999999"
                 android:textSize="17.78sp" />
 
             <TextView
@@ -194,8 +184,8 @@
                 android:layout_marginRight="5dp"
                 android:layout_toRightOf="@+id/day_field_to"
                 android:hint="26"
-                android:textColor="@color/dark_grey_color"
-                android:textColorHint="@color/hint_color"
+                android:textColor="@color/_4d4d4d"
+                android:textColorHint="@color/_999999"
                 android:textSize="17.78sp" />
 
             <TextView
@@ -204,8 +194,8 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/date_field_to"
                 android:hint="Month"
-                android:textColor="@color/dark_grey_color"
-                android:textColorHint="@color/hint_color"
+                android:textColor="@color/_4d4d4d"
+                android:textColorHint="@color/_999999"
                 android:textSize="17.78sp" />
 
             <TextView
@@ -217,8 +207,8 @@
                 android:layout_marginRight="5dp"
                 android:layout_toRightOf="@+id/to"
                 android:hint="Day"
-                android:textColor="@color/dark_grey_color"
-                android:textColorHint="@color/hint_color"
+                android:textColor="@color/_4d4d4d"
+                android:textColorHint="@color/_999999"
                 android:textSize="17.78sp" />
 
             <TextView
@@ -227,8 +217,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:hint="00:00"
-                android:textColor="@color/dark_grey_color"
-                android:textColorHint="@color/hint_color"
+                android:textColor="@color/_4d4d4d"
+                android:textColorHint="@color/_999999"
                 android:textSize="17.78sp"
                 android:visibility="visible" />
         </RelativeLayout>

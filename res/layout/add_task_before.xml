@@ -44,7 +44,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="15 Minutes Before"
                 android:textColor="@color/_777777"
                 android:textColorHint="@color/_999999"
                 android:textSize="13.33sp"
