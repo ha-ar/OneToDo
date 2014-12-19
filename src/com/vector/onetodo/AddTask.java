@@ -140,9 +140,9 @@ public class AddTask extends FragmentActivity {
 	List<ToDo> tod;
 	ProgressDialog dialog;
 	public static PopupWindow popupWindowAdd;
-	private PopupWindow popupWindowTask, popupWindowEvent;
-	DragSortListView listViewTask, listViewEvent;
-	ArrayAdapter<String> adapterTask, adapterEvent;
+	private PopupWindow popupWindowTask, popupWindowEvent, popupWindowSchedule;
+	DragSortListView listViewTask, listViewSchedule,listViewEvent;
+	ArrayAdapter<String> adapterTask, adapterEvent,adapterSchedule;
 	SQLiteDatabase db;
 	public static FrameLayout layout_MainMenu;
 
@@ -168,13 +168,21 @@ public class AddTask extends FragmentActivity {
 			if (from != to) {
 				String item = adapterEvent.getItem(from);
 				adapterEvent.remove(item);
-				adapterEvent.insert(item, to);/*
-											 * listViewEvent.moveCheckState(from,
-											 * to);
-											 * AddEventFragment.swapInflatedLayouts
-											 * (mFrom, mTo);
-											 */
+				adapterEvent.insert(item, to);
 				inflateLayoutsEvents();
+			}
+		}
+	};
+
+	private DragSortListView.DropListener onDropSchedule = new DragSortListView.DropListener() {
+		@Override
+		public void drop(int from, int to) {
+			int mFrom = from + 1, mTo = to + 1;
+			if (from != to) {
+				String item = adapterSchedule.getItem(from);
+				adapterSchedule.remove(item);
+				adapterSchedule.insert(item, to);
+				inflateLayoutsSchedule();
 			}
 		}
 	};
@@ -195,14 +203,7 @@ public class AddTask extends FragmentActivity {
 
 		dialoglayout5 = getLayoutInflater().inflate(R.layout.add_location,
 				null, false);
-		/*
-		 * convertPixelsToDp(72, this);
-		 * android.widget.RelativeLayout.LayoutParams rl = new
-		 * android.widget.RelativeLayout.LayoutParams(
-		 * android.widget.RelativeLayout.LayoutParams.MATCH_PARENT, (int)
-		 * Constants.dp); RelativeLayout rl1 = (RelativeLayout)
-		 * findViewById(R.id.header); rl1.setLayoutParams(rl);
-		 */
+		
 		db_initialize();
 		aq = new AQuery(this);
 		init();
@@ -294,6 +295,13 @@ public class AddTask extends FragmentActivity {
 		TextView cancel_event = (TextView) view2
 				.findViewById(R.id.cancel_event);
 		TextView ok_event = (TextView) view2.findViewById(R.id.ok_event);
+		
+		final View viewS = inflater2.inflate(R.layout.popup_menu_schedule, null,
+				false);
+		TextView cancel_schedule = (TextView) viewS
+				.findViewById(R.id.cancel_event);
+		TextView ok_schedule = (TextView) viewS.findViewById(R.id.ok_event);
+		
 		TextView tx = (TextView) view.findViewById(R.id.show_hid_text);
 		tx.setTypeface(TypeFaces.get(this, Constants.MED_TYPEFACE));
 
@@ -302,15 +310,33 @@ public class AddTask extends FragmentActivity {
 
 		String[] arrayEvent = { "Assign", "Due date", "Location", "Reminder",
 				"Repeat", "Label", "Subtasks", "Notes" };
+		
+		String[] arraySchedule = { "Assign", "Due date", "Location", "Reminder",
+				"Repeat", "Label", "Subtasks", "Notes" };
 
 		ArrayList<String> arrayList = new ArrayList<String>(
 				Arrays.asList(array));
 
 		ArrayList<String> arrayListEvent = new ArrayList<String>(
 				Arrays.asList(arrayEvent));
+		
+		ArrayList<String> arrayListSchedule = new ArrayList<String>(
+				Arrays.asList(arraySchedule));
+		
+		listViewSchedule = (DragSortListView) viewS.findViewById(R.id.list_schedule);
+		adapterSchedule = new ArrayAdapter<String>(AddTask.this,
+				R.layout.popup_menu_items_events, R.id.text, arrayListSchedule);
+
+		listViewSchedule.setAdapter(adapterSchedule);
+		listViewSchedule.setDropListener(onDropSchedule);
+		
+		for (int i = 0; i < array.length; i++)
+			listViewSchedule.setItemChecked(i, true);
+		
+		
 		listViewEvent = (DragSortListView) view2.findViewById(R.id.list_event);
 		adapterEvent = new ArrayAdapter<String>(AddTask.this,
-				R.layout.popup_menu_items_events, R.id.text, arrayListEvent);
+				R.layout.popup_menu_items_schedule, R.id.text, arrayListEvent);
 
 		listViewEvent.setAdapter(adapterEvent);
 		listViewEvent.setDropListener(onDropEvent);
@@ -392,6 +418,18 @@ public class AddTask extends FragmentActivity {
 			}
 		});
 
+		popupWindowSchedule= new PopupWindow(viewS, Utils.getDpValue(270, this),
+				WindowManager.LayoutParams.WRAP_CONTENT, true);
+		popupWindowSchedule.setBackgroundDrawable(new BitmapDrawable());
+		popupWindowSchedule.setOutsideTouchable(true);
+		popupWindowSchedule.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss() {
+				layout_MainMenu.getForeground().setAlpha(0);
+			}
+		});
+		
 		popupWindowTask = new PopupWindow(view, Utils.getDpValue(270, this),
 				WindowManager.LayoutParams.WRAP_CONTENT, true);
 		popupWindowTask.setBackgroundDrawable(new BitmapDrawable());
@@ -499,6 +537,22 @@ public class AddTask extends FragmentActivity {
 								Gravity.CENTER_HORIZONTAL, 0, -7);
 					}
 
+				}else if (Position == 2) {
+
+					if (popupWindowSchedule.isShowing())
+						popupWindowSchedule.dismiss();
+					else {
+						popupWindowAdd.dismiss();
+						layout_MainMenu.getForeground().setAlpha(150);
+						/*
+						 * popupWindowTask.showAsDropDown(aq.id(R.id.main_container
+						 * ) .getView(), 0, 0,Gravity.CENTER);
+						 */
+						popupWindowSchedule.showAtLocation(
+								aq.id(R.id.menu_dots_task).getView(),
+								Gravity.CENTER_HORIZONTAL, 0, -7);
+					}
+
 				}
 			}
 		});
@@ -510,6 +564,15 @@ public class AddTask extends FragmentActivity {
 
 			}
 		});
+		
+
+
+		DragSortController controllerSchedule = new DragSortController(
+				listViewSchedule);
+		controllerSchedule.setDragHandleId(R.id.drag_handle);
+
+		listViewSchedule.setOnTouchListener(controllerSchedule);
+		listViewSchedule.setOnItemClickListener(new ListClickListenerSchedule());
 
 		DragSortController controllerEvent = new DragSortController(
 				listViewEvent);
@@ -582,6 +645,21 @@ public class AddTask extends FragmentActivity {
 			param.rowSpec = GridLayout.spec(key);
 			View child = gridLayout
 					.findViewById(AddEventFragment.inflatingLayoutsEvents
+							.get(key));
+			child.setLayoutParams(param);
+		}
+		gridLayout.invalidate();
+	}
+
+	public void inflateLayoutsSchedule() {
+		GridLayout gridLayout = (GridLayout) findViewById(R.id.inner_container_scheduale);
+		for (int key : AddScheduleFragment.inflatingLayouts.keySet()) {
+			GridLayout.LayoutParams param = new GridLayout.LayoutParams();
+			param.height = LayoutParams.WRAP_CONTENT;
+			param.width = LayoutParams.MATCH_PARENT;
+			param.rowSpec = GridLayout.spec(key);
+			View child = gridLayout
+					.findViewById(AddScheduleFragment.inflatingLayouts
 							.get(key));
 			child.setLayoutParams(param);
 		}
@@ -668,6 +746,30 @@ public class AddTask extends FragmentActivity {
 
 	}
 
+	public class ListClickListenerSchedule implements OnItemClickListener {
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			position = position + 1;
+			if (position == 2) {
+				position = position + 1;
+			} else if (position > 1) {
+				position = position + 1;
+			}
+			int layoutId = AddScheduleFragment.inflatingLayouts
+					.get(position);
+			CheckedTextView checkedTextView = (CheckedTextView) view
+					.findViewById(R.id.checkbox);
+			if (checkedTextView.isChecked()) {
+				aq.id(layoutId).visible();
+			} else {
+				aq.id(layoutId).gone();
+			}
+		}
+
+	}
+
 	public class AddTaskPagerFragment extends FragmentPagerAdapter {
 
 		public AddTaskPagerFragment(FragmentManager fm) {
@@ -740,10 +842,10 @@ public class AddTask extends FragmentActivity {
 				label_name = aq.id(R.id.spinner_labels_task).getText()
 						.toString();
 				if (!label_name.equals("")) {
-					String label_color = aq.id(R.id.spinner_labels_task)
+					/*String label_color = aq.id(R.id.spinner_labels_task)
 							.getTextView().getBackground().getConstantState()
 							.toString();
-					Log.v("Log v ", label_color);
+					Log.v("Log v ", label_color);*/
 				} // location = aq.id(R.id.location_task).getText().toString();
 				before = aq.id(R.id.before).getText().toString();
 				before1 = aq.id(R.id.repeat).getText().toString();

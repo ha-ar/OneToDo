@@ -31,6 +31,10 @@ public class Country extends Fragment {
 	AQuery aq;
 	ArrayList<String> country;
 	ArrayList<String> code;
+
+	InputMethodManager imm;
+		
+			
 	// List view
 	public ListView lv;
 	// Listview Adapter
@@ -47,6 +51,8 @@ public class Country extends Fragment {
 		inputSearch = (EditText) view.findViewById(R.id.search);
 		country = new ArrayList<String>();
 		code = new ArrayList<String>();
+		imm = (InputMethodManager) getActivity()
+				.getSystemService(getActivity().INPUT_METHOD_SERVICE);
 		country();
 		aq=new AQuery(getActivity(), view);
 		return view;
@@ -56,11 +62,7 @@ public class Country extends Fragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onViewCreated(view, savedInstanceState);
-		InputMethodManager imm = (InputMethodManager) getActivity()
-				.getSystemService(getActivity().INPUT_METHOD_SERVICE);
-		if (imm != null) {
-			imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-		}
+	
 		adapter=new Adapter(getActivity());
 		lv.setAdapter(adapter);
 		lv.setOnItemClickListener(new OnItemClickListener() {
@@ -72,8 +74,9 @@ public class Country extends Fragment {
 				SplashScreen.code=code.get(arg2);
 				SplashScreen.country=country.get(arg2);
 				Toast.makeText(getActivity(), ""+code.get(arg2), Toast.LENGTH_SHORT).show();
-
+				imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 			
+				
 				getActivity().getSupportFragmentManager().popBackStack();
 			}
 		});
@@ -86,7 +89,12 @@ public class Country extends Fragment {
 				aq.id(R.id.imageView2).getImageView().setVisibility(View.GONE);
 				aq.id(R.id.search).getEditText().setVisibility(View.VISIBLE);
 				aq.id(R.id.search).getEditText().setEnabled(true);
-
+				aq.id(R.id.search).getEditText().requestFocus();
+				if (imm != null) {
+					imm.showSoftInput(aq.id(R.id.search).getEditText(), InputMethodManager.SHOW_IMPLICIT);
+				}
+				/*Ehour.setFocusable(true);
+				Ehour.requestFocus();*/
 				/*aq.id(R.id.search).getEditText().setFocusable(true);*/
 			}
 		});

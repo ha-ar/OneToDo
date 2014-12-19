@@ -18,7 +18,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -37,7 +36,7 @@ public class AddTaskBeforeFragment extends Fragment {
 			"30 Mins", "2 Hours", "Custom" };
 	static final String[] values = { "Mins", "Hours", "Days", "Weeks",
 			"Months", "Years" };
-	static View viewP, viewl, button = null, temp;
+	static View viewP, viewl, button = null;
 	String Title, pname = null, padress = null;
 	private static View previousSelected;
 	private static View previousSelectedLocation;
@@ -345,7 +344,6 @@ public class AddTaskBeforeFragment extends Fragment {
 			aq.id(R.id.pre_defined_4).getTextView()
 					.setOnLongClickListener(new LocationEditClickListener());
 
-			temp = aq.id(R.id.pre_defined_1).getView();
 			aq.id(R.id.pre_defined_1).clicked(new LocationTagClickListener());
 			aq.id(R.id.pre_defined_2).clicked(new LocationTagClickListener());
 			aq.id(R.id.pre_defined_3).clicked(new LocationTagClickListener());

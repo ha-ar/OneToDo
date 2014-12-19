@@ -96,7 +96,6 @@ import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 import com.astuetz.PagerSlidingTabStrip;
 import com.devspark.appmsg.AppMsg;
-import com.vector.onetodo.AddTask.add;
 import com.vector.onetodo.db.gen.LabelName;
 import com.vector.onetodo.utils.Constants;
 import com.vector.onetodo.utils.ScaleAnimToHide;
@@ -113,7 +112,7 @@ public class AddTaskFragment extends Fragment {
 	HttpPost post;
 	List<NameValuePair> pairs;
 	HttpResponse response = null;
-	add asyn;
+	//add asyn;
 	Uri filename;
 	Editor editor, editorattach;
 	String plabel = null;
@@ -122,8 +121,7 @@ public class AddTaskFragment extends Fragment {
 	int MaxId = -1;
 	private static int Tag = 0;
 	private PopupWindow popupWindowAttach;
-	
-	
+
 	// public PopupWindow popupImage;
 	public static AQuery aq, popupAQ, aq_edit, aqd, aq_del, att, aqa, aq_menu;
 
@@ -466,25 +464,7 @@ public class AddTaskFragment extends Fragment {
 		gridView = (GridView) vie.findViewById(R.id.add_label_grid);
 
 		gridView.setAdapter(new LabelImageAdapter(getActivity()));
-		/*
-		 * gridView.setAdapter(new ArrayAdapter<String>(getActivity(),
-		 * R.layout.grid_layout_label_image_view,labels_array1) {
-		 * 
-		 * @Override public View getView(int position, View convertView,
-		 * ViewGroup parent) { ImageView textView = (ImageView)
-		 * super.getView(position, convertView, parent); //if
-		 * (!textView.getText().toString().equals("New")) {
-		 * //textView.setTextColor(Color.TRANSPARENT); GradientDrawable
-		 * mDrawable = (GradientDrawable) getResources()
-		 * .getDrawable(R.drawable.label_background_dialog);
-		 * mDrawable.setColor(Color.parseColor(colors1[position]));
-		 * textView.setBackground(mDrawable); //} return textView; }
-		 * 
-		 * });
-		 */
-
-		// gridView.setItemChecked(0, true);
-		// /* gridView.getSelectedView(). */
+	
 
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -1075,14 +1055,7 @@ public class AddTaskFragment extends Fragment {
 			}
 		});
 
-		
-		
-		
-		
-		
-		
-		
-		//***************************** Attachment
+		// ***************************** Attachment
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 
 		View attachment = inflater
@@ -1158,10 +1131,9 @@ public class AddTaskFragment extends Fragment {
 			}
 		});
 
-		//********************** Attachment End
-		
-		
-		//***************************** Priority
+		// ********************** Attachment End
+
+		// ***************************** Priority
 		lastCheckedId = ((RadioGroup) aq.id(R.id.priority_radio_buttons)
 				.getView()).getCheckedRadioButtonId();
 		((RadioGroup) aq.id(R.id.priority_radio_buttons).getView())
@@ -1444,7 +1416,8 @@ public class AddTaskFragment extends Fragment {
 			showCurrentView(v);
 			setAllOtherFocusableFalse(v);
 			if (v.getId() == R.id.location_before
-					|| v.getId() == R.id.task_title1 || v.getId() == R.id.notes
+					|| v.getId() == R.id.task_title1 
+					|| v.getId() == R.id.notes
 					|| v.getId() == R.id.location_task)
 				Utils.showKeyboard(getActivity());
 			else
@@ -1526,7 +1499,7 @@ public class AddTaskFragment extends Fragment {
 				Tag = Tag + 1;
 				imagemenu.setTag(Tag);
 				child.setId(Tag);
-				
+
 				imagemenu.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -1537,7 +1510,7 @@ public class AddTaskFragment extends Fragment {
 								Toast.LENGTH_LONG).show();
 						ll_iner = (LinearLayout) item.findViewById(Integer
 								.parseInt(arg0.getTag().toString()));
-						
+
 						if (popupWindowAttach.isShowing()) {
 							popupWindowAttach.dismiss();
 
