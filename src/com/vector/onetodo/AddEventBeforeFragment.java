@@ -219,8 +219,7 @@ public class AddEventBeforeFragment extends Fragment {
 								if (beforeArray[position] == "On Time") {
 									before.setText(beforeArray[position]);
 								} else {
-									before.setText("Reminde before "
-											+ beforeArray[position]);
+									before.setText(beforeArray[position]+ " Before");
 								}
 								/*before.setTextColor(getResources().getColor(
 										R.color.active));
@@ -252,11 +251,6 @@ public class AddEventBeforeFragment extends Fragment {
 					customDays.clearFocus();
 					TextView before = (TextView) AddEventFragment.allView
 							.findViewById(R.id.before_event);
-					/*ImageView reminderImage = (ImageView) getActivity()
-							.findViewById(R.id.before_event_image);
-
-					reminderImage.setBackground(getResources().getDrawable(
-							R.drawable.reminder_blue));*/
 					before.setVisibility(View.VISIBLE);
 					before.setText(numberPicker.getValue()
 							+ " " + values[customDays.getValue()]+" Before" );

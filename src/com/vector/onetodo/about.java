@@ -56,6 +56,7 @@ public class about extends Fragment {
 	TextView confirm, save;
 	int position = 0;
 	public static View view;
+	InputMethodManager imm;
 
 	@Override
 	public void onResume() {
@@ -66,6 +67,11 @@ public class about extends Fragment {
 			aq.id(R.id.country).getEditText()
 					.setSelection(SplashScreen.code.length());
 			aq.id(R.id.spinner1).text(SplashScreen.country);
+			aq.id(R.id.country).getEditText().setEnabled(true);
+			aq.id(R.id.country).getEditText().requestFocus();
+			if (imm != null) {
+				imm.showSoftInput(aq.id(R.id.country).getEditText(), InputMethodManager.SHOW_IMPLICIT);
+			}
 			position = 1;
 		}
 	}
@@ -76,6 +82,8 @@ public class about extends Fragment {
 		// TODO Auto-generated method stub
 		view = inflater.inflate(R.layout.about, container, false);
 		aq = new AQuery(getActivity(), view);
+		imm = (InputMethodManager) getActivity()
+				.getSystemService(getActivity().INPUT_METHOD_SERVICE);
 		return view;
 
 	}
@@ -121,6 +129,7 @@ public class about extends Fragment {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
+				//imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
 				Fragment fr = new Country();
 				FragmentTransaction trans = getFragmentManager()
 						.beginTransaction();
