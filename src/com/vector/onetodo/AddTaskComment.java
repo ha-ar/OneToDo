@@ -30,6 +30,9 @@ import android.widget.TextView;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
+import com.vector.onetodo.R;
+import com.vector.onetodo.R.id;
+import com.vector.onetodo.R.layout;
 import com.vector.onetodo.utils.Constants;
 import com.vector.onetodo.utils.Utils;
 

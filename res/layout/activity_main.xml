@@ -1,149 +1,27 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/framedim"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="#ffffff" >
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/active"
+        android:minHeight="?attr/actionBarSize" />
 
-        <RelativeLayout
-            android:id="@+id/frameabove"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#ffffff" >
-
-            <RelativeLayout
-                android:id="@+id/header_layout"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@color/active"
-                android:visibility="visible" >
-
-                <ImageView
-                    android:id="@+id/header_logo"
-                    android:layout_width="25dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="25dp"
-                    android:src="@drawable/drag" />
-
-                <!--
-                    <TextView
-                        android:id="@+id/search"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="48dp"
-                        android:drawableRight="@android:drawable/ic_search_category_default"
-                        android:ems="3"
-                        android:textColor="@android:color/white" >
-
-                        <requestFocus />
-                    </TextView>
-                -->
-
-                <TextView
-                    android:id="@+id/weather"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="25dp"
-                    android:layout_toRightOf="@+id/header_logo"
-                    android:text="To-do&apos;s"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp" />
-
-                <ImageView
-                    android:id="@+id/menu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_show_white" />
-
-                <ImageView
-                    android:id="@+id/notif"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:layout_toLeftOf="@+id/menu"
-                    android:src="@drawable/ic_bell" />
-
-                <ImageView
-                    android:id="@+id/search_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:layout_toLeftOf="@+id/notif"
-                    android:src="@drawable/ic_action_search" />
-
-                <TextView
-                    android:id="@+id/textView1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignRight="@+id/notif"
-                    android:layout_alignTop="@+id/menu"
-                    android:background="@drawable/round_notification"
-                    android:gravity="center"
-                    android:padding="2.3dp"
-                    android:text="99"
-                    android:textColor="#ffffff"
-                    android:textSize="8sp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/search_layout"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@color/active"
-                android:visibility="gone" >
-
-                <ImageView
-                    android:id="@+id/search_back"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="25dp"
-                    android:padding="5dp"
-                    android:src="@drawable/back" />
-
-                <EditText
-                    android:id="@+id/search_text"
-                    style="@style/EditTextCustomHolo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="5dp"
-                    android:ems="12"
-                    android:hint="Search ONE-todo"
-                    android:paddingLeft="20sp"
-                    android:singleLine="true"
-                    android:textColorHighlight="#88D2F0"
-                    android:textColorHint="#4DFFFFFF" >
-
-                    <requestFocus />
-                </EditText>
-            </RelativeLayout>
-            <!-- </LinearLayout> -->
-        </RelativeLayout>
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
         <FrameLayout
             android:id="@+id/container_inner"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/frameabove" >
+            android:layout_height="match_parent" >
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -179,7 +57,8 @@
                     <android.support.v4.view.ViewPager
                         android:id="@+id/pager"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:background="#eeeeee" />
 
                     <TextView
                         android:id="@+id/pagertext"
@@ -195,16 +74,12 @@
             </RelativeLayout>
         </FrameLayout>
 
-        <ImageView
-            android:id="@+id/add_task_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="40dp"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/ic_plus"
-            android:text="TextView" />
-    </RelativeLayout>
+        <include
+            android:id="@+id/content_frame"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            layout="@layout/menu_drawer" />
+    </android.support.v4.widget.DrawerLayout>
 
-</FrameLayout>
+</LinearLayout>

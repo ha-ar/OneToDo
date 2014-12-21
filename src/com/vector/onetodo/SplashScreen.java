@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -34,7 +33,6 @@ public class SplashScreen extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
 		regid=this.getSharedPreferences("Registration", 0);

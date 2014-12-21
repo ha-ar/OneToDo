@@ -1149,8 +1149,8 @@ public class CaldroidFragment extends DialogFragment {
 		});
 
 		// For the monthTitleTextView
-		monthTitleTextView = (TextView) getActivity()
-				.findViewById(R.id.weather);
+//		monthTitleTextView = (TextView) getActivity()
+//				.findViewById(R.id.weather);
 		monthTitleTextView.setTypeface(TypeFaces.get(getActivity(),
 				"HeleveticaNeueTStd-Roman"));
 

@@ -1,10 +1,5 @@
 package com.vector.onetodo;
 
-import com.androidquery.AQuery;
-import com.astuetz.PagerSlidingTabStrip;
-import com.vector.onetodo.Invitations.TabPagerAdapter1;
-import com.vector.onetodo.utils.Utils;
-
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -20,6 +15,10 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.TextView;
 
+import com.androidquery.AQuery;
+import com.astuetz.PagerSlidingTabStrip;
+import com.vector.onetodo.utils.Utils;
+
 public class Projects extends Fragment implements ProjectsScrollHolder {
 
 	AQuery aq;
@@ -34,7 +33,7 @@ public class Projects extends Fragment implements ProjectsScrollHolder {
 		// TODO Auto-generated method stub
 		View view = inflater.inflate(R.layout.projects, container, false);
 		aq=new AQuery(getActivity(), view);
-		title=(TextView) getActivity().findViewById(R.id.weather);
+//		title=(TextView) getActivity().findViewById(R.id.weather);
 		
 		return view;
 	}

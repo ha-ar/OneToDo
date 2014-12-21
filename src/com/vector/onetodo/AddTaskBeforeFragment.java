@@ -24,6 +24,11 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
+import com.vector.onetodo.R;
+import com.vector.onetodo.R.color;
+import com.vector.onetodo.R.drawable;
+import com.vector.onetodo.R.id;
+import com.vector.onetodo.R.layout;
 
 public class AddTaskBeforeFragment extends Fragment {
 

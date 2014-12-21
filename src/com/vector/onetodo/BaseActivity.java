@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 
 import com.androidquery.AQuery;
 import com.vector.onetodo.db.gen.DaoMaster;
@@ -13,7 +13,7 @@ import com.vector.onetodo.db.gen.LabelName;
 import com.vector.onetodo.db.gen.LabelNameDao;
 import com.vector.onetodo.utils.Constants;
 
-public abstract class BaseActivity extends FragmentActivity {
+public abstract class BaseActivity extends ActionBarActivity {
 
 	public static AQuery aq, aqd, aq_menu;
 	public static HashMap<Integer, String> pageName = new HashMap<Integer, String>(),

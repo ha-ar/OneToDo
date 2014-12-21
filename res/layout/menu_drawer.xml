@@ -1,745 +1,228 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/menu_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@android:color/white"
     android:orientation="vertical" >
 
-    <ScrollView
-        android:id="@+id/scroll_main"
+    <RelativeLayout
+        android:id="@+id/user"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible" >
+        android:layout_height="100dp"
+        android:background="@drawable/rec" >
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:id="@+id/user_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageView1"
+            android:layout_alignTop="@+id/imageView1"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/imageView1"
+            android:gravity="left|center_vertical"
             android:orientation="vertical" >
 
-            <RelativeLayout
-                android:id="@+id/user"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/rec" >
-
-                <LinearLayout
-                    android:id="@+id/user_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/imageView1"
-                    android:layout_alignTop="@+id/imageView1"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@+id/imageView1"
-                    android:gravity="left|center_vertical"
-                    android:orientation="vertical" >
-
-                    <TextView
-                        android:id="@+id/username"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Guest User"
-                        android:textColor="@android:color/white"
-                        android:textSize="17.78sp" />
-
-                    <TextView
-                        android:id="@+id/email"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/username"
-                        android:text=""
-                        android:textColor="@android:color/white"
-                        android:textSize="15.56sp"
-                        android:visibility="gone" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/manage_account"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignTop="@+id/user_layout"
-                    android:layout_marginRight="52dp"
-                    android:drawableBottom="@drawable/ic_down"
-                    android:paddingRight="10dp" />
-
-                <TextView
-                    android:id="@+id/imageView1"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="18dp"
-                    android:background="@drawable/round_white"
-                    android:gravity="center"
-                    android:text="GU"
-                    android:textColor="@color/active"
-                    android:textSize="20sp" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/manage"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="clip_vertical"
-                android:orientation="horizontal"
-                android:paddingBottom="15dp"
-                android:paddingLeft="15dp"
-                android:paddingTop="15dp"
-                android:visibility="gone" >
-
-                <ImageView
-                    android:id="@+id/manage_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/settings" />
-
-                <TextView
-                    android:id="@+id/manage_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="20dp"
-                    android:text="Manage account"
-                    android:textColor="@color/_4d4d4d"
-                    android:textSize="17.78sp" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#80e6e6e6" />
-
-            <LinearLayout
-                android:id="@+id/todo_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="clip_vertical"
-                android:orientation="horizontal"
-                android:paddingBottom="10dp"
-                android:paddingLeft="15dp"
-                android:paddingTop="10dp" >
-
-                <ImageView
-                    android:id="@+id/todo_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/list_black" />
-
-                <TextView
-                    android:id="@+id/todo_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="29dp"
-                    android:text="To-do&apos;s"
-                    android:textColor="@color/_4d4d4d"
-                    android:textSize="17.78sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/calendar_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="clip_vertical"
-                android:orientation="horizontal"
-                android:paddingBottom="10dp"
-                android:paddingLeft="15dp"
-                android:paddingTop="10dp" >
-
-                <ImageView
-                    android:id="@+id/calendar_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/calendar_black" />
-
-                <TextView
-                    android:id="@+id/calendar_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="29dp"
-                    android:text="Calender"
-                    android:textColor="@color/_4d4d4d"
-                    android:textSize="17.78sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/project_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:gravity="clip_vertical"
-                android:orientation="horizontal"
-                android:paddingBottom="10dp"
-                android:paddingLeft="15dp"
-                android:paddingTop="10dp" >
-
-                <ImageView
-                    android:id="@+id/project_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/progress_black" />
-
-                <TextView
-                    android:id="@+id/project_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="29dp"
-                    android:text="Projects"
-                    android:textColor="@color/_4d4d4d"
-                    android:textSize="17.78sp" />
-            </LinearLayout>
-
-            <!--
-            <LinearLayout
-                android:id="@+id/tasks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="horizontal"
-                android:paddingBottom="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="10dp" >
-
-                <ImageView
-                    android:id="@+id/tasks_img"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="3dp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingBottom="5dp"
-                    android:paddingTop="5dp"
-                    android:text="Quick Access Tasks"
-                    android:textSize="16sp" />
-            </LinearLayout>
-            -->
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="15dp"
-                android:background="#80e6e6e6" />
-
-            <!--
-            <LinearLayout
-                android:id="@+id/tasks_inner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="vertical"
-                android:visibility="gone" >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:orientation="horizontal"
-                    android:paddingLeft="50dp" >
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:text="Delayed"
-                        android:textSize="16sp" />
-
-                    <CheckBox
-                        android:id="@+id/tasks_delayed"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="3dp"
-                        android:button="@drawable/blue_chechk_box"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/blue_color" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:orientation="horizontal"
-                    android:paddingLeft="50dp" >
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:text="Assigned"
-                        android:textSize="16sp" />
-
-                    <CheckBox
-                        android:id="@+id/tasks_assigned"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="3dp"
-                        android:button="@drawable/blue_chechk_box"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/blue_color" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:orientation="horizontal"
-                    android:paddingLeft="50dp" >
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:text="Shared"
-                        android:textSize="16sp" />
-
-                    <CheckBox
-                        android:id="@+id/tasks_shared"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="3dp"
-                        android:button="@drawable/blue_chechk_box"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/blue_color" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:orientation="horizontal"
-                    android:paddingLeft="50dp" >
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:text="Completed"
-                        android:textSize="16sp" />
-
-                    <CheckBox
-                        android:id="@+id/tasks_completed"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="3dp"
-                        android:button="@drawable/blue_chechk_box"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/blue_color" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:orientation="horizontal"
-                    android:paddingLeft="50dp" >
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:text="Deleted"
-                        android:textSize="16sp" />
-
-                    <CheckBox
-                        android:id="@+id/tasks_deleted"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="3dp"
-                        android:button="@drawable/blue_chechk_box"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/blue_color" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:orientation="horizontal"
-                    android:paddingLeft="50dp" >
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
-                        android:text="None"
-                        android:textSize="16sp" />
-
-                    <CheckBox
-                        android:id="@+id/tasks_none"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="3dp"
-                        android:button="@drawable/blue_chechk_box"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/blue_color" />
-            </LinearLayout>
-            -->
+                android:text="Guest User"
+                android:textColor="@android:color/white"
+                android:textSize="17.78sp" />
 
             <TextView
-                android:id="@+id/settings"
-                android:layout_width="match_parent"
+                android:id="@+id/email"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:gravity="center_vertical"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="5dp"
-                android:text="Setting"
-                android:textColor="@color/_4d4d4d"
-                android:textSize="15.56sp" />
-
-            <!--
-            <LinearLayout
-                android:id="@+id/settings_inner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone" >
-
-                <TextView
-                    android:id="@+id/dateformat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="55dp"
-                    android:paddingTop="15dp"
-                    android:text="Date Format"
-                    android:textSize="16sp" />
-
-                <LinearLayout
-                    android:id="@+id/dateformat_inner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:orientation="vertical"
-                    android:visibility="gone" >
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:orientation="horizontal"
-                        android:paddingLeft="55dp" >
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:paddingBottom="5dp"
-                            android:paddingTop="5dp"
-                            android:text="DD/MM/YY"
-                            android:textSize="16sp" />
-
-                        <CheckBox
-                            android:id="@+id/dateformat_1"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="3dp"
-                            android:button="@drawable/blue_chechk_box" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:orientation="horizontal"
-                        android:paddingLeft="55dp" >
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:paddingBottom="5dp"
-                            android:paddingTop="5dp"
-                            android:text="MM/DD/YY"
-                            android:textSize="16sp" />
-
-                        <CheckBox
-                            android:id="@+id/dateformat_2"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="3dp"
-                            android:button="@drawable/blue_chechk_box" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/blue_color" />
-
-                <TextView
-                    android:id="@+id/timeformat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="55dp"
-                    android:paddingTop="15dp"
-                    android:text="Time Format"
-                    android:textSize="16sp" />
-
-                <LinearLayout
-                    android:id="@+id/timeformat_inner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:orientation="vertical"
-                    android:visibility="gone" >
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:orientation="horizontal"
-                        android:paddingLeft="55dp" >
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:paddingBottom="5dp"
-                            android:paddingTop="5dp"
-                            android:text="12H"
-                            android:textSize="16sp" />
-
-                        <CheckBox
-                            android:id="@+id/timeformat_1"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="3dp"
-                            android:button="@drawable/blue_chechk_box"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:orientation="horizontal"
-                        android:paddingLeft="55dp" >
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:paddingBottom="5dp"
-                            android:paddingTop="5dp"
-                            android:text="24H"
-                            android:textSize="16sp" />
-
-                        <CheckBox
-                            android:id="@+id/timeformat_2"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="3dp"
-                            android:button="@drawable/blue_chechk_box"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/blue_color" />
-
-                <TextView
-                    android:id="@+id/weekformat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="55dp"
-                    android:paddingTop="15dp"
-                    android:text="Week Start"
-                    android:textSize="16sp" />
-
-                <LinearLayout
-                    android:id="@+id/weekformat_inner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:orientation="vertical"
-                    android:visibility="gone" >
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:orientation="horizontal"
-                        android:paddingLeft="55dp" >
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:paddingBottom="5dp"
-                            android:paddingTop="5dp"
-                            android:text="Monday"
-                            android:textSize="16sp" />
-
-                        <CheckBox
-                            android:id="@+id/weekformat_1"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="3dp"
-                            android:button="@drawable/blue_chechk_box"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:orientation="horizontal"
-                        android:paddingLeft="55dp" >
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:paddingBottom="5dp"
-                            android:paddingTop="5dp"
-                            android:text="Sunday"
-                            android:textSize="16sp" />
-
-                        <CheckBox
-                            android:id="@+id/weekformat_2"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="3dp"
-                            android:button="@drawable/blue_chechk_box"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/blue_color" />
-
-                <TextView
-                    android:id="@+id/unscheduletask"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="55dp"
-                    android:paddingTop="15dp"
-                    android:text="Unscheduled Tasks"
-                    android:textSize="16sp" />
-            </LinearLayout>
-            -->
-
-            <TextView
-                android:id="@+id/help"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:gravity="center_vertical"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:text="Help"
-                android:textColor="@color/_4d4d4d"
-                android:textSize="15.56sp" />
-
-            <TextView
-                android:id="@+id/about"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:gravity="center_vertical"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:text="About"
-                android:textColor="@color/_4d4d4d"
-                android:textSize="15.56sp" />
+                android:layout_below="@+id/username"
+                android:text=""
+                android:textColor="@android:color/white"
+                android:textSize="15.56sp"
+                android:visibility="gone" />
         </LinearLayout>
-    </ScrollView>
+
+        <TextView
+            android:id="@+id/manage_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/user_layout"
+            android:layout_marginRight="52dp"
+            android:drawableBottom="@drawable/ic_down"
+            android:paddingRight="10dp" />
+
+        <TextView
+            android:id="@+id/imageView1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="18dp"
+            android:background="@drawable/round_white"
+            android:gravity="center"
+            android:text="GU"
+            android:textColor="@color/active"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/manage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="clip_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="15dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="15dp"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/manage_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/settings" />
+
+        <TextView
+            android:id="@+id/manage_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:text="Manage account"
+            android:textColor="@color/_4d4d4d"
+            android:textSize="17.78sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#80e6e6e6" />
+
+    <LinearLayout
+        android:id="@+id/todo_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="clip_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="10dp" >
+
+        <ImageView
+            android:id="@+id/todo_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/list_black" />
+
+        <TextView
+            android:id="@+id/todo_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="29dp"
+            android:text="To-do&apos;s"
+            android:textColor="@color/_4d4d4d"
+            android:textSize="17.78sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/calendar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="clip_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="10dp" >
+
+        <ImageView
+            android:id="@+id/calendar_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/calendar_black" />
+
+        <TextView
+            android:id="@+id/calendar_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="29dp"
+            android:text="Calender"
+            android:textColor="@color/_4d4d4d"
+            android:textSize="17.78sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/project_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:gravity="clip_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="10dp" >
+
+        <ImageView
+            android:id="@+id/project_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/progress_black" />
+
+        <TextView
+            android:id="@+id/project_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="29dp"
+            android:text="Projects"
+            android:textColor="@color/_4d4d4d"
+            android:textSize="17.78sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="15dp"
+        android:background="#80e6e6e6" />
+
+    <TextView
+        android:id="@+id/settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center_vertical"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:text="Setting"
+        android:textColor="@color/_4d4d4d"
+        android:textSize="15.56sp" />
+
+    <TextView
+        android:id="@+id/help"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center_vertical"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:text="Help"
+        android:textColor="@color/_4d4d4d"
+        android:textSize="15.56sp" />
+
+    <TextView
+        android:id="@+id/about"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center_vertical"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:text="About"
+        android:textColor="@color/_4d4d4d"
+        android:textSize="15.56sp" />
 
 </LinearLayout>

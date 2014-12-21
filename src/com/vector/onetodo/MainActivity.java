@@ -11,23 +11,17 @@ import java.util.Locale;
 import net.simonvt.datepicker.DatePicker;
 import net.simonvt.datepicker.DatePicker.OnDateChangedListener;
 import net.simonvt.menudrawer.MenuDrawer;
-import net.simonvt.menudrawer.MenuDrawer.Type;
-import net.simonvt.menudrawer.Position;
 
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -35,31 +29,24 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.ViewPager;
-import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.Spanned;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
@@ -70,7 +57,6 @@ import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 import com.astuetz.PagerSlidingTabStrip;
 import com.google.gson.Gson;
-import com.hipmob.gifanimationdrawable.GifAnimationDrawable;
 import com.vector.model.TaskData;
 import com.vector.model.TaskData.Todos;
 import com.vector.onetodo.db.gen.DaoMaster;
@@ -81,28 +67,21 @@ import com.vector.onetodo.db.gen.LabelDao;
 import com.vector.onetodo.db.gen.LabelNameDao;
 import com.vector.onetodo.db.gen.ToDo;
 import com.vector.onetodo.db.gen.ToDoDao;
-import com.vector.onetodo.utils.AlphaForegroundColorSpan;
 import com.vector.onetodo.utils.Constants;
-import com.vector.onetodo.utils.TypeFaces;
 import com.vector.onetodo.utils.Utils;
-import com.zh.wang.android.apis.yweathergetter4a.WeatherInfo;
-import com.zh.wang.android.apis.yweathergetter4a.YahooWeather;
-import com.zh.wang.android.apis.yweathergetter4a.YahooWeatherInfoListener;
 
 import de.greenrobot.dao.query.QueryBuilder;
 
 public class MainActivity extends BaseActivity implements
-		YahooWeatherInfoListener, ScrollTabHolder,
 		ViewPager.OnPageChangeListener, OnItemClickListener {
 
-	// ************* Save data for setting
 	public static SharedPreferences setting;
 	Editor setting_editor;
 	public static Calendar CurrentDate;
 	static int check = -1, check1 = 0;;
 	public static int menuchange = 0;
 	private PopupWindow popupWindowTask;
-	public static FrameLayout layout_MainMenu;
+	public static LinearLayout layout_MainMenu;
 	InputMethodManager inputMethodManager;
 	AlertDialog date_time_alert;
 	LinearLayout itemadded;
@@ -123,35 +102,32 @@ public class MainActivity extends BaseActivity implements
 	public ViewPager pager;
 	public TabPagerAdapter tabPagerAdapter;
 	PagerSlidingTabStrip tabs;
-	/*
-	 * private int[] menuDrawerCollapsingLayouts = { R.id.tasks_inner,
-	 * R.id.settings_inner };
-	 */
 	static QueryBuilder<Label> label1, label2, label3, label4, label5, label6;
 	// private ImageView weatherImage;
-	private GifAnimationDrawable weatherBackground;
-	public static YahooWeather mYahooWeather;
-	public static WeatherInfo weatherInfo;
-	private int mActionBarHeight;
-	private int mMinHeaderHeight;
-	private int mHeaderHeight;
-	private int mMinHeaderTranslation;
-
-	private RectF mRect1 = new RectF();
-	private RectF mRect2 = new RectF();
-	private TypedValue mTypedValue = new TypedValue();
-	private View mHeader;
-	private ImageView mHeaderLogo;
-	private AccelerateDecelerateInterpolator mSmoothInterpolator = new AccelerateDecelerateInterpolator();
-	private int mActionBarTitleColor;
 
 	public static List<Todos> Today, Tomorrow, Upcoming;
-	private AlphaForegroundColorSpan mAlphaForegroundColorSpan;
-	private SpannableString mSpannableString;
+	private ActionBarDrawerToggle actionBarDrawerToggle;
+	private DrawerLayout drawerLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_top);
+		if (toolbar != null) {
+			setSupportActionBar(toolbar);
+		}
+
+		getSupportActionBar().setTitle(R.string.close_drawer);
+		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
+				toolbar, R.string.close_drawer, R.string.open_drawer);
+		drawerLayout.setDrawerListener(actionBarDrawerToggle);
+
+		// enable ActionBar app icon to behave as action to toggle nav drawer
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
 
 		// ***** Initializinf Setting shared prefrences**********//
 		setting = this.getSharedPreferences("setting", 0);
@@ -165,24 +141,19 @@ public class MainActivity extends BaseActivity implements
 		startRepeatingTimer();
 
 		// ***** Left Drawer**********//
-		{
-			mDrawer = MenuDrawer.attach(this, Type.OVERLAY, Position.LEFT,
-					MenuDrawer.MENU_DRAG_WINDOW);
-			mDrawer.setContentView(R.layout.activity_main);
-			mDrawer.setDropShadowEnabled(false);
-			mDrawer.setDrawOverlay(true);
-			mDrawer.setMenuView(R.layout.menu_drawer);
-		}
-		// ***** Right Drawer**********//
-		{
-			mDrawerr = MenuDrawer.attach(this, Type.OVERLAY, Position.RIGHT,
-					MenuDrawer.MENU_DRAG_WINDOW);
-			mDrawerr.setContentView(R.layout.activity_main);
-			mDrawerr.setMenuView(R.layout.menu_drawer_right);
-			mDrawerr.setDropShadowEnabled(false);
-			mDrawerr.setDrawOverlay(true);
-
-		}
+		// mDrawer = MenuDrawer.attach(this, Type.OVERLAY, Position.LEFT,
+		// MenuDrawer.MENU_DRAG_WINDOW);
+		// mDrawer.setContentView(R.layout.activity_main);
+		// mDrawer.setDropShadowEnabled(false);
+		// mDrawer.setDrawOverlay(true);
+		// mDrawer.setMenuView(R.layout.menu_drawer);
+		// // ***** Right Drawer**********//
+		// mDrawerr = MenuDrawer.attach(this, Type.OVERLAY, Position.RIGHT,
+		// MenuDrawer.MENU_DRAG_WINDOW);
+		// mDrawerr.setContentView(R.layout.activity_main);
+		// mDrawerr.setMenuView(R.layout.menu_drawer_right);
+		// mDrawerr.setDropShadowEnabled(false);
+		// mDrawerr.setDrawOverlay(true);
 
 		// ***** Initializinf Registration shared prefrences**********//
 		SharedPreferences pref = this.getSharedPreferences("registration", 0);
@@ -215,12 +186,45 @@ public class MainActivity extends BaseActivity implements
 		}
 
 	}
+	
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		actionBarDrawerToggle.syncState();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		// Pass any configuration change to the drawer toggls
+		actionBarDrawerToggle.onConfigurationChanged(newConfig);
+	}
 
 	private void init() {
 
-		ListView notif_list = (ListView) findViewById(R.id.notif_list);
-		Notify_adapter adapter = new Notify_adapter(this);
-		notif_list.setAdapter(adapter);
+		// ListView notif_list = (ListView) findViewById(R.id.notif_list);
+		// Notify_adapter adapter = new Notify_adapter(this);
+		// notif_list.setAdapter(adapter);
 
 		// ***** LeftMenudrawer Mange Account feld**********//
 		if (Constants.user_id == -1) {/*
@@ -237,7 +241,6 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				if (check1 == 0) {
 					check1 = 1;
 					aq.id(R.id.manage_account)
@@ -269,7 +272,6 @@ public class MainActivity extends BaseActivity implements
 		try {
 			today = sdf.parse(sdf.format(CurrentDate.getTime()));
 		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -278,7 +280,6 @@ public class MainActivity extends BaseActivity implements
 		try {
 			tomorrow = sdf.parse(sdf.format(CurrentDate.getTime()));
 		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -289,7 +290,6 @@ public class MainActivity extends BaseActivity implements
 					date = sdf
 							.parse(TaskData.getInstance().todos.get(i).start_date);
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -308,8 +308,6 @@ public class MainActivity extends BaseActivity implements
 
 		inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
-		parallaxHeaderInit();
-
 		// ********* Old
 		aq.id(R.id.navigation_menu).clicked(new OnClickListener() {
 
@@ -320,30 +318,28 @@ public class MainActivity extends BaseActivity implements
 		});
 
 		// ***** right drawer open close**********//
-		aq.id(R.id.notif).clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				if (!(mDrawerr.isActivated())) {
-					mDrawerr.openMenu();
-				} else {
-					mDrawerr.closeMenu();
-				}
-			}
-		});
+		// aq.id(R.id.notif).clicked(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View arg0) {
+		// if (!(mDrawerr.isActivated())) {
+		// mDrawerr.openMenu();
+		// } else {
+		// mDrawerr.closeMenu();
+		// }
+		// }
+		// });
 
 		// ***** left drawer open close**********//
 		aq.id(R.id.right_back).clicked(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				mDrawerr.closeMenu();
 			}
 		});
 
-		layout_MainMenu = (FrameLayout) findViewById(R.id.container);
+		layout_MainMenu = (LinearLayout) findViewById(R.id.container);
 		// layout_MainMenu.getForeground().setAlpha(0);
 		final View view = getLayoutInflater().inflate(R.layout.landing_menu,
 				null, false);
@@ -360,7 +356,6 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onDismiss() {
-				// TODO Auto-generated method stub
 			}
 		});
 
@@ -368,8 +363,6 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-
 				if (popupWindowTask.isShowing()) {
 					popupWindowTask.dismiss();
 
@@ -394,7 +387,6 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				date_time_alert.dismiss();
 			}
 		});
@@ -429,7 +421,6 @@ public class MainActivity extends BaseActivity implements
 					@Override
 					public void onDateChanged(DatePicker view, int year,
 							int monthOfYear, int dayOfMonth) {
-						// TODO Auto-generated method stub
 						Calendar cal = Calendar.getInstance();
 						cal.set(year, monthOfYear, dayOfMonth);
 						aqd.id(R.id.title).text(
@@ -450,8 +441,6 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-
 				popupWindowTask.dismiss();
 				if (menuchange == 1) {
 
@@ -469,7 +458,6 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				popupWindowTask.dismiss();
 			}
 		});
@@ -477,7 +465,6 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				popupWindowTask.dismiss();
 				date_time_alert.show();
 			}
@@ -487,41 +474,36 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				// if (menuchange == 0) {
 				inputMethodManager.toggleSoftInput(
 						InputMethodManager.SHOW_FORCED, 0);
 
 				aq.id(R.id.search_layout).getView().setVisibility(View.VISIBLE);
-				aq.id(R.id.header_layout).getView().setVisibility(View.GONE);
+				// aq.id(R.id.header_layout).getView().setVisibility(View.GONE);
 				aq.id(R.id.search_text).getEditText().setFocusable(true);
-				// }
 			}
 		});
 		aq.id(R.id.search_back).clicked(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				inputMethodManager.toggleSoftInput(
 						InputMethodManager.SHOW_FORCED, 0);
 				aq.id(R.id.search_layout).getView().setVisibility(View.GONE);
-				aq.id(R.id.header_layout).getView().setVisibility(View.VISIBLE);
+				// aq.id(R.id.header_layout).getView().setVisibility(View.VISIBLE);
 			}
 		});
 
-		aq.id(R.id.header_logo).clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				if (!(mDrawer.isActivated())) {
-					mDrawer.openMenu();
-				} else {
-					mDrawer.closeMenu();
-				}
-			}
-		});
+		// aq.id(R.id.header_logo).clicked(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View arg0) {
+		// if (!(mDrawer.isActivated())) {
+		// mDrawer.openMenu();
+		// } else {
+		// mDrawer.closeMenu();
+		// }
+		// }
+		// });
 
 		// Menu Drawer on click change items
 
@@ -547,7 +529,6 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				if (Constants.user_id == -1) {
 
 				} else {
@@ -569,9 +550,8 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				TextView title = (TextView) findViewById(R.id.weather);
-				title.setText("To-do's");
+				// // TextView title = (TextView) findViewById(R.id.weather);
+				// title.setText("To-do's");
 				getSupportFragmentManager().popBackStack();
 				mDrawer.closeMenu();
 				arg0.setBackgroundColor(Color.parseColor("#F2F2F2"));
@@ -596,8 +576,6 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-
 				aq_menu.id(R.id.menu_item1).text("Invitations");
 				aq_menu.id(R.id.menu_item2).text("Visible calenders");
 				aq_menu.id(R.id.menu_item3).text("Go to")
@@ -641,10 +619,9 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				getSupportFragmentManager().popBackStack();
-				TextView title = (TextView) findViewById(R.id.weather);
-				title.setText("Projects");
+				// TextView title = (TextView) findViewById(R.id.weather);
+				// title.setText("Projects");
 
 				mDrawer.closeMenu();
 				arg0.setBackgroundColor(Color.parseColor("#F2F2F2"));
@@ -703,7 +680,6 @@ public class MainActivity extends BaseActivity implements
 		// Initialize the ViewPager and set an adapter
 		pager = (ViewPager) findViewById(R.id.pager);
 		tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
-		tabPagerAdapter.setTabHolderScrollingContent(this);
 		pager.setAdapter(tabPagerAdapter);
 
 		// Bind the tabs to the ViewPager
@@ -712,11 +688,11 @@ public class MainActivity extends BaseActivity implements
 		tabs.setDividerColorResource(android.R.color.transparent);
 		// tabs.setIndicatorColorResource(R.color.graytab);
 		tabs.setUnderlineColorResource(android.R.color.transparent);
-		tabs.setTextSize(Utils.getPxFromDp(this, 16));
+		tabs.setTextSize(Utils.getPxFromDp(this, 13));
 		tabs.setIndicatorHeight(Utils.getPxFromDp(this, 3));
 		tabs.setIndicatorColor(Color.parseColor("#ffffff"));
 		tabs.setSmoothScrollingEnabled(true);
-		tabs.setShouldExpand(false);
+		tabs.setShouldExpand(true);
 		// tabs.setTextColorResource(R.color.graytab);
 		tabs.setAllCaps(false);
 		tabs.setTypeface(null, Typeface.NORMAL);
@@ -725,21 +701,21 @@ public class MainActivity extends BaseActivity implements
 		tabs.setViewPager(pager);
 		tabPagerAdapter.notifyDataSetChanged();
 
-		aq.id(R.id.add_task_button)
-				.typeface(TypeFaces.get(this, Constants.ICON_FONT))
-				.clicked(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-
-						Intent intent = new Intent(MainActivity.this,
-								AddTask.class);
-						intent.putExtra("position", pager.getCurrentItem());
-						startActivity(intent);
-						overridePendingTransition(R.anim.slide_in1,
-								R.anim.slide_out1);
-					}
-				});
+		// aq.id(R.id.add_task_button)
+		// .typeface(TypeFaces.get(this, Constants.ICON_FONT))
+		// .clicked(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		//
+		// Intent intent = new Intent(MainActivity.this,
+		// AddTask.class);
+		// intent.putExtra("position", pager.getCurrentItem());
+		// startActivity(intent);
+		// overridePendingTransition(R.anim.slide_in1,
+		// R.anim.slide_out1);
+		// }
+		// });
 
 	}
 
@@ -755,21 +731,6 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-	}
-
-	private void parallaxHeaderInit() {
-		mHeader = (LinearLayout) findViewById(R.id.header);
-		mHeaderLogo = (ImageView) findViewById(R.id.header_logo);
-		mMinHeaderHeight = getResources().getDimensionPixelSize(
-				R.dimen.min_header_height);
-		mHeaderHeight = getResources().getDimensionPixelSize(
-				R.dimen.header_height);
-		mMinHeaderTranslation = -mMinHeaderHeight + getActionBarHeight();
-
-		mActionBarTitleColor = getResources().getColor(android.R.color.white);
-		mSpannableString = new SpannableString("One ToDo");
-		mAlphaForegroundColorSpan = new AlphaForegroundColorSpan(
-				mActionBarTitleColor);
 	}
 
 	void updateDate(int days) {
@@ -890,143 +851,6 @@ public class MainActivity extends BaseActivity implements
 		nHandler.createSimpleNotification(context);
 	}
 
-	private int getWeatherImage(WeatherInfo weatherInfo) {
-		if (weatherInfo != null) {
-			String weather = weatherInfo.getCurrentText().toLowerCase();
-			if (weather.equalsIgnoreCase("haze")) {
-				return R.raw.sunny;
-			} else if (weather.contains("snow")) {
-				return R.raw.snow;
-			} else if (weather.contains("rain")) {
-				return R.raw.rain;
-			} else if (weather.contains("thunder")) {
-				return R.raw.thunder;
-			} else if (weather.contains("sun")) {
-				return R.raw.sunny;
-			} else if (weather.contains("cloudy")) {
-				return R.raw.cloudy;
-			}
-
-		}
-		return R.raw.demo;
-	}
-
-	@Override
-	public void gotWeatherInfo(WeatherInfo weatherInfo) {
-		MainActivity.weatherInfo = weatherInfo;
-
-		if (weatherInfo != null) {
-			Spanned html = Html.fromHtml(weatherInfo.getCurrentTempC()
-					+ " \u00B0C" + "\n" + weatherInfo.getCurrentText());
-			// ((TextView) findViewById(R.id.weather_temp)).setText(html);
-		}
-
-		/*
-		 * weatherImage = (ImageView) findViewById(R.id.weather_background); try
-		 * { weatherBackground = new GifAnimationDrawable(getResources()
-		 * .openRawResource(getWeatherImage(weatherInfo))); } catch
-		 * (NotFoundException e) { e.printStackTrace(); } catch (IOException e)
-		 * { e.printStackTrace(); } weatherBackground.setOneShot(false);
-		 * weatherImage.setImageDrawable(weatherBackground);
-		 * weatherBackground.setVisible(true, true);
-		 */
-	}
-
-	public int getActionBarHeight() {
-		if (mActionBarHeight != 0) {
-			return mActionBarHeight;
-		}
-
-		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
-			getTheme().resolveAttribute(android.R.attr.actionBarSize,
-					mTypedValue, true);
-		} else {
-			// getTheme().resolveAttribute(R.attr.actionBarSize, mTypedValue,
-			// true);
-		}
-
-		mActionBarHeight = TypedValue.complexToDimensionPixelSize(
-				mTypedValue.data, getResources().getDisplayMetrics());
-
-		return mActionBarHeight;
-	}
-
-	public static float clamp(float value, float max, float min) {
-		return Math.max(Math.min(value, min), max);
-	}
-
-	private RectF getOnScreenRect(RectF rect, View view) {
-		rect.set(view.getLeft(), view.getTop(), view.getRight(),
-				view.getBottom());
-		return rect;
-	}
-
-	private void setTitleAlpha(float alpha) {
-		mAlphaForegroundColorSpan.setAlpha(alpha);
-		mSpannableString.setSpan(mAlphaForegroundColorSpan, 0,
-				mSpannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		// getActivity().getActionBar().setTitle(mSpannableString);
-		// ((Button) findViewById(R.id.cal)).setAlpha(alpha);
-		// if (alpha == 1.0)
-		// ((Button) getActivity().findViewById(R.id.cal))
-		// .setVisibility(View.VISIBLE);
-		// else
-		// ((Button) getActivity().findViewById(R.id.cal))
-		// .setVisibility(View.INVISIBLE);
-		//
-		// ((Button) getActivity().findViewById(R.id.cal))
-		// .setOnClickListener(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		// Fragment fr = new Calender();
-		// FragmentTransaction transaction =
-		// getActivity().getSupportFragmentManager()
-		// .beginTransaction();
-		// // transaction.setCustomAnimations(R.anim.slide_in,
-		// // R.anim.slide_out, R.anim.slide_in, R.anim.slide_out);
-		//
-		// transaction.replace(R.id.container, fr);
-		// transaction.addToBackStack("CALENDAR");
-		// transaction.commit();
-		// }
-		// });
-	}
-
-	/*
-	 * private void setWeatherAlpha(float alpha) { ((TextView)
-	 * findViewById(R.id.weather_temp)) .setAlpha(getInverseAlpha(alpha)); if
-	 * (getInverseAlpha(alpha) > 0.22f) { ((EditText) findViewById(R.id.search))
-	 * .setEms(alphaToEms(getInverseAlpha(alpha))); }
-	 */
-
-	// }
-
-	public int getScrollY(AbsListView view) {
-		View c = view.getChildAt(0);
-		if (c == null) {
-			return 0;
-		}
-
-		int firstVisiblePosition = view.getFirstVisiblePosition();
-		int top = c.getTop();
-
-		int headerHeight = 0;
-		if (firstVisiblePosition >= 1) {
-			headerHeight = mHeaderHeight;
-		}
-
-		return -top + firstVisiblePosition * c.getHeight() + headerHeight;
-	}
-
-	private float getInverseAlpha(float alpha) {
-		return 1 - alpha;
-	}
-
-	private int alphaToEms(float alpha) {
-		return (int) (15 * alpha);
-	}
-
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
 		// nothing
@@ -1041,55 +865,7 @@ public class MainActivity extends BaseActivity implements
 
 	@Override
 	public void onPageSelected(int position) {
-		SparseArrayCompat<ScrollTabHolder> scrollTabHolders = tabPagerAdapter
-				.getScrollTabHolders();
-		ScrollTabHolder currentHolder = scrollTabHolders.valueAt(position);
 
-		currentHolder.adjustScroll((int) (mHeader.getHeight() + mHeader
-				.getTranslationY()));
-
-	}
-
-	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem,
-			int visibleItemCount, int totalItemCount, int pagePosition) {
-	}
-
-	@Override
-	public void adjustScroll(int scrollHeight) {
-		// nothing
-
-	}
-
-	public void slideUpDown(final View view) {
-		if (!isPanelShown(view)) {
-			// Show the panel
-			Animation bottomUp = AnimationUtils.loadAnimation(this,
-					R.anim.bottom_up);
-
-			view.startAnimation(bottomUp);
-			view.setVisibility(View.VISIBLE);
-			Drawable tintColor = new ColorDrawable(getResources().getColor(
-					R.color.dim_background));
-			((FrameLayout) aq.id(R.id.framedim).getView())
-					.setForeground(tintColor);
-		} else {
-			// Hide the Panel
-			Animation bottomDown = AnimationUtils.loadAnimation(this,
-					R.anim.bottom_down);
-
-			view.startAnimation(bottomDown);
-			view.setVisibility(View.GONE);
-			Drawable tintColor = new ColorDrawable(getResources().getColor(
-					android.R.color.transparent));
-			((FrameLayout) aq.id(R.id.framedim).getView())
-					.setForeground(tintColor);
-			itemadded.removeAllViews();
-		}
-	}
-
-	private boolean isPanelShown(View view) {
-		return view.getVisibility() == View.VISIBLE;
 	}
 
 	// ****************** Notification List Adapter*********
@@ -1104,26 +880,22 @@ public class MainActivity extends BaseActivity implements
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
 			aq.id(R.id.no_notification).visibility(View.GONE);
 			return 10;
 		}
 
 		@Override
 		public java.lang.Object getItem(int arg0) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public long getItemId(int arg0) {
-			// TODO Auto-generated method stub
 			return arg0;
 		}
 
 		@Override
 		public View getView(int position, View view, ViewGroup arg2) {
-			// TODO Auto-generated method stub
 
 			Holder holder = null;
 			if (view == null) {
@@ -1152,7 +924,6 @@ public class MainActivity extends BaseActivity implements
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		// TODO Auto-generated method stub
 
 		Toast.makeText(MainActivity.this, "asdasdasd", Toast.LENGTH_SHORT)
 				.show();

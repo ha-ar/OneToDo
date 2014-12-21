@@ -71,6 +71,7 @@ import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 import com.vector.model.TaskData;
 import com.vector.model.TaskData.Todos;
+import com.vector.onetodo.R;
 import com.vector.onetodo.db.gen.Assign;
 import com.vector.onetodo.db.gen.AssignDao;
 import com.vector.onetodo.db.gen.CheckList;
@@ -601,13 +602,13 @@ public class AddTask extends FragmentActivity {
 			@Override
 			public void onClick(View arg0) {
 				tod = tododao.loadAll();
-
-				if (Constants.user_id != -1) {
-					AddData();
-
-				} else
-					Toast.makeText(AddTask.this, "Please Registered First",
-							Toast.LENGTH_LONG).show();
+				AddData();
+//				if (Constants.user_id != -1) {
+//					AddData();
+//
+//				} else
+//					Toast.makeText(AddTask.this, "Please Registered First",
+//							Toast.LENGTH_LONG).show();
 			}
 		});
 

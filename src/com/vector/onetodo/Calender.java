@@ -52,19 +52,19 @@ public class Calender extends Fragment {
 				getFragmentManager().popBackStack();
 			}
 		});
-		aq.id(R.id.add_task_button).text(Constants.ADD)
-				.typeface(TypeFaces.get(getActivity(), Constants.ICON_FONT))
-				.clicked(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(getActivity(), AddTask.class);
-						intent.putExtra("position", 0);
-						startActivity(intent);
-						getActivity().overridePendingTransition(
-								R.anim.bottom_up, R.anim.bottom_down);
-					}
-				});
+//		aq.id(R.id.add_task_button).text(Constants.ADD)
+//				.typeface(TypeFaces.get(getActivity(), Constants.ICON_FONT))
+//				.clicked(new OnClickListener() {
+//
+//					@Override
+//					public void onClick(View v) {
+//						Intent intent = new Intent(getActivity(), AddTask.class);
+//						intent.putExtra("position", 0);
+//						startActivity(intent);
+//						getActivity().overridePendingTransition(
+//								R.anim.bottom_up, R.anim.bottom_down);
+//					}
+//				});
 		return view;
 	}
 

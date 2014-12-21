@@ -74,7 +74,7 @@ public class Schedule extends Fragment {
 		allView = getView();
 		inflatingLayouts.put(0, R.layout.scheduale_label);
 		inflatingLayouts.put(1, R.layout.scheduale_notes);
-		inflatingLayouts.put(2, R.layout.scheduale_scheduale);
+//		inflatingLayouts.put(2, R.layout.scheduale_scheduale);
 
 		inflateLayouts();
 

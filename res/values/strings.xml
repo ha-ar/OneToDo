@@ -8,6 +8,9 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_splash_screen">One ToDo</string>
     <string name="notes_prompt">Add Notes</string>
+    <string name="open_drawer">Menu</string>
+    <string name="close_drawer">Todo\'s</string>
+    
     <string-array name="notes_array">
         <item>Notes</item>
         <item>Checklist</item>

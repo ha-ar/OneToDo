@@ -3,17 +3,17 @@ package com.vector.onetodo;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import android.app.Activity;
+public class ABC {
 
-public class ABC extends Activity {
-
-	ArrayList<String> codes = new ArrayList(Arrays.asList(
+	ArrayList<String> codes = new ArrayList<String>(Arrays.asList(
 
 	"+93"
 
 	, "+355"
 
-	, "+213", "+1-684"
+	, "+213"
+	
+	, "+1-684"
 
 	, "+376"
 

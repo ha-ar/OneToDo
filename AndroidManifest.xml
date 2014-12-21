@@ -5,6 +5,7 @@
     android:versionName="1" >
 
     <uses-sdk
+        android:targetSdkVersion="18"
         android:minSdkVersion="14" />
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -51,7 +52,7 @@
             android:name="com.vector.onetodo.SplashScreen"
             android:label="@string/title_activity_splash_screen"
             android:screenOrientation="portrait"
-            android:theme="@style/OneToDoTheme" >
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
