@@ -31,6 +31,7 @@ public class Constants {
 	public static int AlaramIndex = -1;
 	public static int AlaramSize = 0;
 	public static float density = 0, dp = 0;
+	public static List<String> Name,Contact;
 
 	// public static String[] state = { "View Tasks", "Settings", "Help",
 	// "About" };

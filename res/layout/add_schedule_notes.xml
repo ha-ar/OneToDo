@@ -18,7 +18,7 @@
         android:typeface="monospace" />
 
     <EditText
-        android:id="@+id/notes_task"
+        android:id="@+id/notes_schedule"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/Button03"

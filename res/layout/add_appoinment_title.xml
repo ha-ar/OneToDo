@@ -27,11 +27,13 @@
             android:layout_height="40dp"
             android:layout_toRightOf="@id/completed_appoinment"
             android:background="@android:color/transparent"
+            android:gravity="center_vertical"
             android:hint="Title"
             android:paddingLeft="15dp"
             android:paddingRight="5dp"
             android:singleLine="true"
-            android:textColorHint="#bababa"
+            android:textColor="@color/_4d4d4d"
+            android:textColorHint="@color/_999999"
             android:textSize="17.78sp" />
     </RelativeLayout>
 
@@ -61,11 +63,13 @@
             android:layout_height="match_parent"
             android:layout_toRightOf="@id/assign_event_button"
             android:background="@android:color/transparent"
+            android:gravity="center_vertical"
             android:hint="Invite"
             android:paddingLeft="15dp"
-            android:paddingRight="20dp"
+            android:paddingRight="5dp"
             android:singleLine="true"
-            android:textColorHint="#bababa"
+            android:textColor="@color/_4d4d4d"
+            android:textColorHint="@color/_999999"
             android:textSize="17.78sp" />
 
         <ImageView

@@ -27,7 +27,7 @@
             android:button="@drawable/task_chechk_box" />
 
         <EditText
-            android:id="@+id/event_title"
+            android:id="@+id/project_title"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_toRightOf="@id/completed_event"
@@ -43,7 +43,7 @@
             android:id="@+id/imageView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/event_title"
+            android:layout_alignRight="@+id/project_title"
             android:layout_centerVertical="true"
             android:src="@drawable/next_arrow" />
     </RelativeLayout>

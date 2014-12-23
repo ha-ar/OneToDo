@@ -27,16 +27,17 @@
             android:layout_height="40dp"
             android:layout_toRightOf="@id/completed_project"
             android:background="@android:color/transparent"
+            android:gravity="center_vertical"
             android:hint="Title"
             android:paddingLeft="15dp"
             android:paddingRight="5dp"
             android:singleLine="true"
-            android:textColorHint="#bababa"
+            android:textColor="@color/_4d4d4d"
+            android:textColorHint="@color/_999999"
             android:textSize="17.78sp" />
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/title_event_layout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_below="@+id/title_event_layout"
@@ -60,11 +61,13 @@
             android:layout_height="match_parent"
             android:layout_toRightOf="@id/assign_event_button"
             android:background="@android:color/transparent"
+            android:gravity="center_vertical"
             android:hint="Invite team"
             android:paddingLeft="15dp"
             android:paddingRight="20dp"
             android:singleLine="true"
-            android:textColorHint="#bababa"
+            android:textColor="@color/_4d4d4d"
+            android:textColorHint="@color/_999999"
             android:textSize="17.78sp" />
 
         <ImageView

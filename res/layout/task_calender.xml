@@ -8,43 +8,8 @@
         android:id="@+id/calendar_caldroid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-    android:background="@color/active" 
+        android:background="@color/active"
         android:orientation="vertical" >
     </LinearLayout>
-
-    <!-- <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="2" >
-
-        <TextView
-            android:id="@+id/currentDayListView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5"
-            android:gravity="center"
-            android:text="You sure no tasks for today." />
-
-        <ListView
-            android:id="@+id/listView1"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5"
-            android:visibility="gone" >
-        </ListView>
-
-        
-             <TextView
-            android:id="@+id/add_task_button"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.21"
-            android:background="@color/dark_blue_color"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="32sp" />
-       
-    </LinearLayout> -->
 
 </FrameLayout>

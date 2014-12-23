@@ -3,7 +3,7 @@
     android:id="@+id/prior_label_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/light_grey_color"
+    android:background="@drawable/input_fields_gray"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -31,8 +31,8 @@
             android:layout_marginTop="6dp"
             android:gravity="center"
             android:hint="Label"
-            android:textColor="@color/grey"
-            android:textColorHint="#bababa"
+            android:textColor="@color/_4d4d4d"
+            android:textColorHint="@color/_999999"
             android:textSize="17.78sp" />
     </LinearLayout>
 

@@ -42,7 +42,7 @@
             android:padding="5dp" >
 
             <CheckBox
-                android:id="@+id/notification_radio_event"
+                android:id="@+id/notification_radio_sch"
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
                 android:button="@drawable/blue_chechk_box"
@@ -53,7 +53,7 @@
                 android:textColor="@color/_4d4d4d" />
 
             <CheckBox
-                android:id="@+id/email_radio_event"
+                android:id="@+id/email_radio_sch"
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
                 android:layout_marginLeft="10dp"

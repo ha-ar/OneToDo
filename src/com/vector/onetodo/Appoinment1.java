@@ -79,7 +79,7 @@ import com.vector.onetodo.utils.TypeFaces;
 import com.vector.onetodo.utils.Utils;
 
 public class Appoinment1 extends Fragment {
-//appoinment_attachment  edittext appoinment_comment
+	// appoinment_attachment edittext appoinment_comment
 	public static AQuery aq, popupAQ, aqloc, aqd, aq_del, aq_edit;
 
 	static List<java.lang.Object> names;
@@ -110,7 +110,6 @@ public class Appoinment1 extends Fragment {
 			"Weekly", "Monthly", "Yearly" };
 	static LinearLayout lll;
 
-	static ContactsCompletionView completionAssignView, completionShareView;
 	static int currentHours, currentMin, currentDayDigit, currentYear,
 			currentMonDigit;
 
@@ -126,7 +125,7 @@ public class Appoinment1 extends Fragment {
 	public static HashMap<Integer, Integer> inflatingLayouts = new HashMap<Integer, Integer>();
 
 	private final String[] labels_array = new String[] { "Personal", "Home",
-			"Work", "New", "New", "New" , "New", "New", "New" };
+			"Work", "New", "New", "New", "New", "New", "New" };
 
 	EditText label_field = null;
 
@@ -189,20 +188,20 @@ public class Appoinment1 extends Fragment {
 		inflateLayouts();
 
 		main();
-		
+
 		taskTitle = (EditText) aq.id(R.id.appoinment_title).getView();
-	
+
 		taskTitle.addTextChangedListener(new TextWatcher() {
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 
-				if(taskTitle.getText().length()>0)
+				if (taskTitle.getText().length() > 0)
 					AddTask.btn.setAlpha(1);
 
 				aq.id(R.id.completed_appoinment).textColorId(R.color.active);
-				
+
 			}
 
 			@Override
@@ -555,11 +554,10 @@ public class Appoinment1 extends Fragment {
 		});
 
 		aq.id(R.id.spinner_label_layout).clicked(new GeneralOnClickListner());
-		
+
 		View switchView = aq.id(R.id.add_sub_appoinment).getView();
 		toggleCheckList(switchView);
-		
-		
+
 		lastCheckedId = ((RadioGroup) aq.id(R.id.priority_radio_buttons)
 				.getView()).getCheckedRadioButtonId();
 		((RadioGroup) aq.id(R.id.priority_radio_buttons).getView())
@@ -649,7 +647,7 @@ public class Appoinment1 extends Fragment {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void inflateLayouts() {
 		GridLayout gridLayout = (GridLayout) allView
 				.findViewById(R.id.inner_container_appoinment);
@@ -704,12 +702,9 @@ public class Appoinment1 extends Fragment {
 			if (aq.id(R.id.before_grid_view_linear_appoinment).getView()
 					.getVisibility() == View.GONE) {
 				if (aq.id(R.id.before_appoinment).getText().toString() == "") {
-					aq.id(R.id.before_appoinment)
-							.text("Reminde before "
-									+ AddTaskBeforeFragment.beforeArray[1])
-							.textColorId(R.color.deep_sky_blue);
-					aq.id(R.id.reminder_image_appoinment).background(
-							R.drawable.reminder_blue);
+					aq.id(R.id.before_appoinment).text(
+							"Reminde before "
+									+ AddTaskBeforeFragment.beforeArray[1]);
 
 				}
 				aq.id(R.id.before_grid_view_linear_appoinment)
@@ -870,34 +865,27 @@ public class Appoinment1 extends Fragment {
 		String tempCurrentHours = String.format("%02d", currentHours);
 		String tempCurrentMins = String.format("%02d", currentMin);
 		String tempYear = String.valueOf(currentYear).substring(2, 4);
-		aq.id(R.id.da_appoinment).text("Due")
-				.textColorId(R.color.deep_sky_blue);
+		aq.id(R.id.da_appoinment).text("Due");
 		if (dayPosition == 0) {
-			aq.id(R.id.day_field_appoinment).text("")
-					.textColorId(R.color.deep_sky_blue);
-			aq.id(R.id.da_appoinment).textColorId(R.color.deep_sky_blue);
-			aq.id(R.id.day_field_appoinment).text("Today")
-					.textColorId(R.color.deep_sky_blue);
+			aq.id(R.id.day_field_appoinment).text("");
+			aq.id(R.id.da_appoinment);
+			aq.id(R.id.day_field_appoinment).text("Today");
 		} else if (dayPosition == 1) {
-			aq.id(R.id.day_field_appoinment).text("")
-					.textColorId(R.color.deep_sky_blue);
-			aq.id(R.id.da_appoinment).textColorId(R.color.deep_sky_blue);
-			aq.id(R.id.day_field_appoinment).text("Tomorrow")
-					.textColorId(R.color.deep_sky_blue);
+			aq.id(R.id.day_field_appoinment).text("");
+			aq.id(R.id.day_field_appoinment).text("Tomorrow");
 		} else {
-			aq.id(R.id.day_field_appoinment).text(currentDay)
-					.textColorId(R.color.deep_sky_blue);
-			aq.id(R.id.da_appoinment).textColorId(R.color.deep_sky_blue);
-			aq.id(R.id.month_year_field_appoinment)
-					.text(tempCurrentDayDigit
+			aq.id(R.id.day_field_appoinment).text(currentDay);
+			aq.id(R.id.month_year_field_appoinment).text(
+					tempCurrentDayDigit
 							+ Utils.getDayOfMonthSuffix(currentDayDigit) + " "
-							+ currentMon).textColorId(R.color.deep_sky_blue);
+							+ currentMon);
 		}
-		aq.id(R.id.time_field_appoinment)
-				.text(tempCurrentHours + ":" + tempCurrentMins)
-				.textColorId(R.color.deep_sky_blue);
-		/*aq.id(R.id.calendare_image_appoinment).background(
-				R.drawable.calendar_blue);*/
+		aq.id(R.id.time_field_appoinment).text(
+				tempCurrentHours + ":" + tempCurrentMins);
+		/*
+		 * aq.id(R.id.calendare_image_appoinment).background(
+		 * R.drawable.calendar_blue);
+		 */
 	}
 
 	public class Appoinmentbeforefragment extends FragmentStatePagerAdapter {

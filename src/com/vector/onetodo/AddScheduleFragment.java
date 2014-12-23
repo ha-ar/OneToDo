@@ -130,8 +130,6 @@ public class AddScheduleFragment extends Fragment {
 	static final String[] repeatArray = new String[] { "Never", "Daily",
 			"Weekly", "Monthly", "Yearly" };
 	static LinearLayout lll;
-
-	static ContactsCompletionView completionAssignView, completionShareView;
 	static int currentHours, currentMin, currentDayDigit, currentYear,
 			currentMonDigit;
 
@@ -227,11 +225,11 @@ public class AddScheduleFragment extends Fragment {
 	void main() {
 
 		// ****************Title
-		aq.id(R.id.sch_title_edit)
+		aq.id(R.id.sch_title)
 				.typeface(
 						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
 				.clicked(new GeneralOnClickListner());
-		taskTitle = (EditText) aq.id(R.id.sch_title_edit).getView();
+		taskTitle = (EditText) aq.id(R.id.sch_title).getView();
 
 		taskTitle.addTextChangedListener(new TextWatcher() {
 
@@ -287,7 +285,7 @@ public class AddScheduleFragment extends Fragment {
 				.clicked(new GeneralOnClickListner());
 
 		ToggleButton toggle = (ToggleButton) getActivity().findViewById(
-				R.id.sch_allday_switch);
+				R.id.switch_sch);
 		toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
 			@Override
@@ -1078,7 +1076,7 @@ public class AddScheduleFragment extends Fragment {
 					}
 				});*/
 
-		View switchView = aq.id(R.id.add_sub_task_event).getView();
+		View switchView = aq.id(R.id.add_sub_sch).getView();
 		toggleCheckList(switchView);
 
 	}

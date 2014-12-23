@@ -26,7 +26,7 @@
         android:paddingTop="6dp" >
 
         <EditText
-            android:id="@+id/add_sub_task_event"
+            android:id="@+id/add_sub_sch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="-30dp"

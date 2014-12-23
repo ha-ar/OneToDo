@@ -9,12 +9,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:background="@drawable/underline_textview_lightgray"
         android:paddingBottom="2dp"
+        android:paddingTop="27dp"
         android:text="DETAILS"
         android:textColor="@color/active"
-        android:textSize="15.56sp"
+        android:textSize="13.33sp"
         android:typeface="monospace" />
 
     <LinearLayout
@@ -50,8 +50,8 @@
                 android:layout_height="40dp"
                 android:gravity="center_vertical"
                 android:hint="Due"
-                android:textColor="@color/dark_grey_color"
-                android:textColorHint="@color/hint_color"
+                android:textColor="@color/_4d4d4d"
+                android:textColorHint="@color/_999999"
                 android:textSize="17.78sp" />
 
             <TextView
@@ -60,8 +60,8 @@
                 android:layout_height="40dp"
                 android:layout_weight="0.55"
                 android:gravity="center"
-                android:textColor="@color/dark_grey_color"
-                android:textColorHint="@color/hint_color"
+                android:textColor="@color/_4d4d4d"
+                android:textColorHint="@color/_999999"
                 android:textSize="17.78sp" />
 
             <TextView
@@ -71,8 +71,8 @@
                 android:layout_weight="0.8"
                 android:gravity="left|center_vertical"
                 android:paddingLeft="2dp"
-                android:textColor="@color/dark_grey_color"
-                android:textColorHint="@color/hint_color"
+                android:textColor="@color/_4d4d4d"
+                android:textColorHint="@color/_999999"
                 android:textSize="17.78sp" />
 
             <TextView
@@ -82,45 +82,11 @@
                 android:layout_weight=".7"
                 android:gravity="center"
                 android:hint=""
-                android:textColor="@color/dark_grey_color"
-                android:textColorHint="#bababa"
+                android:textColor="@color/_4d4d4d"
+                android:textColorHint="@color/_999999"
                 android:textSize="17.78sp"
                 android:visibility="gone" />
         </LinearLayout>
-
-        <!--
-        <RadioGroup
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="2dp"
-            android:layout_marginTop="10dp"
-            android:layout_weight=".6"
-            android:background="@drawable/input_fields"
-            android:orientation="horizontal" >
-
-            <CheckBox
-                android:id="@+id/time_date_check_box"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:background="@drawable/input_fields"
-                android:button="@drawable/blue_chechk_box"
-                android:paddingLeft="@dimen/check_box_padding"
-                android:text="All Day"
-                android:textColor="@color/dark_grey_color"
-                android:textSize="14sp" />
-        </RadioGroup>
-        -->
-        <!--
-        <ImageView
-            android:id="@+id/time_date_container_dragger"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:layout_marginLeft="7.5dp"
-            android:layout_marginRight="7.5dp"
-            android:background="@drawable/drag" />
-        -->
     </LinearLayout>
 
     <include

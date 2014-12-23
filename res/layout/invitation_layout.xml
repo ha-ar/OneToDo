@@ -131,7 +131,7 @@
             android:paddingTop="10dp" >
 
             <ImageView
-                android:id="@+id/imageView1"
+                android:id="@+id/image1"
                 android:layout_width="15dp"
                 android:layout_height="25dp"
                 android:layout_alignParentLeft="true"
@@ -139,12 +139,12 @@
                 android:src="@drawable/location_grey" />
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/text1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="25dp"
-                android:layout_toRightOf="@+id/imageView1"
+                android:layout_toRightOf="@+id/image1"
                 android:maxLines="3"
                 android:text="Iqbal Road, Lahore"
                 android:textColor="@android:color/black"
@@ -299,7 +299,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/details_layout"
                 android:layout_marginTop="3dp"
-                android:layout_toRightOf="@+id/imageView1"
                 android:text="Show details"
                 android:textColor="@color/active"
                 android:textSize="13.13sp" />

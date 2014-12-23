@@ -108,11 +108,9 @@ public class AddEventFragment extends Fragment {
 	static int FragmentCheck = 0;
 	Uri filename;
 	static EditText taskTitle;
-
 	private static int Tag = 0;
 	private PopupWindow popupWindowAttach;
 	static LinearLayout ll_iner;
-	
 	private static View previousSelected;
 	static String checkedId2 = null, setmon1;
 	View label_view, viewl;;
@@ -132,7 +130,6 @@ public class AddEventFragment extends Fragment {
 	int MaxId = -1;
 	Editor editor, editorattach;
 
-	static ContactsCompletionView completionAssignView, completionShareView;
 
 	AlertDialog add_new_label_alert, date_time_alert, label_edit, location_del,
 			attach_alert;
@@ -236,8 +233,6 @@ public class AddEventFragment extends Fragment {
 						getActivity().finish();
 					}
 				});
-		aq.id(R.id.contacts_name).typeface(
-				TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE));
 
 		aq.id(R.id.time_date_to)
 				.typeface(
@@ -1148,7 +1143,7 @@ public class AddEventFragment extends Fragment {
 					}
 				});
 
-		View switchView = aq.id(R.id.add_sub_task_event).getView();
+		View switchView = aq.id(R.id.add_sub_event).getView();
 		toggleCheckList(switchView);
 
 	}
@@ -1266,7 +1261,7 @@ public class AddEventFragment extends Fragment {
 			v.requestFocus();
 			showCurrentView(v);
 			setAllOtherFocusableFalse(v);
-			if (v.getId() == R.id.event_title || v.getId() == R.id.notes)
+			if (v.getId() == R.id.event_title)
 				Utils.showKeyboard(getActivity());
 			else
 				Utils.hidKeyboard(getActivity());

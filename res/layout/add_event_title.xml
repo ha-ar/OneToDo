@@ -27,6 +27,7 @@
             android:layout_height="40dp"
             android:layout_toRightOf="@id/completed_event"
             android:background="@android:color/transparent"
+            android:gravity="center_vertical"
             android:hint="Title"
             android:paddingLeft="15dp"
             android:paddingRight="5dp"

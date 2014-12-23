@@ -145,7 +145,6 @@ public class AddTaskFragment extends Fragment {
 	View label_view = null, viewl;
 	private AutoCompleteTextView locationTextView;
 
-	static ContactsCompletionView completionAssignView, completionShareView;
 
 	static AlertDialog attach;
 	Dialog add_new_label_alert, assig_alert, share_alert, date_time_alert,
@@ -247,7 +246,6 @@ public class AddTaskFragment extends Fragment {
 		inflateLayouts();
 
 		aqa = aq;
-
 		aq.id(R.id.task_assign).clicked(new OnClickListener() {
 
 			@Override
@@ -275,9 +273,6 @@ public class AddTaskFragment extends Fragment {
 						getActivity().finish();
 					}
 				});
-
-		aq.id(R.id.contacts_name).typeface(
-				TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE));
 
 		aq.id(R.id.time_date)
 				.typeface(
@@ -932,7 +927,7 @@ public class AddTaskFragment extends Fragment {
 		// **************Should be removed -- old
 		// design************************//
 
-		people = new Person[] {
+		/*people = new Person[] {
 				new Person("Usman Ameer", "de.uameer@example.com"),
 				new Person("Khurram Nawaaz", "khurram@example.com"),
 				new Person("Hasan Ali", "has@example.com"),
@@ -1059,7 +1054,7 @@ public class AddTaskFragment extends Fragment {
 				transaction.addToBackStack(null);
 				transaction.commit();
 			}
-		});
+		});*/
 
 		// ***************************** Attachment
 		LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -1273,35 +1268,7 @@ public class AddTaskFragment extends Fragment {
 		}
 	}
 
-	private void showSlectedContacts(int layout, String heading,
-			ContactsCompletionView completionView) {
-		final LinearLayout item = (LinearLayout) aq.id(layout).visible()
-				.getView();
-		item.removeAllViews();
-		TextView textView = new TextView(getActivity());
-		textView.setPadding(10, 10, 10, 10);
-		aq.id(textView).text(heading).textSize(16f);
-		item.addView(textView);
-		names = completionView.getObjects();
-		for (java.lang.Object name : names) {
 
-			final View child = getActivity().getLayoutInflater().inflate(
-					R.layout.image_added_layout, null);
-
-			TextView text = (TextView) child
-					.findViewById(R.id.image_added_text);
-			text.setText(name.toString());
-			child.findViewById(R.id.image_cancel).setOnClickListener(
-					new OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
-							item.removeView(child);
-						}
-					});
-			item.addView(child);
-		}
-	}
 
 	private void showRightDateAndTime() {
 		String tempCurrentDayDigit = String.format("%02d", currentDayDigit);
@@ -1423,7 +1390,6 @@ public class AddTaskFragment extends Fragment {
 			setAllOtherFocusableFalse(v);
 			if (v.getId() == R.id.location_before
 					|| v.getId() == R.id.task_title1 
-					|| v.getId() == R.id.notes
 					|| v.getId() == R.id.location_task)
 				Utils.showKeyboard(getActivity());
 			else
