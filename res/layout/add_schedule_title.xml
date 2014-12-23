@@ -17,7 +17,7 @@
         android:button="@drawable/task_chechk_box" />
 
     <EditText
-        android:id="@+id/sch_title_edit"
+        android:id="@+id/sch_title"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_toRightOf="@id/sch_title_checkbox"

@@ -300,7 +300,7 @@ public class AddScheduleBeforeFragment extends Fragment {
 								.parseColor("#000000"));
 						// ((TextView)
 						// viewP).setBackgroundColor(Color.parseColor("#999999"));
-						aq.id(R.id.location)
+						aq.id(R.id.location_before_sch)
 								.text(aqd.id(R.id.adress).getText());
 						((TextView) viewP).setText(aqd.id(R.id.home).getText());
 
@@ -372,7 +372,7 @@ public class AddScheduleBeforeFragment extends Fragment {
 					((TextView) viewl)
 							.setBackgroundResource(R.color.light_grey_color);
 					remove(viewl.getId());
-					aq.id(R.id.location).text("");
+					aq.id(R.id.location_before_sch).text("");
 					location_del.dismiss();
 				}
 			});
@@ -406,7 +406,7 @@ public class AddScheduleBeforeFragment extends Fragment {
 
 			aq.id(R.id.arrive_leave_checkbox_layout).visible();
 			AutoCompleteTextView locationTextView = (AutoCompleteTextView) aq
-					.id(R.id.location).getView();
+					.id(R.id.location_before_sch).getView();
 			locationTextView.setAdapter(new PlacesAutoCompleteAdapter(
 					getActivity(),
 					android.R.layout.simple_spinner_dropdown_item));
@@ -460,12 +460,12 @@ public class AddScheduleBeforeFragment extends Fragment {
 				location.show();
 			} else {
 				if (button != null) {
-					aq.id(R.id.location).text(padress);
+					aq.id(R.id.location_before_sch).text(padress);
 					button.setBackgroundResource(R.drawable.button_shadow2);
 					v.setBackgroundResource(R.drawable.button_shadow);
 					button = v;
 				} else {
-					aq.id(R.id.location).text(padress);
+					aq.id(R.id.location_before_sch).text(padress);
 					button = v;
 					v.setBackgroundResource(R.drawable.button_shadow);
 				}

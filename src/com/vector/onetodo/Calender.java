@@ -25,7 +25,7 @@ import com.vector.onetodo.utils.TypeFaces;
 @SuppressLint("SimpleDateFormat")
 public class Calender extends Fragment {
 
-	Button list;
+	//Button list;
 	AQuery aq;
 	private CaldroidFragment caldroidFragment;
 
@@ -43,7 +43,7 @@ public class Calender extends Fragment {
 		View view = inflater.inflate(R.layout.task_calender, container, false);
 		aq = new AQuery(getActivity(), view);
 		
-		list = (Button) getActivity().findViewById(R.id.list_button);
+		/*list = (Button) getActivity().findViewById(R.id.list_button);
 		aq.id(list).visible().clicked(new OnClickListener() {
 
 			@Override
@@ -51,7 +51,7 @@ public class Calender extends Fragment {
 				getActivity().getActionBar().show();
 				getFragmentManager().popBackStack();
 			}
-		});
+		});*/
 //		aq.id(R.id.add_task_button).text(Constants.ADD)
 //				.typeface(TypeFaces.get(getActivity(), Constants.ICON_FONT))
 //				.clicked(new OnClickListener() {

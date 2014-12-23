@@ -132,7 +132,6 @@
                     android:textSize="17.78sp" />
 
                 <LinearLayout
-                    android:id="@+id/timeformat_lay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"

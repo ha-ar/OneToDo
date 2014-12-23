@@ -68,8 +68,7 @@ import com.vector.onetodo.utils.Utils;
 
 public class Project2 extends Fragment {
 
-	
-	//event_attachment 
+	// event_attachment
 	public static AQuery aq, popupAQ, aqloc, AQlabel, AQlabel_edit,
 			AQlabel_del;
 
@@ -83,7 +82,7 @@ public class Project2 extends Fragment {
 	int itempos = -1;
 	int MaxId = -1;
 	EditText taskTitle;
-	
+
 	final String[] colors1 = { "#790000", "#005826", "#0D004C", "#ED145B",
 			"#E0D400", "#0000FF", "#4B0049", "#005B7F", "#603913", "#005952" };
 	private final String[] labels_array = new String[] { "Personal", "Home",
@@ -104,8 +103,6 @@ public class Project2 extends Fragment {
 	private static final int TAKE_PICTURE = 1;
 
 	static LinearLayout lll;
-
-	static ContactsCompletionView completionAssignView, completionShareView;
 
 	AlertDialog label_edit, location_del, add_new_label_alert, assig_alert,
 			share_alert, date_time_alert;
@@ -178,20 +175,20 @@ public class Project2 extends Fragment {
 
 		inflateLayouts();
 		main();
-		
+
 		taskTitle = (EditText) aq.id(R.id.project_title).getView();
-		
+
 		taskTitle.addTextChangedListener(new TextWatcher() {
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 
-				if(taskTitle.getText().length()>0)
+				if (taskTitle.getText().length() > 0)
 					AddTask.btn.setAlpha(1);
 
 				aq.id(R.id.completed_project).textColorId(R.color.active);
-				
+
 			}
 
 			@Override
@@ -348,8 +345,6 @@ public class Project2 extends Fragment {
 								.setBackground(label_view.getBackground());
 						aq.id(R.id.spinner_labels_event).getTextView()
 								.setTextColor(Color.WHITE);
-						aq.id(R.id.label_image).background(
-								R.drawable.label_blue);
 
 					}
 				}
@@ -425,8 +420,6 @@ public class Project2 extends Fragment {
 									.setBackground(view.getBackground());
 							aq.id(R.id.spinner_labels_event).getTextView()
 									.setTextColor(Color.WHITE);
-							aq.id(R.id.label_image).background(
-									R.drawable.label_blue);
 						} else {
 							add_new_label_alert.show();
 						}
@@ -701,29 +694,21 @@ public class Project2 extends Fragment {
 		String tempCurrentHours = String.format("%02d", currentHours);
 		String tempCurrentMins = String.format("%02d", currentMin);
 		String tempYear = String.valueOf(currentYear).substring(2, 4);
-		aq.id(R.id.da).text("Due").textColorId(R.color.deep_sky_blue);
+		aq.id(R.id.da).text("Due");
 		if (dayPosition == 0) {
-			aq.id(R.id.day_field).text("").textColorId(R.color.deep_sky_blue);
-			aq.id(R.id.da).textColorId(R.color.deep_sky_blue);
-			aq.id(R.id.day_field).text("Today")
-					.textColorId(R.color.deep_sky_blue);
+			aq.id(R.id.day_field).text("");
+			aq.id(R.id.day_field).text("Today");
 		} else if (dayPosition == 1) {
-			aq.id(R.id.day_field).text("").textColorId(R.color.deep_sky_blue);
-			aq.id(R.id.da).textColorId(R.color.deep_sky_blue);
-			aq.id(R.id.day_field).text("Tomorrow")
-					.textColorId(R.color.deep_sky_blue);
+			aq.id(R.id.day_field).text("");
+			aq.id(R.id.day_field).text("Tomorrow");
 		} else {
-			aq.id(R.id.day_field).text(currentDay)
-					.textColorId(R.color.deep_sky_blue);
-			aq.id(R.id.da).textColorId(R.color.deep_sky_blue);
-			aq.id(R.id.month_year_field)
-					.text(tempCurrentDayDigit
+			aq.id(R.id.day_field).text(currentDay);
+			aq.id(R.id.month_year_field).text(
+					tempCurrentDayDigit
 							+ Utils.getDayOfMonthSuffix(currentDayDigit) + " "
-							+ currentMon).textColorId(R.color.deep_sky_blue);
+							+ currentMon);
 		}
-		aq.id(R.id.time_field).text(tempCurrentHours + ":" + tempCurrentMins)
-				.textColorId(R.color.deep_sky_blue);
-		aq.id(R.id.calendare_image).background(R.drawable.calendar_blue);
+		aq.id(R.id.time_field).text(tempCurrentHours + ":" + tempCurrentMins);
 	}
 
 	private class LabelEditClickListener implements OnItemLongClickListener {
