@@ -15,7 +15,9 @@ import net.simonvt.menudrawer.MenuDrawer;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
+import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
@@ -31,6 +33,8 @@ import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -49,6 +53,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +73,7 @@ import com.vector.onetodo.db.gen.LabelNameDao;
 import com.vector.onetodo.db.gen.ToDo;
 import com.vector.onetodo.db.gen.ToDoDao;
 import com.vector.onetodo.utils.Constants;
+import com.vector.onetodo.utils.TypeFaces;
 import com.vector.onetodo.utils.Utils;
 
 import de.greenrobot.dao.query.QueryBuilder;
@@ -81,7 +87,7 @@ public class MainActivity extends BaseActivity implements
 	static int check = -1, check1 = 0;;
 	public static int menuchange = 0;
 	private PopupWindow popupWindowTask;
-	public static LinearLayout layout_MainMenu;
+	public static RelativeLayout layout_MainMenu;
 	InputMethodManager inputMethodManager;
 	AlertDialog date_time_alert;
 	LinearLayout itemadded;
@@ -186,25 +192,47 @@ public class MainActivity extends BaseActivity implements
 		}
 
 	}
-	
-	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+	Menu menu;
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		this.menu = menu;
+		SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		SearchView search = (SearchView) menu.findItem(R.id.action_search)
+				.getActionView();
+		search.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
+		search.setOnQueryTextListener(new OnQueryTextListener() {
+			@Override
+			public boolean onQueryTextChange(String query) {
+				// loadHistory(query);
+				return true;
+			}
+
+			@Override
+			public boolean onQueryTextSubmit(String arg0) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+		});
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
@@ -339,7 +367,7 @@ public class MainActivity extends BaseActivity implements
 			}
 		});
 
-		layout_MainMenu = (LinearLayout) findViewById(R.id.container);
+		layout_MainMenu = (RelativeLayout) findViewById(R.id.container);
 		// layout_MainMenu.getForeground().setAlpha(0);
 		final View view = getLayoutInflater().inflate(R.layout.landing_menu,
 				null, false);
@@ -582,7 +610,7 @@ public class MainActivity extends BaseActivity implements
 						.visibility(View.VISIBLE);
 
 				getSupportFragmentManager().popBackStack();
-				mDrawer.closeMenu();
+				drawerLayout.closeDrawers();
 				menuchange = 1;
 
 				arg0.setBackgroundColor(Color.parseColor("#F2F2F2"));
@@ -701,21 +729,21 @@ public class MainActivity extends BaseActivity implements
 		tabs.setViewPager(pager);
 		tabPagerAdapter.notifyDataSetChanged();
 
-		// aq.id(R.id.add_task_button)
-		// .typeface(TypeFaces.get(this, Constants.ICON_FONT))
-		// .clicked(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		//
-		// Intent intent = new Intent(MainActivity.this,
-		// AddTask.class);
-		// intent.putExtra("position", pager.getCurrentItem());
-		// startActivity(intent);
-		// overridePendingTransition(R.anim.slide_in1,
-		// R.anim.slide_out1);
-		// }
-		// });
+		aq.id(R.id.add_task_button)
+				.typeface(TypeFaces.get(this, Constants.ICON_FONT))
+				.clicked(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+
+						Intent intent = new Intent(MainActivity.this,
+								AddTask.class);
+						intent.putExtra("position", pager.getCurrentItem());
+						startActivity(intent);
+						overridePendingTransition(R.anim.slide_in1,
+								R.anim.slide_out1);
+					}
+				});
 
 	}
 

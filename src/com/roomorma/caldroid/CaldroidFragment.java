@@ -1151,8 +1151,8 @@ public class CaldroidFragment extends DialogFragment {
 		// For the monthTitleTextView
 //		monthTitleTextView = (TextView) getActivity()
 //				.findViewById(R.id.weather);
-		monthTitleTextView.setTypeface(TypeFaces.get(getActivity(),
-				"HeleveticaNeueTStd-Roman"));
+//		monthTitleTextView.setTypeface(TypeFaces.get(getActivity(),
+//				"HeleveticaNeueTStd-Roman"));
 
 		// For the left arrow button
 		leftArrowButton = (Button) view.findViewById(R.id.calendar_left_arrow);
