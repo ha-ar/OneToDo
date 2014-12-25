@@ -1,11 +1,12 @@
 package com.vector.onetodo;
 
-import java.io.File;
+import it.feio.android.checklistview.ChecklistManager;
+import it.feio.android.checklistview.exceptions.ViewNotSupportedException;
+import it.feio.android.checklistview.interfaces.CheckListChangedListener;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-
 import net.simonvt.datepicker.DatePicker;
 import net.simonvt.datepicker.DatePicker.OnDateChangedListener;
 import net.simonvt.timepicker.TimePicker;
@@ -21,17 +22,17 @@ import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.ContactsContract;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -44,7 +45,11 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -52,85 +57,83 @@ import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-
 import com.androidquery.AQuery;
+import com.astuetz.PagerSlidingTabStrip;
 import com.devspark.appmsg.AppMsg;
-import com.vector.onetodo.AddEventFragment.LabelImageAdapter;
 import com.vector.onetodo.utils.Constants;
 import com.vector.onetodo.utils.ScaleAnimToHide;
 import com.vector.onetodo.utils.ScaleAnimToShow;
 import com.vector.onetodo.utils.TypeFaces;
 import com.vector.onetodo.utils.Utils;
 
-public class Project2 extends Fragment {
+public class AddAppoinmentFragment extends Fragment {
+	// appoinment_attachment edittext appoinment_comment
+	public static AQuery aq, popupAQ, aqloc, aqd, aq_del, aq_edit;
 
-	// event_attachment
-	public static AQuery aq, popupAQ, aqloc, AQlabel, AQlabel_edit,
-			AQlabel_del;
-
-	View label_view, viewl;
-	GradientDrawable label_color;
+	static List<java.lang.Object> names;
 	int Label_postion = -1;
-	private int lastCheckedId = -1;
 	ImageView last;
 	String plabel = null;
 	int pposition = -1;
 	int itempos = -1;
 	int MaxId = -1;
+	private int lastCheckedId = -1;
 	EditText taskTitle;
 
-	final String[] colors1 = { "#790000", "#005826", "#0D004C", "#ED145B",
-			"#E0D400", "#0000FF", "#4B0049", "#005B7F", "#603913", "#005952" };
-	private final String[] labels_array = new String[] { "Personal", "Home",
-			"Work", "New", "New", "New", "New", "New", "New" };
-	static List<java.lang.Object> names;
+	String[] colors1 = { "#790000", "#005826", "#0D004C", "#ED145B", "#E0D400",
+			"#0000FF", "#4B0049", "#005B7F", "#603913", "#005952" };
 
-	public static HashMap<Integer, Integer> inflatingLayouts = new HashMap<Integer, Integer>();
-
-	public static HashMap<Integer, Integer> inflatingLayoutsSelector = new HashMap<Integer, Integer>();
-
-	private String currentDay, currentMon;
+	Editor editor;
+	View label_view, viewl;
+	GradientDrawable label_color;
 	static String checkedId2 = null;
-	private Uri imageUri;
-	public static final int RESULT_GALLERY = 0;
 
-	public static final int PICK_CONTACT = 2;
+	private Uri imageUri;
+	int dayPosition;
 
 	private static final int TAKE_PICTURE = 1;
 
+	static final String[] repeatArray = new String[] { "Once", "Daily",
+			"Weekly", "Monthly", "Yearly" };
 	static LinearLayout lll;
 
-	AlertDialog label_edit, location_del, add_new_label_alert, assig_alert,
-			share_alert, date_time_alert;
 	static int currentHours, currentMin, currentDayDigit, currentYear,
 			currentMonDigit;
 
-	int Month, Year;
+	private int[] collapsingViews = { R.id.label_grid_view3,
+			R.id.before_grid_view_linear_appoinment,
+			R.id.date_time_include_appoinment };
 
-	private int[] collapsingViews = { R.id.date_time_include,
-			R.id.label_event_grid_view };
+	private String currentDay, currentMon;
+	private int[] allViews = { R.id.spinner_label_layout,
+			R.id.before_appoinment_lay, R.id.time_date_appoinment,
+			R.id.appoinment_title };
 
-	private int[] allViews = { R.id.time_date, R.id.spinner_label_layout };
+	public static HashMap<Integer, Integer> inflatingLayouts = new HashMap<Integer, Integer>();
 
-	static final String[] repeatArray = new String[] { "Once", "Daily",
-			"Weekly", "Monthly", "Yearly" };
+	private final String[] labels_array = new String[] { "Personal", "Home",
+			"Work", "New", "New", "New", "New", "New", "New" };
 
-	int dayPosition;
-	Editor editor;
 	EditText label_field = null;
 
+	AlertDialog date_time_alert, add_new_label_alert, location_del, label_edit;
+
 	protected static final int RESULT_CODE = 123;
+
+	public static final int RESULT_GALLERY = 0;
+
+	public static final int PICK_CONTACT = 2;
 
 	public static View allView;
 
 	public static Activity act;
 
-	public static Project2 newInstance(int position, int dayPosition) {
-		Project2 myFragment = new Project2();
+	public static AddAppoinmentFragment newInstance(int position, int dayPosition) {
+		AddAppoinmentFragment myFragment = new AddAppoinmentFragment();
 		Bundle args = new Bundle();
 		args.putInt("position", position);
 		args.putInt("dayPosition", dayPosition);
@@ -141,12 +144,12 @@ public class Project2 extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.project_fragment, container,
+		View view = inflater.inflate(R.layout.appoinment_fragment, container,
 				false);
 
 		aq = new AQuery(getActivity(), view);
 		act = getActivity();
-
+		
 		return view;
 	}
 
@@ -155,7 +158,6 @@ public class Project2 extends Fragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		allView = getView();
 		editor = AddTask.label.edit();
 		dayPosition = getArguments().getInt("dayPosition", 0);
 		currentDay = Utils.getCurrentDay(dayPosition, Calendar.SHORT);
@@ -167,16 +169,19 @@ public class Project2 extends Fragment {
 		currentHours = Utils.getCurrentHours();
 		currentMin = Utils.getCurrentMins();
 
-		// inflatingLayouts.put(0, R.layout.project_title);
-		inflatingLayouts.put(0, R.layout.project_title);
-		inflatingLayouts.put(1, R.layout.project_duration);
-		inflatingLayouts.put(2, R.layout.project_task);
-		inflatingLayouts.put(3, R.layout.project_note);
+		allView = getView();
+
+		inflatingLayouts.put(0, R.layout.add_appoinment_title);
+		inflatingLayouts.put(1, R.layout.appoinment_date);
+		inflatingLayouts.put(2, R.layout.add_appoinment_before);
+		inflatingLayouts.put(3, R.layout.add_appoinment_label);
+		inflatingLayouts.put(4, R.layout.add_appoinment_notes);
 
 		inflateLayouts();
+
 		main();
 
-		taskTitle = (EditText) aq.id(R.id.project_title).getView();
+		taskTitle = (EditText) aq.id(R.id.appoinment_title).getView();
 
 		taskTitle.addTextChangedListener(new TextWatcher() {
 
@@ -187,7 +192,7 @@ public class Project2 extends Fragment {
 				if (taskTitle.getText().length() > 0)
 					AddTask.btn.setAlpha(1);
 
-				aq.id(R.id.completed_project).textColorId(R.color.active);
+				aq.id(R.id.completed_appoinment).textColorId(R.color.active);
 
 			}
 
@@ -205,9 +210,33 @@ public class Project2 extends Fragment {
 
 	}
 
-	public void main() {
+	void main() {
 
-		aq.id(R.id.time_date)
+		LayoutInflater inflater5 = getActivity().getLayoutInflater();
+
+		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
+				false);
+		aq_edit = new AQuery(dialoglayout6);
+		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
+		builder6.setView(dialoglayout6);
+		label_edit = builder6.create();
+
+		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
+				null, false);
+		aq_del = new AQuery(dialoglayout7);
+		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
+		builder7.setView(dialoglayout7);
+		location_del = builder7.create();
+		// ****************Title
+		aq.id(R.id.appoinment_title)
+				.typeface(
+						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
+				.clicked(new GeneralOnClickListner());
+		// *********************End Title
+
+		// ******************date Time Picker
+
+		aq.id(R.id.time_date_appoinment)
 				.typeface(
 						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
 				.clicked(new GeneralOnClickListner());
@@ -247,7 +276,7 @@ public class Project2 extends Fragment {
 			public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
 				currentHours = hourOfDay;
 				currentMin = minute;
-				aq.id(R.id.time_field).visible();
+				aq.id(R.id.time_field_appoinment).visible();
 				showRightDateAndTime();
 			}
 		});
@@ -261,23 +290,52 @@ public class Project2 extends Fragment {
 			tPicker.setScaleY(0.7f);
 		}
 
-		// **********************END DATE TIME
+		// ***********************END DATE TIME
 
-		// ****************************** Label Dialog
+		// ***********************bEFORE fRAGMENT
 
-		aq.id(R.id.time_date).clicked(new GeneralOnClickListner());
+		aq.id(R.id.before_appoinment_lay)
+				.clicked(new GeneralOnClickListner());
+		/**
+		 * View pager for before and location
+		 * 
+		 */
+		ViewPager pager = (ViewPager) aq.id(R.id.add_appoinment_before_pager)
+				.getView();
+
+		pager.setAdapter(new Appoinmentbeforefragment(getActivity()
+				.getSupportFragmentManager()));
+
+		// Bind the tabs to the ViewPager
+		PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) aq.id(
+				R.id.add_appoinment_before_tabs).getView();
+		tabs.setDividerColorResource(android.R.color.transparent);
+		tabs.setIndicatorColorResource(R.color._4d4d4d);
+		tabs.setUnderlineColorResource(android.R.color.transparent);
+		tabs.setTextSize(Utils.getPxFromDp(getActivity(), 16));
+		tabs.setIndicatorHeight(Utils.getPxFromDp(getActivity(), 1));
+		tabs.setTextColorResource(R.color._4d4d4d);
+		tabs.setAllCaps(false);
+		tabs.setTypeface(
+				TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE),
+				Typeface.NORMAL);
+		tabs.setShouldExpand(true);
+		tabs.setViewPager(pager);
+
+		// ***********************eND Before pager
+
+		// **********************lABEL
+
+		// ******************* label dialog
 		GridView gridView;
 
-		final String[] labels_array1 = new String[] { "A", "A", "A", "A", "A",
-				"A", "A", "A", "A", "A", };
-
 		View vie = getActivity().getLayoutInflater().inflate(
-				R.layout.add_label_event, null, false);
+				R.layout.add_label, null, false);
 
-		AQlabel = new AQuery(vie);
+		aqd = new AQuery(vie);
 		final TextView label_text = (TextView) vie
-				.findViewById(R.id.add_label_text_event);
-		gridView = (GridView) vie.findViewById(R.id.add_label_grid_event);
+				.findViewById(R.id.add_label_text);
+		gridView = (GridView) vie.findViewById(R.id.add_label_grid);
 
 		gridView.setAdapter(new LabelImageAdapter(getActivity()));
 
@@ -299,8 +357,6 @@ public class Project2 extends Fragment {
 				img.setImageResource(R.drawable.select_white);
 
 				Label_postion = position;
-
-				// buttonColor = (ColorDrawable) view.getBackground();
 			}
 		});
 
@@ -318,7 +374,6 @@ public class Project2 extends Fragment {
 				label_text.setText("");
 			}
 		});
-
 		TextView saveLabel = (TextView) vie.findViewById(R.id.save);
 		saveLabel.setOnClickListener(new OnClickListener() {
 
@@ -339,13 +394,13 @@ public class Project2 extends Fragment {
 								.toString());
 						((TextView) label_view).setTextColor(Color.WHITE);
 
-						aq.id(R.id.spinner_labels_event).text(
+						aq.id(R.id.spinner_labels_appoin).text(
 								((TextView) label_view).getText().toString());
-						aq.id(R.id.spinner_labels_event).getTextView()
+						aq.id(R.id.spinner_labels_appoin).getTextView()
 								.setBackground(label_view.getBackground());
-						aq.id(R.id.spinner_labels_event).getTextView()
+						aq.id(R.id.spinner_labels_appoin).getTextView()
 								.setTextColor(Color.WHITE);
-
+					
 					}
 				}
 			}
@@ -362,7 +417,7 @@ public class Project2 extends Fragment {
 
 		// Init labels adapter
 		final String[] colors = { "#AC7900", "#4D6600", "#5A0089" };
-		aq.id(R.id.label_event_grid_view)
+		aq.id(R.id.label_grid_view)
 				.getGridView()
 				.setAdapter(
 						new ArrayAdapter<String>(getActivity(),
@@ -374,10 +429,7 @@ public class Project2 extends Fragment {
 									ViewGroup parent) {
 								TextView textView = (TextView) super.getView(
 										position, convertView, parent);
-
 								Load(textView.getId() + "" + position);
-								Log.v("View id= ", textView.getId() + position
-										+ "| " + plabel + " | " + pposition);
 
 								if (!textView.getText().toString()
 										.equals("New")) {
@@ -403,23 +455,24 @@ public class Project2 extends Fragment {
 							}
 
 						});
-		aq.id(R.id.label_event_grid_view).getGridView()
+
+		aq.id(R.id.label_grid_view).getGridView()
 				.setOnItemClickListener(new OnItemClickListener() {
 
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
-
 						itempos = position;
 						label_view = view;
 						if (!((TextView) view).getText().toString()
 								.equalsIgnoreCase("new")) {
-							aq.id(R.id.spinner_labels_event).text(
+							aq.id(R.id.spinner_labels_appoin).text(
 									((TextView) view).getText().toString());
-							aq.id(R.id.spinner_labels_event).getTextView()
+							aq.id(R.id.spinner_labels_appoin).getTextView()
 									.setBackground(view.getBackground());
-							aq.id(R.id.spinner_labels_event).getTextView()
+							aq.id(R.id.spinner_labels_appoin).getTextView()
 									.setTextColor(Color.WHITE);
+							
 						} else {
 							add_new_label_alert.show();
 						}
@@ -428,26 +481,10 @@ public class Project2 extends Fragment {
 
 				});
 
-		aq.id(R.id.label_event_grid_view).getGridView()
+		aq.id(R.id.label_grid_view).getGridView()
 				.setOnItemLongClickListener(new LabelEditClickListener());
 
-		LayoutInflater inflater5 = getActivity().getLayoutInflater();
-
-		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
-				false);
-		AQlabel_edit = new AQuery(dialoglayout6);
-		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
-		builder6.setView(dialoglayout6);
-		label_edit = builder6.create();
-
-		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
-				null, false);
-		AQlabel_del = new AQuery(dialoglayout7);
-		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
-		builder7.setView(dialoglayout7);
-		location_del = builder7.create();
-
-		AQlabel_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
+		aq_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -456,7 +493,7 @@ public class Project2 extends Fragment {
 			}
 		});
 
-		AQlabel_del.id(R.id.edit_del).clicked(new OnClickListener() {
+		aq_del.id(R.id.edit_del).clicked(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -472,7 +509,7 @@ public class Project2 extends Fragment {
 			}
 		});
 
-		AQlabel_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
+		aq_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -482,28 +519,117 @@ public class Project2 extends Fragment {
 			}
 		});
 
-		AQlabel_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
+		aq_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub=
-				// aqd.id(R.id.add_label_text).text(((TextView)
-				// viewl).getText().)
-				AQlabel.id(R.id.label_title_event).text("Edit");
-				AQlabel.id(R.id.save).text("Save");
+				// TODO Auto-generated method
+				aqd.id(R.id.label_title).text("Edit");
+				aqd.id(R.id.save).text("Save");
 				label_view = viewl;
 				label_edit.dismiss();
 				add_new_label_alert.show();
 			}
 		});
+
 		aq.id(R.id.spinner_label_layout).clicked(new GeneralOnClickListner());
 
-		// ********************************* Label END
+		View switchView = aq.id(R.id.add_sub_appoinment).getView();
+		toggleCheckList(switchView);
+
+		lastCheckedId = ((RadioGroup) aq.id(R.id.priority_radio_buttons)
+				.getView()).getCheckedRadioButtonId();
+		((RadioGroup) aq.id(R.id.priority_radio_buttons).getView())
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+					@Override
+					public void onCheckedChanged(RadioGroup group, int checkedId) {
+						((RadioButton) group.findViewById(lastCheckedId))
+								.setTextColor(getResources().getColor(
+										R.color.deep_sky_blue));
+						((RadioButton) group.findViewById(checkedId))
+								.setTextColor(getResources().getColor(
+										android.R.color.white));
+						String abc = ((RadioButton) group
+								.findViewById(checkedId)).getText().toString();
+						if (abc.equals("None"))
+							AddTask.priority = 0;
+						else if (abc.equals("!"))
+							AddTask.priority = 1;
+						else if (abc.equals("! !"))
+							AddTask.priority = 2;
+						else if (abc.equals("! ! !"))
+							AddTask.priority = 3;
+						lastCheckedId = checkedId;
+					}
+				});
+	}
+
+	// ***************Main End**********************
+
+	private void toggleCheckList(View switchView) {
+		View newView;
+
+		/*
+		 * Here is where the job is done. By simply calling an instance of the
+		 * ChecklistManager we can call its methods.
+		 */
+		try {
+			// Getting instance
+			ChecklistManager mChecklistManager = ChecklistManager
+					.getInstance(getActivity());
+
+			/*
+			 * These method are useful when converting from EditText to
+			 * ChecklistView (but can be set anytime, they'll be used at
+			 * appropriate moment)
+			 */
+
+			// Setting new entries hint text (if not set no hint
+			// will be used)
+			mChecklistManager.setNewEntryHint("Add a subtask");
+			// Let checked items are moved on bottom
+
+			mChecklistManager.setMoveCheckedOnBottom(1);
+
+			mChecklistManager
+					.setCheckListChangedListener(new CheckListChangedListener() {
+
+						@Override
+						public void onCheckListChanged() {
+
+						}
+					});
+
+			// Decide if keep or remove checked items when converting
+			// back to simple text from checklist
+			mChecklistManager.setKeepChecked(true);
+
+			// I want to make checks symbols visible when converting
+			// back to simple text from checklist
+			mChecklistManager.setShowChecks(true);
+
+			// Converting actual EditText into a View that can
+			// replace the source or viceversa
+			newView = mChecklistManager.convert(switchView);
+
+			// Replacing view in the layout
+			mChecklistManager.replaceViews(switchView, newView);
+
+			// Updating the instance of the pointed view for
+			// eventual reverse conversion
+			switchView = newView;
+
+		} catch (ViewNotSupportedException e) {
+			// This exception is fired if the source view class is
+			// not supported
+			e.printStackTrace();
+		}
 	}
 
 	public static void inflateLayouts() {
 		GridLayout gridLayout = (GridLayout) allView
-				.findViewById(R.id.inner_event_container);
+				.findViewById(R.id.inner_container_appoinment);
 		gridLayout.removeAllViews();
 		for (int key : inflatingLayouts.keySet()) {
 			View child = act.getLayoutInflater().inflate(
@@ -516,17 +642,6 @@ public class Project2 extends Fragment {
 			child.setLayoutParams(param);
 			gridLayout.addView(child);
 		}
-	}
-
-	private void setAllOtherFocusableFalse(View v) {
-		for (int id : allViews)
-			if (v.getId() != id) {
-				try {
-					aq.id(id).getView().setFocusableInTouchMode(false);
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-			}
 	}
 
 	private void hideAll() {
@@ -545,27 +660,55 @@ public class Project2 extends Fragment {
 		hideAll();
 
 		switch (v.getId()) {
-		case R.id.time_date:
-			if (aq.id(R.id.date_time_include).getView().getVisibility() == View.GONE)
-				aq.id(R.id.date_time_include)
+		case R.id.time_date_appoinment:
+			if (aq.id(R.id.date_time_include_appoinment).getView()
+					.getVisibility() == View.GONE)
+				aq.id(R.id.date_time_include_appoinment)
 						.getView()
 						.startAnimation(
-								new ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f,
-										200, aq.id(R.id.date_time_include)
+								new ScaleAnimToShow(
+										1.0f,
+										1.0f,
+										1.0f,
+										0.0f,
+										200,
+										aq.id(R.id.date_time_include_appoinment)
 												.getView(), true));
+
+			break;
+		case R.id.before_appoinment_lay:
+
+			if (aq.id(R.id.before_grid_view_linear_appoinment).getView()
+					.getVisibility() == View.GONE) {
+				if (aq.id(R.id.before_appoinment).getText().toString() == "") {
+					aq.id(R.id.before_appoinment).text(
+							AddTaskBeforeFragment.beforeArray[1]+" Before").visibility(View.VISIBLE);
+
+				}
+				aq.id(R.id.before_grid_view_linear_appoinment)
+						.getView()
+						.startAnimation(
+								new ScaleAnimToShow(
+										1.0f,
+										1.0f,
+										1.0f,
+										0.0f,
+										200,
+										aq.id(R.id.before_grid_view_linear_appoinment)
+												.getView(), true));
+			}
 			break;
 		case R.id.spinner_label_layout:
-			if (aq.id(R.id.label_event_grid_view).getView().getVisibility() == View.GONE)
-				aq.id(R.id.label_event_grid_view)
+			if (aq.id(R.id.label_grid_view3).getView().getVisibility() == View.GONE)
+				aq.id(R.id.label_grid_view3)
 						.getView()
 						.startAnimation(
 								new ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f,
-										200, aq.id(R.id.label_event_grid_view)
+										200, aq.id(R.id.label_grid_view3)
 												.getView(), true));
-			break;
 
 		default:
-			break;
+
 		}
 
 	}
@@ -578,13 +721,23 @@ public class Project2 extends Fragment {
 			v.requestFocus();
 			showCurrentView(v);
 			setAllOtherFocusableFalse(v);
-			if (v.getId() == R.id.time_date
-					|| v.getId() == R.id.spinner_label_layout)
+			if (v.getId() == R.id.appoinment_title)
 				Utils.showKeyboard(getActivity());
 			else
 				Utils.hidKeyboard(getActivity());
 		}
 
+	}
+
+	private void setAllOtherFocusableFalse(View v) {
+		for (int id : allViews)
+			if (v.getId() != id) {
+				try {
+					aq.id(id).getView().setFocusableInTouchMode(false);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
 	}
 
 	public void slideUpDown(final View view) {
@@ -597,10 +750,8 @@ public class Project2 extends Fragment {
 			view.setVisibility(View.VISIBLE);
 			Drawable tintColor = new ColorDrawable(getResources().getColor(
 					R.color.dim_background));
-			/*
-			 * ((FrameLayout) aq.id(R.id.add_project_frame).getView())
-			 * .setForeground(tintColor);
-			 */
+			((FrameLayout) aq.id(R.id.add_appoinment_frame).getView())
+					.setForeground(tintColor);
 		} else {
 			// Hide the Panel
 			Animation bottomDown = AnimationUtils.loadAnimation(getActivity(),
@@ -610,10 +761,8 @@ public class Project2 extends Fragment {
 			view.setVisibility(View.GONE);
 			Drawable tintColor = new ColorDrawable(getResources().getColor(
 					android.R.color.transparent));
-			/*
-			 * ((FrameLayout) aq.id(R.id.add_project_frame).getView())
-			 * .setForeground(tintColor);
-			 */
+			((FrameLayout) aq.id(R.id.add_appoinment_frame).getView())
+					.setForeground(tintColor);
 		}
 	}
 
@@ -693,22 +842,54 @@ public class Project2 extends Fragment {
 		String tempCurrentDayDigit = String.format("%02d", currentDayDigit);
 		String tempCurrentHours = String.format("%02d", currentHours);
 		String tempCurrentMins = String.format("%02d", currentMin);
-		String tempYear = String.valueOf(currentYear).substring(2, 4);
-		aq.id(R.id.da).text("Due");
+		aq.id(R.id.da_appoinment).text("Due");
 		if (dayPosition == 0) {
-			aq.id(R.id.day_field).text("");
-			aq.id(R.id.day_field).text("Today");
+			aq.id(R.id.day_field_appoinment).text("");
+			aq.id(R.id.da_appoinment);
+			aq.id(R.id.day_field_appoinment).text("Today");
 		} else if (dayPosition == 1) {
-			aq.id(R.id.day_field).text("");
-			aq.id(R.id.day_field).text("Tomorrow");
+			aq.id(R.id.day_field_appoinment).text("");
+			aq.id(R.id.day_field_appoinment).text("Tomorrow");
 		} else {
-			aq.id(R.id.day_field).text(currentDay);
-			aq.id(R.id.month_year_field).text(
+			aq.id(R.id.day_field_appoinment).text(currentDay);
+			aq.id(R.id.month_year_field_appoinment).text(
 					tempCurrentDayDigit
 							+ Utils.getDayOfMonthSuffix(currentDayDigit) + " "
 							+ currentMon);
 		}
-		aq.id(R.id.time_field).text(tempCurrentHours + ":" + tempCurrentMins);
+		aq.id(R.id.time_field_appoinment).text(
+				tempCurrentHours + ":" + tempCurrentMins);
+
+	}
+
+	public class Appoinmentbeforefragment extends FragmentStatePagerAdapter {
+
+		public Appoinmentbeforefragment(FragmentManager fm) {
+			super(fm);
+		}
+
+		@Override
+		public int getCount() {
+			return 2; // just Add Task & Add Event
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			switch (position) {
+			case 0:
+				return "By time";
+			case 1:
+				return "At location";
+			default:
+				return "";// not the case
+
+			}
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			return AddAppoinmentBeforeFragment.newInstance(position);
+		}
 	}
 
 	private class LabelEditClickListener implements OnItemLongClickListener {
@@ -721,12 +902,12 @@ public class Project2 extends Fragment {
 					|| position < 3) {
 
 			} else {
-				AQlabel.id(R.id.add_label_text_event).text(
+				aqd.id(R.id.add_label_text).text(
 						((TextView) arg1).getText().toString());
-				AQlabel_del.id(R.id.body).text(
+				aq_del.id(R.id.body).text(
 						"Label " + ((TextView) arg1).getText().toString()
 								+ " will be deleted");
-				AQlabel_edit.id(R.id.add_task_edit_title).text(
+				aq_edit.id(R.id.add_task_edit_title).text(
 						"Label: " + ((TextView) arg1).getText().toString());
 				viewl = arg1;
 				itempos = position;
@@ -758,14 +939,11 @@ public class Project2 extends Fragment {
 		// create a new ImageView for each item referenced by the Adapter
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ImageView imageView;
-			if (convertView == null) { // if it's not recycled, initialize some
-										// attributes
+			if (convertView == null) {
 				imageView = new ImageView(mContext);
 				imageView.setLayoutParams(new GridView.LayoutParams(Utils
 						.convertDpToPixel(40, mContext), Utils
 						.convertDpToPixel(40, mContext)));
-				// imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-				// imageView.setPadding(8, 8, 8, 8);
 			} else {
 				imageView = (ImageView) convertView;
 			}
@@ -774,8 +952,6 @@ public class Project2 extends Fragment {
 					.getDrawable(R.drawable.label_background_dialog);
 			mDrawable.setColor(Color.parseColor(colors1[position]));
 			imageView.setBackground(mDrawable);
-
-			// imageView.setImageResource(mThumbIds[position]);
 			return imageView;
 		}
 
@@ -783,25 +959,26 @@ public class Project2 extends Fragment {
 
 	public void Save(String id, String name, int label_position) {
 		// 0 - for private mode
-		editor.putString(5 + "key_label" + id, name); // Storing integer
-		editor.putInt(5 + "key_color_position" + id, label_position); // Storing
+		editor.putString(4 + "key_label" + id, name); // Storing integer
+		editor.putInt(4 + "key_color_position" + id, label_position); // Storing
 																		// float
 		editor.commit();
 	}
 
 	public void Load(String id) {
 		plabel = null;
-		plabel = AddTask.label.getString(5 + "key_label" + id, null); // getting
+		plabel = AddTask.label.getString(4 + "key_label" + id, null); // getting
 																		// String
 		Log.v("View id= ", id + "| " + plabel + " | " + pposition);
 
-		pposition = AddTask.label.getInt(5 + "key_color_position" + id, 0); // getting
+		pposition = AddTask.label.getInt(4 + "key_color_position" + id, 0); // getting
 																			// String
 	}
 
 	public void Remove(String id) {
-		editor.remove(5 + "key_label" + id); // will delete key name
-		editor.remove(5 + "key_color_position" + id); // will delete key email
+		editor.remove(4 + "key_label" + id); // will delete key name
+		editor.remove(4 + "key_color_position" + id); // will delete key email
 		editor.commit();
 	}
+
 }

@@ -129,7 +129,7 @@ public class AddTask extends FragmentActivity {
 	static SharedPreferences pref, label, attach;
 	Boolean is_time = true, is_location = false, is_allday = false,
 			is_alertEmail = false, is_alertNotification = false,
-			is_priority = false;
+			is_priority = false,repeat_forever=false;
 	long r_time = 0, r_repeat = 0, todo_id = 0, dateInMilliseconds = 0;
 	static int priority = 0;
 	HttpClient client;
@@ -750,9 +750,9 @@ public class AddTask extends FragmentActivity {
 			else if (position == 2)
 				return AddScheduleFragment.newInstance(position, dayPosition);
 			else if (position == 3)
-				return Appoinment1.newInstance(position, dayPosition);
+				return AddAppoinmentFragment.newInstance(position, dayPosition);
 			else if (position == 4)
-				return Project2.newInstance(position, dayPosition);
+				return AddProjectFragment.newInstance(position, dayPosition);
 			else
 				return null;
 		}
@@ -794,11 +794,15 @@ public class AddTask extends FragmentActivity {
 							.toString();
 				}
 
-				is_alertEmail = aq.id(R.id.email_radio).getCheckBox()
-						.isChecked();
-				is_alertNotification = aq.id(R.id.notification_radio)
-						.getCheckBox().isChecked();
-
+				if (!(aq.id(R.id.before).getText().toString().equals("") || aq
+						.id(R.id.before).getText().toString() == null)) {
+					is_alertEmail = aq.id(R.id.email_radio).getCheckBox()
+							.isChecked();
+					is_alertNotification = aq.id(R.id.notification_radio)
+							.getCheckBox().isChecked();
+				}
+				
+				repeat_forever=aq.id(R.id.forever_radio).isChecked();
 				repeat = aq.id(R.id.repeat).getText().toString();
 
 				label_name = aq.id(R.id.spinner_labels_task).getText()
@@ -810,7 +814,7 @@ public class AddTask extends FragmentActivity {
 					 * .toString(); Log.v("Log v ", label_color);
 					 */
 				} // location = aq.id(R.id.location_task).getText().toString();
-
+				toggleCheckList(aq.id(R.id.add_sub_task).getView());
 				checklist_data = aq.id(R.id.add_sub_task).getEditText()
 						.getText().toString();
 
@@ -845,11 +849,15 @@ public class AddTask extends FragmentActivity {
 							.toString();
 				}
 
-				is_alertEmail = aq.id(R.id.email_radio_event).getCheckBox()
-						.isChecked();
-				is_alertNotification = aq.id(R.id.notification_radio_event)
-						.getCheckBox().isChecked();
+				if (!(aq.id(R.id.before_event).getText().toString().equals("") || aq
+						.id(R.id.before_event).getText().toString() == null)) {
+					is_alertEmail = aq.id(R.id.email_radio_event).getCheckBox()
+							.isChecked();
+					is_alertNotification = aq.id(R.id.notification_radio_event)
+							.getCheckBox().isChecked();
+				}
 
+				repeat_forever=aq.id(R.id.repeat_forever_radio).isChecked();
 				repeat = aq.id(R.id.repeat_event).getText().toString();
 
 				label_name = aq.id(R.id.spinner_labels_event).getText()
@@ -862,6 +870,7 @@ public class AddTask extends FragmentActivity {
 					 */
 				} // location = aq.id(R.id.location_task).getText().toString();
 
+				toggleCheckList(aq.id(R.id.add_sub_event).getView());
 				checklist_data = aq.id(R.id.add_sub_event).getEditText()
 						.getText().toString();
 
@@ -897,11 +906,16 @@ public class AddTask extends FragmentActivity {
 							.toString();
 				}
 
-				is_alertEmail = aq.id(R.id.email_radio_sch).getCheckBox()
-						.isChecked();
-				is_alertNotification = aq.id(R.id.notification_radio_sch)
-						.getCheckBox().isChecked();
-
+				if (!(aq.id(R.id.before_schedule).getText().toString()
+						.equals("") || aq.id(R.id.before_schedule).getText()
+						.toString() == null)) {
+					is_alertEmail = aq.id(R.id.email_radio_sch).getCheckBox()
+							.isChecked();
+					is_alertNotification = aq.id(R.id.notification_radio_sch)
+							.getCheckBox().isChecked();
+				}
+				
+				repeat_forever=aq.id(R.id.sch_forever_radio).isChecked();
 				repeat = aq.id(R.id.sch_repeat_txt).getText().toString();
 
 				label_name = aq.id(R.id.sch_label_txt).getText().toString();
@@ -913,6 +927,7 @@ public class AddTask extends FragmentActivity {
 					 */
 				} // location = aq.id(R.id.location_task).getText().toString();
 
+				toggleCheckList(aq.id(R.id.add_sub_sch).getView());
 				checklist_data = aq.id(R.id.add_sub_sch).getEditText()
 						.getText().toString();
 
@@ -921,36 +936,110 @@ public class AddTask extends FragmentActivity {
 			}
 		} else if (Position == 3) {
 			if (!(aq.id(R.id.appoinment_title).getText().toString().equals(""))) {
+
+				MaxId = attach.getInt("4Max", 0);
 				titlecheck = 4;
+
 				title = aq.id(R.id.appoinment_title).getText().toString();
-				start_date = Appoinment1.currentYear + "-"
-						+ (Appoinment1.currentMonDigit + 1) + "-"
-						+ Appoinment1.currentDayDigit + " "
-						+ Appoinment1.currentHours + ":"
-						+ Appoinment1.currentMin + ":00";
-				notes = aq.id(R.id.notes_appoinment).getText().toString();
+
+				/*
+				 * ToggleButton switCh = (ToggleButton)
+				 * findViewById(R.id.switch_sch);
+				 */
+				is_allday = false;
+
+				start_date = AddAppoinmentFragment.currentYear + "-"
+						+ (AddAppoinmentFragment.currentMonDigit + 1) + "-"
+						+ AddAppoinmentFragment.currentDayDigit + " "
+						+ AddAppoinmentFragment.currentHours + ":"
+						+ AddAppoinmentFragment.currentMin + ":00";
+				end_date = null;
+
+				location = null; // aq.id(R.id.sch_location).getText().toString();
+
 				before = aq.id(R.id.before_appoinment).getText().toString();
 				if (before.contains("On Arrive") || before.contains("On Leave")) {
 					is_time = false;
 					is_location = true;
-					r_location = aq.id(R.id.before_appoinment).getText()
+					r_location = aq.id(R.id.location_before_appoin).getText()
 							.toString();
 				}
+
+				is_alertEmail = aq.id(R.id.email_radio_appoin).getCheckBox()
+						.isChecked();
+				is_alertNotification = aq.id(R.id.notification_radio_appoin)
+						.getCheckBox().isChecked();
+
+				repeat = null; // aq.id(R.id.sch_repeat_txt).getText().toString();
+
+				label_name = aq.id(R.id.spinner_labels_appoin).getText()
+						.toString();
+				if (!label_name.equals("")) {
+					/*
+					 * String label_color = aq.id(R.id.spinner_labels_task)
+					 * .getTextView().getBackground().getConstantState()
+					 * .toString(); Log.v("Log v ", label_color);
+					 */
+				} // location = aq.id(R.id.location_task).getText().toString();
+
+				toggleCheckList(aq.id(R.id.add_sub_appoinment).getView());
+				checklist_data = aq.id(R.id.add_sub_appoinment).getEditText()
+						.getText().toString();
+
+				notes = aq.id(R.id.notes_appoinment).getText().toString();
 
 			}
 		} else if (Position == 4) {
 			if (!(aq.id(R.id.project_title).getText().toString().equals(""))) {
+
+				MaxId = attach.getInt("5Max", 0);
 				titlecheck = 5;
+
 				title = aq.id(R.id.project_title).getText().toString();
-				start_date = Project2.currentYear + "-"
-						+ (Project2.currentMonDigit + 1) + "-"
-						+ Project2.currentDayDigit + " "
-						+ Project2.currentHours + ":" + Project2.currentMin
-						+ ":00";
-				notes = "";
-				label_name = "";
-				location = "";
-				before = "";
+
+				/*
+				 * ToggleButton switCh = (ToggleButton)
+				 * findViewById(R.id.switch_sch);
+				 */
+				is_allday = false;
+
+				start_date = AddProjectFragment.currentYear + "-"
+						+ (AddProjectFragment.currentMonDigit + 1) + "-"
+						+ AddProjectFragment.currentDayDigit + " "
+						+ AddProjectFragment.currentHours + ":"
+						+ AddProjectFragment.currentMin + ":00";
+				end_date = null;
+
+				location = null; // aq.id(R.id.sch_location).getText().toString();
+
+				before = null; // aq.id(R.id.before_appoinment).getText().toString();
+				// if (before.contains("On Arrive") ||
+				// before.contains("On Leave")) {
+				is_time = false;
+				is_location = false;
+				r_location = null;
+				// }
+
+				is_alertEmail = false;
+				is_alertNotification = false;
+
+				repeat = null; // aq.id(R.id.sch_repeat_txt).getText().toString();
+
+				label_name = aq.id(R.id.spinner_labels_project).getText()
+						.toString();
+				if (!label_name.equals("")) {
+					/*
+					 * String label_color = aq.id(R.id.spinner_labels_task)
+					 * .getTextView().getBackground().getConstantState()
+					 * .toString(); Log.v("Log v ", label_color);
+					 */
+				} // location = aq.id(R.id.location_task).getText().toString();
+
+				checklist_data = null;// aq.id(R.id.add_sub_appoinment).getEditText()
+				// .getText().toString();
+
+				notes = null;// aq.id(R.id.notes_appoinment).getText().toString();
+
 			}
 		}
 		if (tod.size() > 0)
@@ -1003,6 +1092,7 @@ public class AddTask extends FragmentActivity {
 				}
 			}
 
+			if(repeat!=null){
 			if (repeat.contains("once") || repeat.contains("Once")) {
 				r_repeat = 0;
 				repeat = "once";
@@ -1019,7 +1109,7 @@ public class AddTask extends FragmentActivity {
 				r_repeat = 12 * 31 * 24 * 60 * 60 * 1000;
 				repeat = "yearly";
 			}
-
+			}
 			AlarmManagerBroadcastReceiver alarm = new AlarmManagerBroadcastReceiver();
 
 			ToDo todoset = new ToDo();
@@ -1090,6 +1180,8 @@ public class AddTask extends FragmentActivity {
 			TaskListFragment.todayAdapter.notifyDataSetChanged();
 
 			alarm.SetcustAlarm(this);
+
+			// ********************* Data add hit Asyntask
 			asyn = new add();
 			asyn.execute();
 			Toast.makeText(AddTask.this, "Added", Toast.LENGTH_SHORT).show();
@@ -1287,10 +1379,10 @@ public class AddTask extends FragmentActivity {
 			pairs.add(new BasicNameValuePair("todo[user_id]", Constants.user_id
 					+ ""));
 
-			if (titlecheck != -1) {
+			if (titlecheck != -1)
 				pairs.add(new BasicNameValuePair("todo[todo_type_id]",
 						titlecheck + ""));
-			}
+
 			pairs.add(new BasicNameValuePair("todo[title]", title));
 
 			if (start_date != null)
@@ -1302,63 +1394,46 @@ public class AddTask extends FragmentActivity {
 						"2014-11-02 04:05:05"));
 			}
 
-			if (titlecheck == 1 || titlecheck == 4)
-				pairs.add(new BasicNameValuePair("todo[priority]", priority
-						+ ""));
-			if (titlecheck == 1 || titlecheck == 4 || titlecheck == 2)
+			/*
+			 * if (titlecheck == 1 || titlecheck == 4) pairs.add(new
+			 * BasicNameValuePair("todo[priority]", priority + ""));
+			 */
+
+			if (notes != null)
 				pairs.add(new BasicNameValuePair("todo[notes]", notes));
 
-			if (titlecheck == 1 || titlecheck == 4) {
-				if (is_location == false) {
-					pairs.add(new BasicNameValuePair("todo_reminder[time]",
-							r_time + ""));
-				} else {
-					pairs.add(new BasicNameValuePair("todo_reminder[location]",
-							r_location));
-					if (!((TextView) AddTaskBeforeFragment.viewP).getText()
-							.toString().equals("New")) {
-						pairs.add(new BasicNameValuePair(
-								"todo_reminder[location_tag]",
-								((TextView) AddTaskBeforeFragment.viewP)
-										.getText().toString()));
-					}
+			if (is_location == false) {
+				pairs.add(new BasicNameValuePair("todo_reminder[time]", r_time
+						+ ""));
+			} else {
+				pairs.add(new BasicNameValuePair("todo_reminder[location]",
+						r_location));
+				if (!((TextView) AddTaskBeforeFragment.viewP).getText()
+						.toString().equals("New")) {
 					pairs.add(new BasicNameValuePair(
-							"todo_reminder[location_type]", locationtype));
+							"todo_reminder[location_tag]",
+							((TextView) AddTaskBeforeFragment.viewP).getText()
+									.toString()));
 				}
+				pairs.add(new BasicNameValuePair(
+						"todo_reminder[location_type]", locationtype));
 			}
 
-			if (titlecheck == 2) {
-				if (is_location == false) {
-					pairs.add(new BasicNameValuePair("todo_reminder[time]",
-							r_time + ""));
-				} else {
-					pairs.add(new BasicNameValuePair("todo_reminder[location]",
-							r_location));
-					if (!((TextView) AddEventBeforeFragment.viewP).getText()
-							.toString().equals("New")) {
-						pairs.add(new BasicNameValuePair(
-								"todo_reminder[location_tag]",
-								((TextView) AddEventBeforeFragment.viewP)
-										.getText().toString()));
-					}
-					pairs.add(new BasicNameValuePair(
-							"todo_reminder[location_type]", locationtype));
-				}
-			}
-
-			if (titlecheck == 1) {
+			if (repeat != null) {
 				pairs.add(new BasicNameValuePair(
 						"todo_repeat[repeat_interval]", repeat));
+				
+				if(repeat_forever!=true)
 				pairs.add(new BasicNameValuePair("todo_repeat[repeat_until]",
 						AddTaskFragment.repeatdate));
 			}
-
 			for (int i = 1; i <= MaxId; i++) {
 				// AddTask.attach.getString(1 + "path" + i, null);
 				pairs.add(new BasicNameValuePair("todo_attachment[" + (i - 1)
 						+ "][attachment_path]", AddTask.attach.getString(
 						titlecheck + "path" + i, null)));
 			}
+			
 
 			MaxId = 0;
 			if (comment != null && comment.size() > 0) {
@@ -1372,30 +1447,9 @@ public class AddTask extends FragmentActivity {
 				}
 			}
 
-			if (titlecheck == 1) {
-				toggleCheckList(aq.id(R.id.add_sub_task).getView());
+			if (checklist_data != null)
 				pairs.add(new BasicNameValuePair(
-						"todo_checklist[checklist_data]", aq
-								.id(R.id.add_sub_task).getEditText().getText()
-								.toString()
-								+ ""));
-			}
-			if (titlecheck == 2) {
-				toggleCheckList(aq.id(R.id.add_sub_sch).getView());
-				pairs.add(new BasicNameValuePair(
-						"todo_checklist[checklist_data]", aq
-								.id(R.id.add_sub_sch).getEditText().getText()
-								.toString()
-								+ ""));
-			}
-			if (titlecheck == 4) {
-				toggleCheckList(aq.id(R.id.add_sub_appoinment).getView());
-				pairs.add(new BasicNameValuePair(
-						"todo_checklist[checklist_data]", aq
-								.id(R.id.add_sub_appoinment).getEditText()
-								.getText().toString()
-								+ ""));
-			}
+						"todo_checklist[checklist_data]", checklist_data));
 
 		}
 

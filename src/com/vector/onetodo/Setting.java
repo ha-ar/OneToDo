@@ -2,7 +2,6 @@ package com.vector.onetodo;
 
 import android.app.AlertDialog;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -24,7 +23,6 @@ public class Setting extends Fragment {
 	int check = -1;
 	Editor editor;
 	ToggleButton toggle;
-
 	RadioButton RB, RB1;
 
 	@Override

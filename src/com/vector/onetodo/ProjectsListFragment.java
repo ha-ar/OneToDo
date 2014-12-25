@@ -2,12 +2,9 @@ package com.vector.onetodo;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,16 +12,10 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.vector.onetodo.ProjectsListFragment.Holder;
-import com.vector.onetodo.ProjectsListFragment.LandingAdapter;
-import com.vector.onetodo.db.gen.ToDo;
-import com.vector.onetodo.db.gen.ToDoDao.Properties;
-import com.vector.onetodo.utils.Utils;
 
-import de.greenrobot.dao.query.QueryBuilder;
+import com.vector.onetodo.utils.Utils;
 
 public class ProjectsListFragment extends ProjectsTabHolder implements
 		OnScrollListener {

@@ -26,7 +26,7 @@ import android.widget.TextView;
 
 import com.androidquery.AQuery;
 
-public class AppoinmentBeforeFragment extends Fragment {
+public class AddAppoinmentBeforeFragment extends Fragment {
 
 	int position;
 	AQuery aq, aqd, aq_edit, aq_del;
@@ -42,8 +42,8 @@ public class AppoinmentBeforeFragment extends Fragment {
 	private static View previousSelected;
 	private static View previousSelectedLocation;
 
-	public static AppoinmentBeforeFragment newInstance(int position) {
-		AppoinmentBeforeFragment myFragment = new AppoinmentBeforeFragment();
+	public static AddAppoinmentBeforeFragment newInstance(int position) {
+		AddAppoinmentBeforeFragment myFragment = new AddAppoinmentBeforeFragment();
 
 		Bundle args = new Bundle();
 		args.putInt("position", position);
@@ -95,37 +95,37 @@ public class AppoinmentBeforeFragment extends Fragment {
 							 * R.layout.grid_layout_textview, beforeArray);
 							 */
 
-			aq.id(R.id.notification_radio).getCheckBox()
+			aq.id(R.id.notification_radio_appoin).getCheckBox()
 					.setOnClickListener(new OnClickListener() {
 
 						@Override
 						public void onClick(View arg0) {
 							// TODO Auto-generated method stub
 							if (((CheckBox) arg0).isChecked()) {
-								aq.id(R.id.notification_radio).textColor(
+								aq.id(R.id.notification_radio_appoin).textColor(
 										getResources()
 												.getColor(R.color._4d4d4d));
 							} else {
 
-								aq.id(R.id.notification_radio).textColor(
+								aq.id(R.id.notification_radio_appoin).textColor(
 										Color.parseColor("#bababa"));
 							}
 						}
 					});
 
-			aq.id(R.id.email_radio).getCheckBox()
+			aq.id(R.id.email_radio_appoin).getCheckBox()
 					.setOnClickListener(new OnClickListener() {
 
 						@Override
 						public void onClick(View arg0) {
 							// TODO Auto-generated method stub
 							if (((CheckBox) arg0).isChecked()) {
-								aq.id(R.id.email_radio).textColor(
+								aq.id(R.id.email_radio_appoin).textColor(
 										getResources()
 												.getColor(R.color._4d4d4d));
 							} else {
 
-								aq.id(R.id.email_radio).textColor(
+								aq.id(R.id.email_radio_appoin).textColor(
 										Color.parseColor("#bababa"));
 							}
 						}
@@ -218,12 +218,7 @@ public class AppoinmentBeforeFragment extends Fragment {
 							before.setText("Reminde before "
 									+ beforeArray[position]);
 						}
-						before.setTextColor(getResources().getColor(
-								R.color.deep_sky_blue));
-						ImageView reminderImage = (ImageView) getActivity()
-								.findViewById(R.id.reminder_image_appoinment);
-						reminderImage.setBackground(getResources().getDrawable(
-								R.drawable.reminder_blue));
+					
 					}
 				}
 
@@ -248,12 +243,7 @@ public class AppoinmentBeforeFragment extends Fragment {
 							R.id.before_appoinment);
 					before.setText("Reminde before " + numberPicker.getValue()
 							+ " " + values[customDays.getValue()]);
-					before.setTextColor(getResources().getColor(
-							R.color.deep_sky_blue));
-					ImageView reminderImage = (ImageView) getActivity()
-							.findViewById(R.id.reminder_image_appoinment);
-					reminderImage.setBackground(getResources().getDrawable(
-							R.drawable.reminder_blue));
+					
 					numberPicker.getValue();
 					alert.dismiss();
 				}
@@ -299,7 +289,7 @@ public class AppoinmentBeforeFragment extends Fragment {
 								.parseColor("#000000"));
 						// ((TextView)
 						// viewP).setBackgroundColor(Color.parseColor("#999999"));
-						aq.id(R.id.location_before).text(
+						aq.id(R.id.location_before_appoin).text(
 								aqd.id(R.id.adress).getText());
 						((TextView) viewP).setText(aqd.id(R.id.home).getText());
 
@@ -372,7 +362,7 @@ public class AppoinmentBeforeFragment extends Fragment {
 					((TextView) viewl)
 							.setBackgroundResource(R.color.light_grey_color);
 					remove(viewl.getId());
-					aq.id(R.id.location_before).text("");
+					aq.id(R.id.location_before_appoin).text("");
 					location_del.dismiss();
 				}
 			});
@@ -406,7 +396,7 @@ public class AppoinmentBeforeFragment extends Fragment {
 
 			aq.id(R.id.arrive_leave_checkbox_layout).visible();
 			AutoCompleteTextView locationTextView = (AutoCompleteTextView) aq
-					.id(R.id.location_before).getView();
+					.id(R.id.location_before_appoin).getView();
 			locationTextView.setAdapter(new PlacesAutoCompleteAdapter(
 					getActivity(),
 					android.R.layout.simple_spinner_dropdown_item));
@@ -429,13 +419,7 @@ public class AppoinmentBeforeFragment extends Fragment {
 									+ aq.id(checkedId).getText().toString());
 							previousSelectedLocation = group
 									.findViewById(checkedId);
-							before.setTextColor(getResources().getColor(
-									R.color.deep_sky_blue));
-							ImageView reminderImage = (ImageView) getActivity()
-									.findViewById(
-											R.id.reminder_image_appoinment);
-							reminderImage.setBackground(getResources()
-									.getDrawable(R.drawable.reminder_blue));
+							
 						}
 					});
 		}
@@ -454,12 +438,12 @@ public class AppoinmentBeforeFragment extends Fragment {
 				location.show();
 			} else {
 				if (button != null) {
-					aq.id(R.id.location_before).text(padress);
+					aq.id(R.id.location_before_appoin).text(padress);
 					button.setBackgroundResource(R.drawable.button_shadow2);
 					v.setBackgroundResource(R.drawable.button_shadow);
 					button = v;
 				} else {
-					aq.id(R.id.location_before).text(padress);
+					aq.id(R.id.location_before_appoin).text(padress);
 					button = v;
 					v.setBackgroundResource(R.drawable.button_shadow);
 				}

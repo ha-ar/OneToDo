@@ -535,10 +535,10 @@ public class AddEventFragment extends Fragment {
 				}
 
 				if (((TextView) view).getText().toString().equals("Never")) {
-					aq.id(R.id.forever_radio).checked(true);
-					aq.id(R.id.time_radio).textColor(
+					aq.id(R.id.repeat_forever_radio).checked(true);
+					aq.id(R.id.repeat_time_radio).textColor(
 							Color.parseColor("#bababa"));
-					aq.id(R.id.forever_radio).textColor(
+					aq.id(R.id.repeat_forever_radio).textColor(
 							(getResources().getColor(R.color._777777)));
 				}
 				((TextView) view).setTextColor(Color.WHITE);
@@ -585,7 +585,7 @@ public class AddEventFragment extends Fragment {
 
 				});
 
-		aq.id(R.id.time_radio).textColor(Color.parseColor("#bababa"));
+		aq.id(R.id.repeat_time_radio).textColor(Color.parseColor("#bababa"));
 		final TextView set = (TextView) dateTimePickerDialog
 				.findViewById(R.id.set);
 		set.setOnClickListener(new OnClickListener() {
@@ -599,7 +599,7 @@ public class AddEventFragment extends Fragment {
 				aq.id(R.id.repeat_event).text(
 						((TextView) previousSelected).getText().toString()
 								+ " until " + setmon1);
-				RadioButton rb = (RadioButton) aq.id(R.id.time_radio).getView();
+				RadioButton rb = (RadioButton) aq.id(R.id.repeat_time_radio).getView();
 				rb.setText(setmon1);
 			}
 		});
@@ -612,7 +612,7 @@ public class AddEventFragment extends Fragment {
 				date_time_alert.cancel();
 			}
 		});
-		aq.id(R.id.forever_radio).clicked(new OnClickListener() {
+		aq.id(R.id.repeat_forever_radio).clicked(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -623,13 +623,13 @@ public class AddEventFragment extends Fragment {
 							((TextView) previousSelected).getText().toString());
 				}
 
-				aq.id(R.id.time_radio).textColor(Color.parseColor("#bababa"));
-				aq.id(R.id.forever_radio).textColor(
+				aq.id(R.id.repeat_time_radio).textColor(Color.parseColor("#bababa"));
+				aq.id(R.id.repeat_forever_radio).textColor(
 						getResources().getColor(R.color._777777));
 			}
 		});
 
-		aq.id(R.id.time_radio).clicked(new OnClickListener() {
+		aq.id(R.id.repeat_time_radio).clicked(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -637,17 +637,17 @@ public class AddEventFragment extends Fragment {
 						.equals("Never")) {
 					Toast.makeText(getActivity(), "Please Select ...",
 							Toast.LENGTH_SHORT).show();
-					aq.id(R.id.time_radio).checked(false);
-					aq.id(R.id.forever_radio).checked(true);
-					aq.id(R.id.time_radio).textColor(
+					aq.id(R.id.repeat_time_radio).checked(false);
+					aq.id(R.id.repeat_forever_radio).checked(true);
+					aq.id(R.id.repeat_time_radio).textColor(
 							Color.parseColor("#bababa"));
-					aq.id(R.id.forever_radio).textColor(
+					aq.id(R.id.repeat_forever_radio).textColor(
 							getResources().getColor(R.color._777777));
 				} else {
 
-					aq.id(R.id.time_radio).textColor(
+					aq.id(R.id.repeat_time_radio).textColor(
 							getResources().getColor(R.color._777777));
-					aq.id(R.id.forever_radio).textColor(
+					aq.id(R.id.repeat_forever_radio).textColor(
 							Color.parseColor("#bababa"));
 					date_time_alert.show();
 				}
