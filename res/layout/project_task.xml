@@ -23,7 +23,7 @@
             android:background="@drawable/label_grey" />
 
         <TextView
-            android:id="@+id/spinner_labels_event"
+            android:id="@+id/spinner_labels_project"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginBottom="6dp"

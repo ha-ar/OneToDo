@@ -2,12 +2,9 @@ package com.vector.onetodo;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,25 +13,19 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.vector.onetodo.InvitationFragment.Holder;
-import com.vector.onetodo.InvitationFragment.LandingAdapter;
-import com.vector.onetodo.db.gen.ToDo;
-import com.vector.onetodo.db.gen.ToDoDao.Properties;
-import com.vector.onetodo.utils.Utils;
 
-import de.greenrobot.dao.query.QueryBuilder;
+import com.vector.onetodo.utils.Utils;
 
 public class InvitationFragment extends Invitationtabholder implements
 		OnScrollListener {
 
 	private ListView listView;
 	private int position;
-	
+
 	private static long[] Currentdate;
 
 	// public static ItemLazyListAdapter todaysAdapter, tomorrowsAdapter,
@@ -57,9 +48,9 @@ public class InvitationFragment extends Invitationtabholder implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.invitation_list, container, false);
+		View view = inflater
+				.inflate(R.layout.invitation_list, container, false);
 		listView = (ListView) view.findViewById(R.id.invitation_list_view);
-		
 
 		Currentdate = new long[3];
 		String date_string = null;
@@ -124,27 +115,32 @@ public class InvitationFragment extends Invitationtabholder implements
 			if (view == null) {
 				LayoutInflater inflater = (LayoutInflater) context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = inflater.inflate(R.layout.invitation_layout, parent, false);
+				view = inflater.inflate(R.layout.invitation_layout, parent,
+						false);
 				holder = new Holder();
-				holder.Details_layout=(RelativeLayout) view.findViewById(R.id.details_layout);
-				holder.title = (TextView) view.findViewById(R.id.invit_list_title);
-				holder.ShowDetails = (TextView) view.findViewById(R.id.showdetails);
+				holder.Details_layout = (RelativeLayout) view
+						.findViewById(R.id.details_layout);
+				holder.title = (TextView) view
+						.findViewById(R.id.invit_list_title);
+				holder.ShowDetails = (TextView) view
+						.findViewById(R.id.showdetails);
 				view.setTag(holder);
 			} else {
 				holder = (Holder) view.getTag();
 			}
-			holder.title.setText("Ttile "+position+1);
-			
+			holder.title.setText("Ttile " + position + 1);
+
 			holder.ShowDetails.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
-					//holder.Details_layout.setVisibility(View.VISIBLE);
-					Toast.makeText(getActivity(), "asda", Toast.LENGTH_LONG).show();
+					// holder.Details_layout.setVisibility(View.VISIBLE);
+					Toast.makeText(getActivity(), "asda", Toast.LENGTH_LONG)
+							.show();
 				}
 			});
-			
+
 			return view;
 		}
 	}
@@ -177,9 +173,9 @@ public class InvitationFragment extends Invitationtabholder implements
 	}
 
 	private void setadapter(Context context, int position) {
-			//todayQuery();
-			//todayAdapter = new LandingAdapter(getActivity(), todayQuery.list());
-			LandingAdapter adapter=new LandingAdapter(getActivity());
-			listView.setAdapter(adapter);	
+		// todayQuery();
+		// todayAdapter = new LandingAdapter(getActivity(), todayQuery.list());
+		LandingAdapter adapter = new LandingAdapter(getActivity());
+		listView.setAdapter(adapter);
 	}
 }

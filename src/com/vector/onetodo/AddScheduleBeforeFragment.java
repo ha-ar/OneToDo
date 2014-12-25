@@ -93,37 +93,37 @@ public class AddScheduleBeforeFragment extends Fragment {
 
 		if (position == 0) {
 
-			aq.id(R.id.notification_radio_event).getCheckBox()
+			aq.id(R.id.notification_radio_sch).getCheckBox()
 					.setOnClickListener(new OnClickListener() {
 
 						@Override
 						public void onClick(View arg0) {
 							// TODO Auto-generated method stub
 							if (((CheckBox) arg0).isChecked()) {
-								aq.id(R.id.notification_radio_event).textColor(
+								aq.id(R.id.notification_radio_sch).textColor(
 
 								getResources().getColor(R.color._4d4d4d));
 							} else {
 
-								aq.id(R.id.notification_radio_event).textColor(
+								aq.id(R.id.notification_radio_sch).textColor(
 										Color.parseColor("#bababa"));
 							}
 						}
 					});
 
-			aq.id(R.id.email_radio_event).getCheckBox()
+			aq.id(R.id.email_radio_sch).getCheckBox()
 					.setOnClickListener(new OnClickListener() {
 
 						@Override
 						public void onClick(View arg0) {
 							// TODO Auto-generated method stub
 							if (((CheckBox) arg0).isChecked()) {
-								aq.id(R.id.email_radio_event).textColor(
+								aq.id(R.id.email_radio_sch).textColor(
 
 								getResources().getColor(R.color._4d4d4d));
 							} else {
 
-								aq.id(R.id.email_radio_event).textColor(
+								aq.id(R.id.email_radio_sch).textColor(
 										Color.parseColor("#bababa"));
 							}
 						}

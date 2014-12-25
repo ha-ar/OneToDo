@@ -1,7 +1,6 @@
 package com.vector.onetodo;
 
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,37 +9,32 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.TextView;
 
 import com.androidquery.AQuery;
 import com.astuetz.PagerSlidingTabStrip;
 import com.vector.onetodo.utils.Utils;
 
+public class Projects extends Fragment implements ProjectsScrollHolder {
 
-public class Invitations extends Fragment implements InvitationScrollHolder {
-
-	private ViewPager pager;
-	private TabPagerAdapter1 tabPagerAdapter;
 	AQuery aq;
-	Html html;
-
-	Display display;
-	Point size;
-
+	TextView title;
+	private ViewPager pager;
+	private TabPagerAdapterpro tabPagerAdapter;
+	
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		View view = inflater.inflate(R.layout.invitation, container, false);
-		display = getActivity().getWindowManager().getDefaultDisplay();
-		size = new Point();
-		display.getSize(size);
-		aq = new AQuery(getActivity(), view);
+		View view = inflater.inflate(R.layout.projects, container, false);
+		aq=new AQuery(getActivity(), view);
+//		title=(TextView) getActivity().findViewById(R.id.weather);
+		
 		return view;
 	}
 
@@ -49,25 +43,17 @@ public class Invitations extends Fragment implements InvitationScrollHolder {
 		// TODO Auto-generated method stub
 		super.onViewCreated(view, savedInstanceState);
 
-		
-		aq.id(R.id.header_logo_inivit).clicked(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-
-				getFragmentManager().popBackStack();
-			}
-		});
 		aq.id(R.id.organizer).text(
 				Html.fromHtml("<i><small><font color=\"#c5c5c5\">"
 						+ "Competitor ID: " + "</font></small></i>"
 						+ "<font color=\"#47a842\">" + "compID" + "</font>"));
 
-		pager = (ViewPager) getActivity().findViewById(R.id.pager_invit);
+		pager = (ViewPager) getActivity().findViewById(R.id.pager_projects);
 
-		tabPagerAdapter = new TabPagerAdapter1(getChildFragmentManager());
-		tabPagerAdapter.setTabHolderScrollingContent(new InvitationScrollHolder() {
+		tabPagerAdapter = new TabPagerAdapterpro(getChildFragmentManager());
+		tabPagerAdapter.setTabHolderScrollingContent(new ProjectsScrollHolder() {
+			
+	 
 			
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
@@ -87,7 +73,7 @@ public class Invitations extends Fragment implements InvitationScrollHolder {
 
 		// Bind the tabs to the ViewPager
 		final PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) aq.id(
-				R.id.tabs_invit).getView();
+				R.id.tabs_projects).getView();
 		/*
 		 * android.widget.LinearLayout.LayoutParams defaultTabLayoutParams = new
 		 * LinearLayout.LayoutParams(size.x/2, LayoutParams.MATCH_PARENT);
@@ -114,18 +100,20 @@ public class Invitations extends Fragment implements InvitationScrollHolder {
 		tabs.setViewPager(pager);
 		tabPagerAdapter.notifyDataSetChanged();
 	}
+	
+	
+	
+	public class TabPagerAdapterpro extends FragmentPagerAdapter {
 
-	public class TabPagerAdapter1 extends FragmentPagerAdapter {
+		private SparseArrayCompat<ProjectsScrollHolder> mScrollTabHolders;
+		private ProjectsScrollHolder mListener;
 
-		private SparseArrayCompat<InvitationScrollHolder> mScrollTabHolders;
-		private InvitationScrollHolder mListener;
-
-		public TabPagerAdapter1(FragmentManager fm) {
+		public TabPagerAdapterpro(FragmentManager fm) {
 			super(fm);
-			mScrollTabHolders = new SparseArrayCompat<InvitationScrollHolder>();
+			mScrollTabHolders = new SparseArrayCompat<ProjectsScrollHolder>();
 		}
 
-		public void setTabHolderScrollingContent(InvitationScrollHolder listener) {
+		public void setTabHolderScrollingContent(ProjectsScrollHolder listener) {
 			mListener = listener;
 		}
 
@@ -139,9 +127,9 @@ public class Invitations extends Fragment implements InvitationScrollHolder {
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case 0:
-				return "RECIEVED";
+				return "MY PROJECTS";
 			case 1:
-				return "SENT";
+				return "SHARED PROJECTS";
 			default:
 				return "";// not the case
 
@@ -151,14 +139,14 @@ public class Invitations extends Fragment implements InvitationScrollHolder {
 
 	
 
-		public SparseArrayCompat<InvitationScrollHolder> getScrollTabHolders() {
+		public SparseArrayCompat<ProjectsScrollHolder> getScrollTabHolders() {
 			return mScrollTabHolders;
 		}
 
 		@Override
 		public Fragment getItem(int position) {
-			Invitationtabholder fragment = 
-					(Invitationtabholder) InvitationFragment.newInstance(position);
+			ProjectsTabHolder fragment = 
+					(ProjectsTabHolder) ProjectsListFragment.newInstance(position);
 
 			mScrollTabHolders.put(position, fragment);
 			if (mListener != null) {
@@ -181,6 +169,5 @@ public class Invitations extends Fragment implements InvitationScrollHolder {
 		// TODO Auto-generated method stub
 		
 	}
-
 
 }

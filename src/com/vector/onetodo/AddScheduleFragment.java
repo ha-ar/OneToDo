@@ -102,6 +102,7 @@ public class AddScheduleFragment extends Fragment {
 
 	public static AQuery aq, aqloc, aq_label, aq_label_edit, aq_label_del,aq_menu,aq_attach;
 	Uri filename;
+	List<NameValuePair> pairs;
 	static LinearLayout ll_iner;
 	static int FragmentCheck = 0;
 	int Tag=0;
@@ -121,6 +122,7 @@ public class AddScheduleFragment extends Fragment {
 
 	int pposition = -1;
 	int itempos = -1;
+	int MaxId = -1;
 
 	private AutoCompleteTextView locationTextView;
 
@@ -152,7 +154,7 @@ public class AddScheduleFragment extends Fragment {
 	String[] colors1 = { "#790000", "#005826", "#0D004C", "#ED145B", "#E0D400",
 			"#0000FF", "#4B0049", "#005B7F", "#603913", "#005952" };
 
-	Editor editor;
+	Editor editor, editorattach;
 	EditText label_field = null;
 
 	AlertDialog date_time_alert, add_new_label_alert, date_time, label_edit,
@@ -192,6 +194,7 @@ public class AddScheduleFragment extends Fragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		editor = AddTask.label.edit();
+		editorattach = AddTask.attach.edit();
 		final int dayPosition = getArguments().getInt("dayPosition", 0);
 
 		currentYear = Utils.getCurrentYear(dayPosition);
@@ -531,10 +534,10 @@ public class AddScheduleFragment extends Fragment {
 				}
 
 				if (((TextView) view).getText().toString().equals("Never")) {
-					aq.id(R.id.sch_repeat_forever_radio).checked(true);
-					aq.id(R.id.sch_repeat_time_radio).textColor(
+					aq.id(R.id.sch_forever_radio).checked(true);
+					aq.id(R.id.sch_time_radio).textColor(
 							Color.parseColor("#bababa"));
-					aq.id(R.id.sch_repeat_forever_radio).textColor(
+					aq.id(R.id.sch_forever_radio).textColor(
 							getResources().getColor(R.color._4d4d4d));
 				}
 				((TextView) view).setTextColor(Color.WHITE);
@@ -590,7 +593,7 @@ public class AddScheduleFragment extends Fragment {
 
 				});
 
-		aq.id(R.id.sch_repeat_time_radio)
+		aq.id(R.id.sch_time_radio)
 				.textColor(Color.parseColor("#bababa"));
 		final TextView set = (TextView) dateTimePickerDialog
 				.findViewById(R.id.set);
@@ -606,7 +609,7 @@ public class AddScheduleFragment extends Fragment {
 						/* setday + " " + */((TextView) previousSelected)
 								.getText().toString() + " until " + setmon1);
 				RadioButton rb = (RadioButton) aq
-						.id(R.id.sch_repeat_time_radio).getView();
+						.id(R.id.sch_time_radio).getView();
 				rb.setText(setmon1);/*
 									 * aq.id(R.id.sch_repeat_txt).textColorId(R.
 									 * color.active);
@@ -622,7 +625,7 @@ public class AddScheduleFragment extends Fragment {
 				date_time_alert.cancel();
 			}
 		});
-		aq.id(R.id.sch_repeat_forever_radio).clicked(new OnClickListener() {
+		aq.id(R.id.sch_forever_radio).clicked(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -633,14 +636,14 @@ public class AddScheduleFragment extends Fragment {
 							((TextView) previousSelected).getText().toString());
 				}
 
-				aq.id(R.id.sch_repeat_time_radio).textColor(
+				aq.id(R.id.sch_time_radio).textColor(
 						Color.parseColor("#bababa"));
-				aq.id(R.id.sch_repeat_forever_radio).textColor(
+				aq.id(R.id.sch_forever_radio).textColor(
 						getResources().getColor(R.color._4d4d4d));
 			}
 		});
 
-		aq.id(R.id.sch_repeat_time_radio).clicked(new OnClickListener() {
+		aq.id(R.id.sch_time_radio).clicked(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -648,17 +651,17 @@ public class AddScheduleFragment extends Fragment {
 						.equals("Never")) {
 					Toast.makeText(getActivity(), "Please Select ...",
 							Toast.LENGTH_SHORT).show();
-					aq.id(R.id.sch_repeat_time_radio).checked(false);
-					aq.id(R.id.sch_repeat_forever_radio).checked(true);
-					aq.id(R.id.sch_repeat_time_radio).textColor(
+					aq.id(R.id.sch_time_radio).checked(false);
+					aq.id(R.id.sch_forever_radio).checked(true);
+					aq.id(R.id.sch_time_radio).textColor(
 							Color.parseColor("#bababa"));
-					aq.id(R.id.sch_repeat_forever_radio).textColor(
+					aq.id(R.id.sch_forever_radio).textColor(
 							getResources().getColor(R.color._4d4d4d));
 				} else {
 
-					aq.id(R.id.sch_repeat_time_radio).textColor(
+					aq.id(R.id.sch_time_radio).textColor(
 							getResources().getColor(R.color._4d4d4d));
-					aq.id(R.id.sch_repeat_forever_radio).textColor(
+					aq.id(R.id.sch_forever_radio).textColor(
 
 					getResources().getColor(R.color._4d4d4d));
 					date_time_alert.show();
@@ -1507,7 +1510,8 @@ public class AddScheduleFragment extends Fragment {
 	}
 
 	
-	public void imageupload() {/*
+	//public void imageupload() 
+	{/*
 
 		HttpEntity entity = null;
 
@@ -1572,6 +1576,72 @@ public class AddScheduleFragment extends Fragment {
 					}
 				});
 	*/}
+	
+	public void imageupload() {
+
+		HttpEntity entity = null;
+
+		Bitmap bm = null;
+		try {
+			bm = MediaStore.Images.Media.getBitmap(getActivity()
+					.getContentResolver(), filename);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+		byte[] byteArray = baos.toByteArray();
+		String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+		pairs = new ArrayList<NameValuePair>();
+		pairs.add(new BasicNameValuePair("image", encoded));
+
+		// UrlEncodedFormEntity
+		// entity=null;
+		try {
+			entity = new UrlEncodedFormEntity(pairs, "UTF-8");
+			// entity.setContentType("application/json");
+		} catch (UnsupportedEncodingException e) {
+			// TODO
+			// Auto-generated
+			// catch block
+			e.printStackTrace();
+		}
+
+		Map<String, HttpEntity> param = new HashMap<String, HttpEntity>();
+		param.put(AQuery.POST_ENTITY, entity);
+
+		aq.ajax("http://api.heuristix.net/one_todo/v1/upload.php", param,
+				JSONObject.class, new AjaxCallback<JSONObject>() {
+					@Override
+					public void callback(String url, JSONObject json,
+							AjaxStatus status) {
+						// dismis();
+						String path = null;
+						try {
+
+							JSONObject obj1 = new JSONObject(json.toString());
+							path = obj1.getString("path");
+							// id = obj1.getInt("result");
+
+						} catch (Exception e) {
+						}
+
+						Loadattachmax();
+						if (MaxId == 0) {
+							MaxId = 1;
+						} else {
+							MaxId = MaxId + 1;
+						}
+						Saveattach(MaxId, path, "type");
+						Log.v("Response", json.toString());
+
+					}
+				});
+	}
 	
 	private void showRightDateAndTime() {
 		String tempCurrentDayDigit = String.format("%02d", currentDayDigit);
@@ -1712,6 +1782,29 @@ public class AddScheduleFragment extends Fragment {
 			return imageView;
 		}
 
+	}
+	
+	public void Saveattach(int id, String path, String type) {
+		// 0 - for private mode
+		editorattach.putInt("3Max", id);
+		editorattach.putString(3 + "path" + id, path);
+		editorattach.putString(3 + "type" + id, type); // Storing float
+		editorattach.commit();
+	}
+
+	public void Loadattachmax() {
+		MaxId = AddTask.attach.getInt("3Max", 0);
+	}
+
+	public void Loadattach(int id) {
+		AddTask.attach.getString(3 + "path" + id, null);
+		AddTask.attach.getString(3 + "type" + id, null); // getting String
+	}
+
+	public void Removeattach(int id) {
+		editorattach.remove(3 + "path" + id); // will delete key name
+		editorattach.remove(3 + "type" + id); // will delete key email
+		editorattach.commit();
 	}
 
 }

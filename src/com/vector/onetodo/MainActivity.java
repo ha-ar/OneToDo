@@ -117,9 +117,8 @@ public class MainActivity extends BaseActivity implements
 	public static List<Todos> Today, Tomorrow, Upcoming;
 	private ActionBarDrawerToggle actionBarDrawerToggle;
 	private DrawerLayout drawerLayout;
-	
-	
-	//************** Phone COntacts
+
+	// ************** Phone COntacts
 
 	String phoneNumber = null;
 	Cursor cursor;
@@ -140,12 +139,11 @@ public class MainActivity extends BaseActivity implements
 				toolbar, R.string.close_drawer, R.string.open_drawer);
 		drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
-		//******* Phone contact , name list
-		Constants.Name=new ArrayList<String>();
-		Constants.Contact=new ArrayList<String>();
-		new Phone_contact().execute();
-		
-		
+		// ******* Phone contact , name list
+//		Constants.Name = new ArrayList<String>();
+//		Constants.Contact = new ArrayList<String>();
+//		new Phone_contact().execute();
+
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
@@ -352,13 +350,12 @@ public class MainActivity extends BaseActivity implements
 		inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
 		// ********* Old
-		/*aq.id(R.id.navigation_menu).clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				mDrawer.toggleMenu(true);
-			}
-		});*/
+		/*
+		 * aq.id(R.id.navigation_menu).clicked(new OnClickListener() {
+		 * 
+		 * @Override public void onClick(View v) { mDrawer.toggleMenu(true); }
+		 * });
+		 */
 
 		// ***** right drawer open close**********//
 		// aq.id(R.id.notif).clicked(new OnClickListener() {
@@ -745,7 +742,8 @@ public class MainActivity extends BaseActivity implements
 		tabPagerAdapter.notifyDataSetChanged();
 
 		aq.id(R.id.add_task_button)
-				.typeface(TypeFaces.get(this, Constants.ICON_FONT))
+				.typeface(TypeFaces.get(this, Constants.ICON_FONT));
+		aq.id(R.id.add_task_button)
 				.clicked(new OnClickListener() {
 
 					@Override
@@ -971,8 +969,7 @@ public class MainActivity extends BaseActivity implements
 		Toast.makeText(MainActivity.this, "asdasdasd", Toast.LENGTH_SHORT)
 				.show();
 	}
-	
-	
+
 	public class Phone_contact extends AsyncTask<Void, Void, Void> {
 
 		@Override
@@ -980,7 +977,6 @@ public class MainActivity extends BaseActivity implements
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 		}
-		
 
 		@Override
 		protected void onPreExecute() {
@@ -995,7 +991,6 @@ public class MainActivity extends BaseActivity implements
 									+ ") ASC");
 		}
 
-
 		@Override
 		protected Void doInBackground(Void... params) {
 			// TODO Auto-generated method stub
@@ -1006,9 +1001,9 @@ public class MainActivity extends BaseActivity implements
 							.parseInt(cursor.getString(cursor
 									.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
 					if (hasPhoneNumber > 0) {
-						Constants.Name.add(cursor.getString(cursor
-								.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-								);
+						Constants.Name
+								.add(cursor.getString(cursor
+										.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
 						// Query and loop for every phone number of the contact
 						Cursor phoneCursor = getContentResolver()
 								.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,

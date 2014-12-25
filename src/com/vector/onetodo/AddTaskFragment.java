@@ -36,7 +36,6 @@ import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.widget.PopupWindow.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
@@ -58,16 +57,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.MimeTypeMap;
@@ -75,7 +73,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -84,10 +81,10 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -96,12 +93,6 @@ import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 import com.astuetz.PagerSlidingTabStrip;
 import com.devspark.appmsg.AppMsg;
-import com.vector.onetodo.R;
-import com.vector.onetodo.R.anim;
-import com.vector.onetodo.R.color;
-import com.vector.onetodo.R.drawable;
-import com.vector.onetodo.R.id;
-import com.vector.onetodo.R.layout;
 import com.vector.onetodo.db.gen.LabelName;
 import com.vector.onetodo.utils.Constants;
 import com.vector.onetodo.utils.ScaleAnimToHide;
@@ -143,8 +134,6 @@ public class AddTaskFragment extends Fragment {
 	static String repeatdate = "";
 	static String checkedId2 = null, title = null;
 	View label_view = null, viewl;
-	private AutoCompleteTextView locationTextView;
-
 
 	static AlertDialog attach;
 	Dialog add_new_label_alert, assig_alert, share_alert, date_time_alert,
@@ -172,9 +161,7 @@ public class AddTaskFragment extends Fragment {
 	static ImageView img;
 	private final String[] labels_array = new String[] { "Personal", "Home",
 			"Work", "New", "New", "New", "New", "New", "New" };
-
-	private Person[] people;
-	private ArrayAdapter<Person> adapter, shareAdapter;
+	
 	EditText label_field = null;
 
 	protected static final int RESULT_CODE = 123;
@@ -317,12 +304,7 @@ public class AddTaskFragment extends Fragment {
 			}
 		});
 
-		// popupWindowTask.setAnimationStyle(R.style.Animation);
-
-		/*
-		 * CheckBox cb=(CheckBox)
-		 * getActivity().findViewById(R.id.completed_task); aq.id(id)
-		 */
+	
 
 		// *****************Title
 
@@ -376,20 +358,20 @@ public class AddTaskFragment extends Fragment {
 					AddTask.btn.setAlpha(1);
 
 				aq.id(R.id.completed_task).textColorId(R.color.active);
-				for (String words : Constants.CONTACTS_EVOKING_WORDS) {
+				/*for (String words : Constants.CONTACTS_EVOKING_WORDS) {
 					String[] typedWords = s.toString().split(" ");
 
 					try {
 						String name = typedWords[typedWords.length - 1];
-						/*
+						
 						 * if (name.equalsIgnoreCase(words))
 						 * showCurrentView(aq.id(R.id.contacts_layout_include)
 						 * .getView());
-						 */
+						 
 					} catch (ArrayIndexOutOfBoundsException aiobe) {
 
 					}
-				}
+				}*/
 			}
 
 			@Override
@@ -1447,9 +1429,9 @@ public class AddTaskFragment extends Fragment {
 
 		getActivity().getContentResolver().notifyChange(selectedImage, null);
 		ContentResolver cr = getActivity().getContentResolver();
-		Cursor returnCursor = cr.query(selectedImage, null, null, null, null);
+	/*	Cursor returnCursor = cr.query(selectedImage, null, null, null, null);
 
-		MimeTypeMap mime = MimeTypeMap.getSingleton();
+		MimeTypeMap mime = MimeTypeMap.getSingleton();*/
 
 		String type = MimeTypeMap.getFileExtensionFromUrl(selectedImage
 				.toString());

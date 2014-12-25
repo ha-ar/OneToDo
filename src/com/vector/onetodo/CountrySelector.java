@@ -40,7 +40,7 @@ import com.androidquery.callback.AjaxStatus;
 import com.vector.onetodo.utils.Constants;
 import com.vector.onetodo.utils.Utils;
 
-public class about extends Fragment {
+public class CountrySelector extends Fragment {
 
 	// private Button loginButton;
 	AQuery aq;
