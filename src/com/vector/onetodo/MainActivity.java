@@ -10,11 +10,11 @@ import java.util.Locale;
 
 import net.simonvt.datepicker.DatePicker;
 import net.simonvt.datepicker.DatePicker.OnDateChangedListener;
-import net.simonvt.menudrawer.MenuDrawer;
 
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,6 +35,8 @@ import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -53,6 +55,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,6 +75,7 @@ import com.vector.onetodo.db.gen.LabelNameDao;
 import com.vector.onetodo.db.gen.ToDo;
 import com.vector.onetodo.db.gen.ToDoDao;
 import com.vector.onetodo.utils.Constants;
+import com.vector.onetodo.utils.TypeFaces;
 import com.vector.onetodo.utils.Utils;
 
 import de.greenrobot.dao.query.QueryBuilder;
@@ -85,7 +89,7 @@ public class MainActivity extends BaseActivity implements
 	static int check = -1, check1 = 0;;
 	public static int menuchange = 0;
 	private PopupWindow popupWindowTask;
-	public static LinearLayout layout_MainMenu;
+	public static RelativeLayout layout_MainMenu;
 	InputMethodManager inputMethodManager;
 	AlertDialog date_time_alert;
 	LinearLayout itemadded;
@@ -94,7 +98,6 @@ public class MainActivity extends BaseActivity implements
 	public static DaoSession daoSession;
 	public static DaoMaster daoMaster;
 	public static List<ToDo> todos;
-	private MenuDrawer mDrawer, mDrawerr;
 	public static int pager_number = 0;
 	private AlarmManagerBroadcastReceiver alarm;
 	private SQLiteDatabase db;
@@ -117,6 +120,7 @@ public class MainActivity extends BaseActivity implements
 
 	String phoneNumber = null;
 	Cursor cursor;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -124,9 +128,8 @@ public class MainActivity extends BaseActivity implements
 		setContentView(R.layout.activity_main);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_top);
-		if (toolbar != null) {
-			setSupportActionBar(toolbar);
-		}
+		if(toolbar != null)
+		setSupportActionBar(toolbar);
 
 		getSupportActionBar().setTitle(R.string.close_drawer);
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -153,21 +156,6 @@ public class MainActivity extends BaseActivity implements
 		todo_obj = tododao.loadAll();
 		alarm = new AlarmManagerBroadcastReceiver();
 		startRepeatingTimer();
-
-		// ***** Left Drawer**********//
-		// mDrawer = MenuDrawer.attach(this, Type.OVERLAY, Position.LEFT,
-		// MenuDrawer.MENU_DRAG_WINDOW);
-		// mDrawer.setContentView(R.layout.activity_main);
-		// mDrawer.setDropShadowEnabled(false);
-		// mDrawer.setDrawOverlay(true);
-		// mDrawer.setMenuView(R.layout.menu_drawer);
-		// // ***** Right Drawer**********//
-		// mDrawerr = MenuDrawer.attach(this, Type.OVERLAY, Position.RIGHT,
-		// MenuDrawer.MENU_DRAG_WINDOW);
-		// mDrawerr.setContentView(R.layout.activity_main);
-		// mDrawerr.setMenuView(R.layout.menu_drawer_right);
-		// mDrawerr.setDropShadowEnabled(false);
-		// mDrawerr.setDrawOverlay(true);
 
 		// ***** Initializinf Registration shared prefrences**********//
 		SharedPreferences pref = this.getSharedPreferences("registration", 0);
@@ -201,10 +189,43 @@ public class MainActivity extends BaseActivity implements
 
 	}
 
+	Menu menu;
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+
+		this.menu = menu;
+		SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		SearchView search = (SearchView) menu.findItem(R.id.action_search)
+				.getActionView();
+		search.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
+		search.setOnSearchClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+				getSupportActionBar().setDisplayShowHomeEnabled(true);
+				actionBarDrawerToggle.syncState();
+
+			}
+		});
+		search.setOnQueryTextListener(new OnQueryTextListener() {
+			@Override
+			public boolean onQueryTextChange(String query) {
+				// loadHistory(query);
+				return true;
+			}
+
+			@Override
+			public boolean onQueryTextSubmit(String arg0) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+		});
+
 		return true;
 	}
 
@@ -348,11 +369,10 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View v) {
-				mDrawerr.closeMenu();
+				// mDrawerr.closeMenu();
 			}
 		});
-
-		layout_MainMenu = (LinearLayout) findViewById(R.id.container);
+		layout_MainMenu = (RelativeLayout) findViewById(R.id.container);
 		// layout_MainMenu.getForeground().setAlpha(0);
 		final View view = getLayoutInflater().inflate(R.layout.landing_menu,
 				null, false);
@@ -506,17 +526,6 @@ public class MainActivity extends BaseActivity implements
 			}
 		});
 
-		// aq.id(R.id.header_logo).clicked(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View arg0) {
-		// if (!(mDrawer.isActivated())) {
-		// mDrawer.openMenu();
-		// } else {
-		// mDrawer.closeMenu();
-		// }
-		// }
-		// });
 
 		// Menu Drawer on click change items
 
@@ -533,7 +542,7 @@ public class MainActivity extends BaseActivity implements
 				transaction.replace(R.id.container, fr);
 				transaction.addToBackStack("SETTING");
 				transaction.commit();
-				mDrawer.closeMenu();
+				drawerLayout.closeDrawer(Gravity.LEFT);
 
 			}
 		});
@@ -553,7 +562,7 @@ public class MainActivity extends BaseActivity implements
 					transaction.replace(R.id.container, fr);
 					transaction.addToBackStack("ACCOUNTS");
 					transaction.commit();
-					mDrawer.closeMenu();
+					drawerLayout.closeDrawer(Gravity.LEFT);
 				}
 
 			}
@@ -566,7 +575,7 @@ public class MainActivity extends BaseActivity implements
 				// // TextView title = (TextView) findViewById(R.id.weather);
 				// title.setText("To-do's");
 				getSupportFragmentManager().popBackStack();
-				mDrawer.closeMenu();
+				drawerLayout.closeDrawer(Gravity.LEFT);
 				arg0.setBackgroundColor(Color.parseColor("#F2F2F2"));
 
 				aq.id(R.id.todo_image).image(R.drawable.list_blue);
@@ -595,7 +604,7 @@ public class MainActivity extends BaseActivity implements
 						.visibility(View.VISIBLE);
 
 				getSupportFragmentManager().popBackStack();
-				mDrawer.closeMenu();
+				drawerLayout.closeDrawers();
 				menuchange = 1;
 
 				arg0.setBackgroundColor(Color.parseColor("#F2F2F2"));
@@ -636,7 +645,7 @@ public class MainActivity extends BaseActivity implements
 				// TextView title = (TextView) findViewById(R.id.weather);
 				// title.setText("Projects");
 
-				mDrawer.closeMenu();
+				drawerLayout.closeDrawer(Gravity.LEFT);
 				arg0.setBackgroundColor(Color.parseColor("#F2F2F2"));
 
 				aq.id(R.id.todo_image).image(R.drawable.list_black);
@@ -714,21 +723,20 @@ public class MainActivity extends BaseActivity implements
 		tabs.setViewPager(pager);
 		tabPagerAdapter.notifyDataSetChanged();
 
-		/*aq.id(R.id.add_task_button)
-				.clicked(new OnClickListener() {
 
-					@Override
-					public void onClick(View v) {
+		aq.id(R.id.add_task_button).typeface(
+				TypeFaces.get(this, Constants.ICON_FONT));
+		aq.id(R.id.add_task_button).clicked(new OnClickListener() {
 
-						
-					}
-				});*/
-		Intent intent = new Intent(MainActivity.this,
-				AddTask.class);
-		intent.putExtra("position", pager.getCurrentItem());
-		startActivity(intent);
-		overridePendingTransition(R.anim.slide_in1,
-				R.anim.slide_out1);
+			@Override
+			public void onClick(View v) {
+
+				Intent intent = new Intent(MainActivity.this, AddTask.class);
+				intent.putExtra("position", pager.getCurrentItem());
+				startActivity(intent);
+				overridePendingTransition(R.anim.slide_in1, R.anim.slide_out1);
+			}
+		});
 
 	}
 
@@ -754,14 +762,6 @@ public class MainActivity extends BaseActivity implements
 				Utils.getCurrentMonth(days, Calendar.SHORT) + "'"
 						+ Utils.getCurrentYear(days));
 	}
-
-	/*
-	 * private void hideAllShowingLayout(int currentViewId) { for (int id :
-	 * menuDrawerCollapsingLayouts) { if (id != currentViewId &&
-	 * aq.id(id).getView().getVisibility() == View.VISIBLE) aq.id(id) .getView()
-	 * .startAnimation( new ScaleAnimToHide(1.0f, 1.0f, 1.0f, 0.0f, 200,
-	 * aq.id(id).getView(), true)); } }
-	 */
 
 	public class TabPagerAdapter extends FragmentPagerAdapter {
 
@@ -1001,5 +1001,6 @@ public class MainActivity extends BaseActivity implements
 		}
 
 	}
+	
 
 }

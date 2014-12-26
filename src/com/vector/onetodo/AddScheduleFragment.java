@@ -106,12 +106,13 @@ public class AddScheduleFragment extends Fragment {
 	// iMageview menu_dots_task,scheduale_attachment edittext task_comment
 	// linearlayout comment_box
 
-	public static AQuery aq, aqloc, aq_label, aq_label_edit, aq_label_del,aq_menu,aq_attach;
+	public static AQuery aq, aqloc, aq_label, aq_label_edit, aq_label_del,
+			aq_menu, aq_attach;
 	Uri filename;
 	List<NameValuePair> pairs;
 	static LinearLayout ll_iner;
 	static int FragmentCheck = 0;
-	int Tag=0;
+	int Tag = 0;
 	private PopupWindow popupWindowAttach;
 	static List<java.lang.Object> names;
 	int Label_postion = -1;
@@ -161,6 +162,7 @@ public class AddScheduleFragment extends Fragment {
 	String[] items = {"From Camera","From Gallery","From DropBox","From GoogleDrive"};
 	CustomListDialog.Builder listbuilder;
 			CustomListDialog attach_alert;
+
 
 	protected static final int RESULT_CODE = 123;
 
@@ -274,8 +276,6 @@ public class AddScheduleFragment extends Fragment {
 		});
 		// *********************End Title
 
-		
-		
 		// ********************* Time Date
 		// ******************************ALL DAY sWITCH
 
@@ -335,7 +335,6 @@ public class AddScheduleFragment extends Fragment {
 			}
 		});
 
-		
 		// *******************dATE tIME
 
 		// Date picker implementation
@@ -437,8 +436,6 @@ public class AddScheduleFragment extends Fragment {
 
 		// *************************End time date
 
-		
-		
 		// ***************** Location
 
 		aq.id(R.id.sch_location)
@@ -478,8 +475,6 @@ public class AddScheduleFragment extends Fragment {
 
 		// ******************Location END
 
-		
-		
 		// *******************Repeat
 
 		aq.id(R.id.repeat_schedule_lay).clicked(new GeneralOnClickListner());
@@ -489,6 +484,7 @@ public class AddScheduleFragment extends Fragment {
 				.setAdapter(
 						new ArrayAdapter<String>(getActivity(),
 								R.layout.grid_layout_textview, Constants.repeatArray) {
+
 
 							@Override
 							public View getView(int position, View convertView,
@@ -545,10 +541,12 @@ public class AddScheduleFragment extends Fragment {
 				((TextView) view).setTextColor(Color.WHITE);
 				view.setSelected(true);
 				if (Constants.repeatArray[position] == "Never") {
+
 					aq.id(R.id.sch_repeat_txt).text(Constants.repeatArray[position])
 					/* .textColorId(R.color.deep_sky_blue) */;
 				} else {
 					aq.id(R.id.sch_repeat_txt).text(Constants.repeatArray[position])
+
 					/* .textColorId(R.color.deep_sky_blue) */;
 				}/*
 				 * aq.id(R.id.sch_repeat_img).background(R.drawable.repeat_blue);
@@ -595,8 +593,10 @@ public class AddScheduleFragment extends Fragment {
 
 				});
 
+
 		aq.id(R.id.sch_time_radio)
 				.textColor(Color.parseColor("#bababa"));
+
 		final TextView set = (TextView) dateTimePickerDialog
 				.findViewById(R.id.set);
 		set.setOnClickListener(new OnClickListener() {
@@ -610,8 +610,10 @@ public class AddScheduleFragment extends Fragment {
 				aq.id(R.id.sch_repeat_txt).text(
 						/* setday + " " + */((TextView) previousSelected)
 								.getText().toString() + " until " + setmon1);
+
 				RadioButton rb = (RadioButton) aq
 						.id(R.id.sch_time_radio).getView();
+
 				rb.setText(setmon1);/*
 									 * aq.id(R.id.sch_repeat_txt).textColorId(R.
 									 * color.active);
@@ -733,14 +735,15 @@ public class AddScheduleFragment extends Fragment {
 		builderLabel.setView(vie);
 		add_new_label_alert = builderLabel.create();
 
-		add_new_label_alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
-			
-			@Override
-			public void onDismiss(DialogInterface dialog) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+		add_new_label_alert
+				.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						// TODO Auto-generated method stub
+
+					}
+				});
 		TextView saveLabel = (TextView) vie.findViewById(R.id.save);
 		saveLabel.setOnClickListener(new OnClickListener() {
 
@@ -938,12 +941,8 @@ public class AddScheduleFragment extends Fragment {
 		tabs.setShouldExpand(true);
 		tabs.setViewPager(pager);
 
-		
-		
-		
-		//************************** Attachment
-		
-		
+		// ************************** Attachment
+
 		final View view12 = getActivity().getLayoutInflater().inflate(
 				R.layout.landing_menu, null, false);
 		aq_menu = new AQuery(getActivity(), view12);
@@ -954,21 +953,80 @@ public class AddScheduleFragment extends Fragment {
 				android.R.drawable.dialog_holo_light_frame));
 		popupWindowAttach.setOutsideTouchable(true);
 		popupWindowAttach.setOnDismissListener(new OnDismissListener() {
-			
+
 			@Override
 			public void onDismiss() {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 		});
-		
+
 		// Show image choose options
-	/*	aq.id(R.id.event_attachment)
-				.clicked(new GeneralOnClickListner());*/
-		
+		/*
+		 * aq.id(R.id.event_attachment) .clicked(new GeneralOnClickListner());
+		 */
 
 		// Gallery and Camera intent
+/*<<<<<<< HEAD
+=======
+
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+
+		View attachment = inflater
+				.inflate(R.layout.add_attachment, null, false);
+		aq_attach = new AQuery(attachment);
+
+		// Gallery and Camera intent
+		aq_attach
+				.id(R.id.gallery1)
+				.typeface(
+						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
+				.clicked(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						attach_alert.dismiss();
+						Intent galleryIntent = new Intent(
+								Intent.ACTION_PICK,
+								android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+						startActivityForResult(galleryIntent, RESULT_GALLERY);
+					}
+				});
+		aq_attach
+				.id(R.id.camera1)
+				.typeface(
+						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
+				.clicked(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						attach_alert.dismiss();
+						Intent intent = new Intent(
+								"android.media.action.IMAGE_CAPTURE");
+
+						String path = Environment.getExternalStorageDirectory()
+								.toString();
+						File makeDirectory = new File(path + File.separator
+								+ "OneTodo");
+						makeDirectory.mkdir();
+						File photo = new File(Environment
+								.getExternalStorageDirectory()
+								+ File.separator
+								+ "OneToDo" + File.separator, "OneToDo_"
+								+ System.currentTimeMillis() + ".JPG");
+						intent.putExtra(MediaStore.EXTRA_OUTPUT,
+								Uri.fromFile(photo));
+						imageUri = Uri.fromFile(photo);
+						startActivityForResult(intent, TAKE_PICTURE);
+					}
+				});
+		AlertDialog.Builder attach_builder = new AlertDialog.Builder(
+				getActivity());
+		attach_builder.setView(attachment);
+		attach_alert = attach_builder.create();
+
+>>>>>>> e7b31beea00fa091b4bda49ca22abe0e45e23679*/
 		aq.id(R.id.event_attachment).clicked(new OnClickListener() {
 			
 			@Override
@@ -1109,28 +1167,33 @@ public class AddScheduleFragment extends Fragment {
 				.typeface(
 						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
 				.clicked(new OnClickListener() {
+=======
+>>>>>>> e7b31beea00fa091b4bda49ca22abe0e45e23679
 
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(
-								"android.media.action.IMAGE_CAPTURE");
-
-						String path = Environment.getExternalStorageDirectory()
-								.toString();
-						File makeDirectory = new File(path + File.separator
-								+ "OneTodo");
-						makeDirectory.mkdir();
-						File photo = new File(Environment
-								.getExternalStorageDirectory()
-								+ File.separator
-								+ "OneToDo" + File.separator, "OneToDo_"
-								+ System.currentTimeMillis() + ".JPG");
-						intent.putExtra(MediaStore.EXTRA_OUTPUT,
-								Uri.fromFile(photo));
-						imageUri = Uri.fromFile(photo);
-						startActivityForResult(intent, TAKE_PICTURE);
-					}
-				});*/
+		/*
+		 * // Gallery and Camera intent aq.id(R.id.gallery) .typeface(
+		 * TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE)) .clicked(new
+		 * OnClickListener() {
+		 * 
+		 * @Override public void onClick(View v) { Intent galleryIntent = new
+		 * Intent( Intent.ACTION_PICK,
+		 * android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		 * startActivityForResult(galleryIntent, RESULT_GALLERY); } });
+		 * aq.id(R.id.camera) .typeface( TypeFaces.get(getActivity(),
+		 * Constants.ROMAN_TYPEFACE)) .clicked(new OnClickListener() {
+		 * 
+		 * @Override public void onClick(View v) { Intent intent = new Intent(
+		 * "android.media.action.IMAGE_CAPTURE");
+		 * 
+		 * String path = Environment.getExternalStorageDirectory() .toString();
+		 * File makeDirectory = new File(path + File.separator + "OneTodo");
+		 * makeDirectory.mkdir(); File photo = new File(Environment
+		 * .getExternalStorageDirectory() + File.separator + "OneToDo" +
+		 * File.separator, "OneToDo_" + System.currentTimeMillis() + ".JPG");
+		 * intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+		 * imageUri = Uri.fromFile(photo); startActivityForResult(intent,
+		 * TAKE_PICTURE); } });
+		 */
 
 		View switchView = aq.id(R.id.add_sub_sch).getView();
 		toggleCheckList(switchView);
@@ -1227,6 +1290,15 @@ public class AddScheduleFragment extends Fragment {
 						.startAnimation(
 								new ScaleAnimToHide(1.0f, 1.0f, 1.0f, 0.0f,
 										200, aq.id(view).getView(), true));
+
+		aq.id(R.id.schedule_time_to_layout).background(
+				R.drawable.input_fields_gray);
+		aq.id(R.id.schedule_time_from_layout).background(
+				R.drawable.input_fields_gray);
+		aq.id(R.id.sch_repeat).background(R.drawable.input_fields_gray);
+		aq.id(R.id.before_schedule_layout).background(
+				R.drawable.input_fields_gray);
+		aq.id(R.id.sch_label_layout).background(R.drawable.input_fields_gray);
 	}
 
 	private void showCurrentView(View v) {
@@ -1243,7 +1315,7 @@ public class AddScheduleFragment extends Fragment {
 		 */
 		// break;
 		case R.id.sch_time_to_layout:
-			if (aq.id(R.id.sch_time_date_to_include).getView().getVisibility() == View.GONE)
+			if (aq.id(R.id.sch_time_date_to_include).getView().getVisibility() == View.GONE) {
 				aq.id(R.id.sch_time_date_to_include)
 						.getView()
 						.startAnimation(
@@ -1251,10 +1323,15 @@ public class AddScheduleFragment extends Fragment {
 										200, aq.id(
 												R.id.sch_time_date_to_include)
 												.getView(), true));
+
+				aq.id(R.id.schedule_time_to_layout).background(
+						R.drawable.input_fields_blue);
+
+			}
 			break;
 		case R.id.sch_time_from_layout:
 			if (aq.id(R.id.sch_time_date_from_include).getView()
-					.getVisibility() == View.GONE)
+					.getVisibility() == View.GONE) {
 				aq.id(R.id.sch_time_date_from_include)
 						.getView()
 						.startAnimation(
@@ -1262,6 +1339,11 @@ public class AddScheduleFragment extends Fragment {
 										200,
 										aq.id(R.id.sch_time_date_from_include)
 												.getView(), true));
+
+				aq.id(R.id.schedule_time_from_layout).background(
+						R.drawable.input_fields_blue);
+
+			}
 			break;
 
 		case R.id.repeat_schedule_lay:
@@ -1278,6 +1360,8 @@ public class AddScheduleFragment extends Fragment {
 										200, aq.id(R.id.sch_repeat_grid_layout)
 												.getView(), true));
 
+				aq.id(R.id.sch_repeat).background(R.drawable.input_fields_blue);
+
 			}
 			break;
 		case R.id.before_schedule_lay:
@@ -1285,8 +1369,10 @@ public class AddScheduleFragment extends Fragment {
 					.getVisibility() == View.GONE) {
 				if (aq.id(R.id.before_schedule).getText().toString() == "") {
 					aq.id(R.id.before_schedule)
+
 							.text(Constants.beforeArray[1]
 									+ " Before").visibility(View.VISIBLE);
+
 					/*
 					 * aq.id(R.id.before_event_image).background(
 					 * R.drawable.reminder_blue);
@@ -1304,16 +1390,23 @@ public class AddScheduleFragment extends Fragment {
 										200,
 										aq.id(R.id.before_grid_view_linear_schedule)
 												.getView(), true));
+				aq.id(R.id.before_schedule_layout).background(
+						R.drawable.input_fields_blue);
+
 			}
 			break;
 		case R.id.sch_label_layout:
-			if (aq.id(R.id.sch_label_grid).getView().getVisibility() == View.GONE)
+			if (aq.id(R.id.sch_label_grid).getView().getVisibility() == View.GONE) {
 				aq.id(R.id.sch_label_grid)
 						.getView()
 						.startAnimation(
 								new ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f,
 										200, aq.id(R.id.sch_label_grid)
 												.getView(), true));
+
+				aq.id(R.id.sch_label_layout).background(
+						R.drawable.input_fields_blue);
+			}
 		default:
 			break;
 		}
@@ -1473,7 +1566,7 @@ public class AddScheduleFragment extends Fragment {
 				Tag = Tag + 1;
 				imagemenu.setTag(Tag);
 				child.setId(Tag);
-				
+
 				imagemenu.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -1484,7 +1577,7 @@ public class AddScheduleFragment extends Fragment {
 								Toast.LENGTH_LONG).show();
 						ll_iner = (LinearLayout) item.findViewById(Integer
 								.parseInt(arg0.getTag().toString()));
-						
+
 						if (popupWindowAttach.isShowing()) {
 							popupWindowAttach.dismiss();
 
@@ -1562,9 +1655,11 @@ public class AddScheduleFragment extends Fragment {
 		}
 	}
 
+
 	
 	//public void imageupload() 
 	{/*
+
 
 		HttpEntity entity = null;
 
@@ -1904,7 +1999,9 @@ public class AddScheduleFragment extends Fragment {
 
 			GradientDrawable mDrawable = (GradientDrawable) getResources()
 					.getDrawable(R.drawable.label_background_dialog);
+
 			mDrawable.setColor(Color.parseColor(Constants.label_colors_dialog[position]));
+
 			imageView.setBackground(mDrawable);
 
 			return imageView;
@@ -1934,5 +2031,9 @@ public class AddScheduleFragment extends Fragment {
 		editorattach.remove(3 + "type" + id); // will delete key email
 		editorattach.commit();
 	}
+
+	
+
+	
 
 }

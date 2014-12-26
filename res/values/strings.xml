@@ -9,7 +9,7 @@
     <string name="title_activity_splash_screen">One ToDo</string>
     <string name="notes_prompt">Add Notes</string>
     <string name="open_drawer">Menu</string>
-    <string name="close_drawer">Todo\'s</string>
+    <string name="close_drawer">To-do\'s</string>
     
     <string-array name="notes_array">
         <item>Notes</item>

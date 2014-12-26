@@ -210,7 +210,11 @@ public class AddTask extends FragmentActivity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				finish();
+				if (Constants.Project_task_check == 1) {
+					getSupportFragmentManager().popBackStack();
+				} else {
+					finish();
+				}
 			}
 		});
 		convertPixelsToDp(38, this);
@@ -470,6 +474,7 @@ public class AddTask extends FragmentActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				popupWindowSchedule.dismiss();
+
 			}
 		});
 		ok_schedule.setOnClickListener(new OnClickListener() {
