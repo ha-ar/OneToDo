@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/calendar_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/active"
     android:orientation="vertical" >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/active"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="@style/Theme.AppCompat.Light"
+        app:theme="@style/ThemeToolbarLightOverflow" />
 
     <ListView
         android:id="@+id/tasks_list"
@@ -56,18 +66,6 @@
             android:layout_marginLeft="20dp"
             android:visibility="gone" />
 
-        <!-- <TextView
-            android:id="@+id/calendar_month_year_textview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:layout_toLeftOf="@+id/calendar_right_arrow"
-            android:layout_toRightOf="@+id/calendar_left_arrow"
-            android:gravity="center"
-            android:textIsSelectable="true"
-            android:textSize="16sp"
-            android:visibility="gone" /> -->
-
         <Button
             android:id="@+id/right_year"
             android:layout_width="wrap_content"
@@ -98,8 +96,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/select_month_caldroid"
             android:layout_marginTop="-5dp"
-            android:numColumns="7"
             android:background="@color/active"
+            android:numColumns="7"
             android:stretchMode="columnWidth" >
         </GridView>
     </RelativeLayout>

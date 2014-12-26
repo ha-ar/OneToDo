@@ -13,6 +13,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.RectF;
@@ -21,6 +22,8 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.view.LayoutInflater;
@@ -228,6 +231,15 @@ public class CaldroidFragment extends DialogFragment {
 	protected boolean enableSwipe = true;
 	protected boolean showNavigationArrows = true;
 	protected boolean enableClickOnDisabledDates = false;
+	
+	private ActionBar actionBar;
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		actionBar = ((ActionBarActivity) activity).getSupportActionBar();
+
+	}
 
 	/**
 	 * dateItemClickListener is fired when user click on the date cell
@@ -928,7 +940,7 @@ public class CaldroidFragment extends DialogFragment {
 		String monthTitle = DateUtils.formatDateRange(getActivity(),
 				monthYearFormatter, millis, millis, MONTH_YEAR_FLAG).toString();
 
-		monthTitleTextView.setText(monthTitle);
+		actionBar.setTitle(monthTitle);
 	}
 
 	/**
@@ -1122,7 +1134,7 @@ public class CaldroidFragment extends DialogFragment {
 
 		weeksGrid = (GridView) view.findViewById(R.id.week_view_grid);
 		ArrayAdapter<String> weekViewAdapter = new ArrayAdapter<String>(
-				getActivity(),R.layout.date_cell2,
+				getActivity(), R.layout.date_cell2,
 				CalendarHelper.getCurrentWeek());
 		weeksGrid.setAdapter(weekViewAdapter);
 
@@ -1149,10 +1161,10 @@ public class CaldroidFragment extends DialogFragment {
 		});
 
 		// For the monthTitleTextView
-//		monthTitleTextView = (TextView) getActivity()
-//				.findViewById(R.id.weather);
-//		monthTitleTextView.setTypeface(TypeFaces.get(getActivity(),
-//				"HeleveticaNeueTStd-Roman"));
+		// monthTitleTextView = (TextView) getActivity()
+		// .findViewById(R.id.weather);
+		// monthTitleTextView.setTypeface(TypeFaces.get(getActivity(),
+		// "HeleveticaNeueTStd-Roman"));
 
 		// For the left arrow button
 		leftArrowButton = (Button) view.findViewById(R.id.calendar_left_arrow);
