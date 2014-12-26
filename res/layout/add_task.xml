@@ -82,12 +82,12 @@
                 android:layout_height="30dp"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
-                android:layout_toLeftOf="@+id/imageView11234"
+                android:layout_toLeftOf="@+id/addtask_menu"
                 android:alpha="0.3"
                 android:background="@drawable/accept" />
 
             <ImageView
-                android:id="@+id/imageView11234"
+                android:id="@+id/addtask_menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"

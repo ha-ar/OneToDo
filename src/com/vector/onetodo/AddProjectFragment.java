@@ -6,6 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import uk.me.lewisdeane.ldialogs.CustomDialog;
+import uk.me.lewisdeane.ldialogs.CustomListDialog;
+import uk.me.lewisdeane.ldialogs.BaseDialog.Alignment;
+import uk.me.lewisdeane.ldialogs.CustomDialog.ClickListener;
+import uk.me.lewisdeane.ldialogs.CustomListDialog.ListClickListener;
+
 import net.simonvt.datepicker.DatePicker;
 import net.simonvt.datepicker.DatePicker.OnDateChangedListener;
 import net.simonvt.timepicker.TimePicker;
@@ -52,6 +58,7 @@ import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -65,6 +72,8 @@ import com.vector.onetodo.utils.ScaleAnimToHide;
 import com.vector.onetodo.utils.ScaleAnimToShow;
 import com.vector.onetodo.utils.TypeFaces;
 import com.vector.onetodo.utils.Utils;
+import com.viewpagerindicator.CirclePageIndicator;
+import com.viewpagerindicator.PageIndicator;
 
 public class AddProjectFragment extends Fragment {
 
@@ -83,15 +92,9 @@ public class AddProjectFragment extends Fragment {
 	int MaxId = -1;
 	EditText taskTitle;
 
-	final String[] colors1 = { "#790000", "#005826", "#0D004C", "#ED145B",
-			"#E0D400", "#0000FF", "#4B0049", "#005B7F", "#603913", "#005952" };
-	private final String[] labels_array = new String[] { "Personal", "Home",
-			"Work", "New", "New", "New", "New", "New", "New" };
 	static List<java.lang.Object> names;
 
 	public static HashMap<Integer, Integer> inflatingLayouts = new HashMap<Integer, Integer>();
-
-	public static HashMap<Integer, Integer> inflatingLayoutsSelector = new HashMap<Integer, Integer>();
 
 	private String currentDay, currentMon;
 	static String checkedId2 = null;
@@ -104,20 +107,20 @@ public class AddProjectFragment extends Fragment {
 
 	static LinearLayout lll;
 
-	AlertDialog label_edit, location_del, add_new_label_alert, assig_alert,
+	AlertDialog  add_new_label_alert, assig_alert,
 			share_alert, date_time_alert;
+	String[] itemsForLables = {"Edit","Delete"};
+	CustomDialog.Builder dialogbuilder;CustomListDialog.Builder listbuilder;
+			CustomListDialog label_edit;CustomDialog location_del;
 	static int currentHours, currentMin, currentDayDigit, currentYear,
 			currentMonDigit;
 
 	int Month, Year;
 
 	private int[] collapsingViews = { R.id.date_time_include,
-			R.id.label_event_grid_view };
+			R.id.label_project_grid_view };
 
 	private int[] allViews = { R.id.time_date, R.id.spinner_label_layout };
-
-	static final String[] repeatArray = new String[] { "Once", "Daily",
-			"Weekly", "Monthly", "Yearly" };
 
 	int dayPosition;
 	Editor editor;
@@ -168,10 +171,10 @@ public class AddProjectFragment extends Fragment {
 		currentMin = Utils.getCurrentMins();
 
 		// inflatingLayouts.put(0, R.layout.project_title);
-		inflatingLayouts.put(0, R.layout.project_title);
-		inflatingLayouts.put(1, R.layout.project_duration);
-		inflatingLayouts.put(2, R.layout.project_task);
-		inflatingLayouts.put(3, R.layout.project_note);
+		inflatingLayouts.put(0, R.layout.add_project_title);
+		inflatingLayouts.put(1, R.layout.add_project_date);
+		inflatingLayouts.put(2, R.layout.add_project_label);
+		inflatingLayouts.put(3, R.layout.add_project_note);
 
 		inflateLayouts();
 		main();
@@ -268,9 +271,6 @@ public class AddProjectFragment extends Fragment {
 		aq.id(R.id.time_date).clicked(new GeneralOnClickListner());
 		GridView gridView;
 
-		final String[] labels_array1 = new String[] { "A", "A", "A", "A", "A",
-				"A", "A", "A", "A", "A", };
-
 		View vie = getActivity().getLayoutInflater().inflate(
 				R.layout.add_label_event, null, false);
 
@@ -330,7 +330,7 @@ public class AddProjectFragment extends Fragment {
 						GradientDrawable mDrawable = (GradientDrawable) getResources()
 								.getDrawable(R.drawable.label_background);
 						mDrawable.setColor(Color
-								.parseColor(colors1[Label_postion]));
+								.parseColor(Constants.label_colors_dialog[Label_postion]));
 						Save(label_view.getId() + "" + itempos, label_text
 								.getText().toString(), Label_postion);
 						Label_postion = -1;
@@ -339,11 +339,11 @@ public class AddProjectFragment extends Fragment {
 								.toString());
 						((TextView) label_view).setTextColor(Color.WHITE);
 
-						aq.id(R.id.spinner_labels_event).text(
+						aq.id(R.id.spinner_labels_project).text(
 								((TextView) label_view).getText().toString());
-						aq.id(R.id.spinner_labels_event).getTextView()
+						aq.id(R.id.spinner_labels_project).getTextView()
 								.setBackground(label_view.getBackground());
-						aq.id(R.id.spinner_labels_event).getTextView()
+						aq.id(R.id.spinner_labels_project).getTextView()
 								.setTextColor(Color.WHITE);
 
 					}
@@ -361,13 +361,12 @@ public class AddProjectFragment extends Fragment {
 		});
 
 		// Init labels adapter
-		final String[] colors = { "#AC7900", "#4D6600", "#5A0089" };
-		aq.id(R.id.label_event_grid_view)
+		aq.id(R.id.label_project_grid_view)
 				.getGridView()
 				.setAdapter(
 						new ArrayAdapter<String>(getActivity(),
 								R.layout.grid_layout_label_text_view,
-								labels_array) {
+								Constants.labels_array) {
 
 							@Override
 							public View getView(int position, View convertView,
@@ -386,7 +385,7 @@ public class AddProjectFragment extends Fragment {
 											.getDrawable(
 													R.drawable.label_background);
 									mDrawable.setColor(Color
-											.parseColor(colors[position]));
+											.parseColor(Constants.label_colors[position]));
 									textView.setBackground(mDrawable);
 								}
 								if (plabel != null) {
@@ -396,14 +395,14 @@ public class AddProjectFragment extends Fragment {
 											.getDrawable(
 													R.drawable.label_background);
 									mDrawable.setColor(Color
-											.parseColor(colors1[pposition]));
+											.parseColor(Constants.label_colors_dialog[pposition]));
 									textView.setBackground(mDrawable);
 								}
 								return textView;
 							}
 
 						});
-		aq.id(R.id.label_event_grid_view).getGridView()
+		aq.id(R.id.label_project_grid_view).getGridView()
 				.setOnItemClickListener(new OnItemClickListener() {
 
 					@Override
@@ -414,11 +413,11 @@ public class AddProjectFragment extends Fragment {
 						label_view = view;
 						if (!((TextView) view).getText().toString()
 								.equalsIgnoreCase("new")) {
-							aq.id(R.id.spinner_labels_event).text(
+							aq.id(R.id.spinner_labels_project).text(
 									((TextView) view).getText().toString());
-							aq.id(R.id.spinner_labels_event).getTextView()
+							aq.id(R.id.spinner_labels_project).getTextView()
 									.setBackground(view.getBackground());
-							aq.id(R.id.spinner_labels_event).getTextView()
+							aq.id(R.id.spinner_labels_project).getTextView()
 									.setTextColor(Color.WHITE);
 						} else {
 							add_new_label_alert.show();
@@ -428,77 +427,101 @@ public class AddProjectFragment extends Fragment {
 
 				});
 
-		aq.id(R.id.label_event_grid_view).getGridView()
+		aq.id(R.id.label_project_grid_view).getGridView()
 				.setOnItemLongClickListener(new LabelEditClickListener());
 
-		LayoutInflater inflater5 = getActivity().getLayoutInflater();
+//		LayoutInflater inflater5 = getActivity().getLayoutInflater();
+//
+//		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
+//				false);
+//		AQlabel_edit = new AQuery(dialoglayout6);
+//		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
+//		builder6.setView(dialoglayout6);
+//		label_edit = builder6.create();
+//
+//		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
+//				null, false);
+//		AQlabel_del = new AQuery(dialoglayout7);
+//		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
+//		builder7.setView(dialoglayout7);
+//		location_del = builder7.create();
 
-		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
-				false);
-		AQlabel_edit = new AQuery(dialoglayout6);
-		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
-		builder6.setView(dialoglayout6);
-		label_edit = builder6.create();
-
-		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
-				null, false);
-		AQlabel_del = new AQuery(dialoglayout7);
-		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
-		builder7.setView(dialoglayout7);
-		location_del = builder7.create();
-
-		AQlabel_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				location_del.dismiss();
-			}
-		});
-
-		AQlabel_del.id(R.id.edit_del).clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				Remove(viewl.getId() + "" + itempos);
-				((TextView) viewl).setText("New");
-				GradientDrawable mDrawable = (GradientDrawable) getResources()
-						.getDrawable(R.drawable.label_simple);
-				((TextView) viewl).setBackground(mDrawable);
-				((TextView) viewl).setTextColor(R.color.mountain_mist);
-
-				location_del.dismiss();
-			}
-		});
-
-		AQlabel_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				label_edit.dismiss();
-				location_del.show();
-			}
-		});
-
-		AQlabel_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub=
-				// aqd.id(R.id.add_label_text).text(((TextView)
-				// viewl).getText().)
-				AQlabel.id(R.id.label_title_event).text("Edit");
-				AQlabel.id(R.id.save).text("Save");
-				label_view = viewl;
-				label_edit.dismiss();
-				add_new_label_alert.show();
-			}
-		});
+//		AQlabel_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				// TODO Auto-generated method stub
+//				location_del.dismiss();
+//			}
+//		});
+//
+//		AQlabel_del.id(R.id.edit_del).clicked(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				// TODO Auto-generated method stub
+//				Remove(viewl.getId() + "" + itempos);
+//				((TextView) viewl).setText("New");
+//				GradientDrawable mDrawable = (GradientDrawable) getResources()
+//						.getDrawable(R.drawable.label_simple);
+//				((TextView) viewl).setBackground(mDrawable);
+//				((TextView) viewl).setTextColor(R.color.mountain_mist);
+//
+//				location_del.dismiss();
+//			}
+//		});
+//
+//		AQlabel_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				// TODO Auto-generated method stub
+//				label_edit.dismiss();
+//				location_del.show();
+//			}
+//		});
+//
+//		AQlabel_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				// TODO Auto-generated method stub=
+//				// aqd.id(R.id.add_label_text).text(((TextView)
+//				// viewl).getText().)
+//				AQlabel.id(R.id.label_title_event).text("Edit");
+//				AQlabel.id(R.id.save).text("Save");
+//				label_view = viewl;
+//				label_edit.dismiss();
+//				add_new_label_alert.show();
+//			}
+//		});
 		aq.id(R.id.spinner_label_layout).clicked(new GeneralOnClickListner());
 
 		// ********************************* Label END
+
+		aq.id(R.id.projec_subtask_lay).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+
+				//PageIndicator mIndicator= (CirclePageIndicator) getActivity().findViewById(R.id.indicator);
+				//aq.id(R.id.indicator).getView().setVisibility(View.GONE);
+
+				Constants.Project_task_check=1;
+				Fragment fr=new AddTaskFragment();
+				FragmentManager manager=getFragmentManager();
+				FragmentTransaction trans=manager.beginTransaction();
+				Bundle b=new Bundle();
+				b.putInt("dayPosition",dayPosition );
+				fr.setArguments(b);
+				trans.replace(R.id.main_container, fr);
+				
+				trans.addToBackStack("ADDPROJECT");
+				
+				trans.commit();
+			}
+		});
 	}
 
 	public static void inflateLayouts() {
@@ -538,6 +561,9 @@ public class AddProjectFragment extends Fragment {
 						.startAnimation(
 								new ScaleAnimToHide(1.0f, 1.0f, 1.0f, 0.0f,
 										200, aq.id(view).getView(), true));
+		aq.id(R.id.spinner_label_layout).background(R.drawable.input_fields_gray);
+		aq.id(R.id.project_time_date).background(R.drawable.input_fields_gray);
+		
 	}
 
 	private void showCurrentView(View v) {
@@ -546,22 +572,29 @@ public class AddProjectFragment extends Fragment {
 
 		switch (v.getId()) {
 		case R.id.time_date:
-			if (aq.id(R.id.date_time_include).getView().getVisibility() == View.GONE)
+			if (aq.id(R.id.date_time_include).getView().getVisibility() == View.GONE){
 				aq.id(R.id.date_time_include)
 						.getView()
 						.startAnimation(
 								new ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f,
 										200, aq.id(R.id.date_time_include)
 												.getView(), true));
+
+				aq.id(R.id.project_time_date).background(R.drawable.input_fields_blue);
+			}
 			break;
 		case R.id.spinner_label_layout:
-			if (aq.id(R.id.label_event_grid_view).getView().getVisibility() == View.GONE)
-				aq.id(R.id.label_event_grid_view)
+			if (aq.id(R.id.label_project_grid_view).getView().getVisibility() == View.GONE)
+				{
+				aq.id(R.id.label_project_grid_view)
 						.getView()
 						.startAnimation(
 								new ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f,
-										200, aq.id(R.id.label_event_grid_view)
+										200, aq.id(R.id.label_project_grid_view)
 												.getView(), true));
+
+				aq.id(R.id.spinner_label_layout).background(R.drawable.input_fields_blue);
+			}
 			break;
 
 		default:
@@ -710,27 +743,102 @@ public class AddProjectFragment extends Fragment {
 		}
 		aq.id(R.id.time_field).text(tempCurrentHours + ":" + tempCurrentMins);
 	}
-
 	private class LabelEditClickListener implements OnItemLongClickListener {
 
 		@Override
-		public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+		public boolean onItemLongClick(AdapterView<?> arg0, final View arg1,
 				int position, long arg3) {
 			// TODO Auto-generated method stub
 			if (((TextView) arg1).getText().toString().equals("New")
 					|| position < 3) {
 
 			} else {
-				AQlabel.id(R.id.add_label_text_event).text(
-						((TextView) arg1).getText().toString());
-				AQlabel_del.id(R.id.body).text(
-						"Label " + ((TextView) arg1).getText().toString()
-								+ " will be deleted");
-				AQlabel_edit.id(R.id.add_task_edit_title).text(
-						"Label: " + ((TextView) arg1).getText().toString());
+//				aqd.id(R.id.add_label_text).text(
+//						((TextView) arg1).getText().toString());
+//				aq_del.id(R.id.body).text(
+//						"Label " + ((TextView) arg1).getText().toString()
+//								+ " will be deleted");
+//				aq_edit.id(R.id.add_task_edit_title).text(
+//						"Label: " + ((TextView) arg1).getText().toString());
 				viewl = arg1;
 				itempos = position;
-				label_edit.show();
+				listbuilder = new CustomListDialog.Builder(getActivity(), "Label: " + ((TextView) arg1).getText().toString(),itemsForLables);
+						listbuilder.darkTheme(false);				
+						listbuilder.titleAlignment(Alignment.LEFT); 
+						listbuilder.itemAlignment(Alignment.LEFT); 
+						listbuilder.titleColor(getResources().getColor(android.R.color.holo_blue_dark)); 
+						listbuilder.itemColor(Color.BLACK);
+						listbuilder.titleTextSize(22);
+						listbuilder.itemTextSize(18);
+						label_edit = listbuilder.build();
+						label_edit.show();
+				label_edit.setListClickListener(new ListClickListener() {
+					
+					@Override
+					public void onListItemSelected(int position, String[] items, String item) {
+						// TODO Auto-generated method stub
+						if(position == 0)
+		            	{
+//							aq_label.id(R.id.add_label_text).text(
+//									((TextView) arg1).getText().toString());
+//							aq_label_del.id(R.id.body).text(
+//									"Label " + ((TextView) arg1).getText().toString()
+//											+ " will be deleted");
+//							aq_label_edit.id(R.id.add_task_edit_title).text(
+//									"Label: " + ((TextView) arg1).getText().toString());
+							viewl = arg1;
+							itempos = position;
+							label_edit.dismiss();
+
+							add_new_label_alert.getWindow().setBackgroundDrawable(
+									new ColorDrawable(android.graphics.Color.TRANSPARENT));
+							add_new_label_alert.show();
+		            	}
+						if(position==1)
+						{
+							label_edit.dismiss();
+							dialogbuilder = new CustomDialog.Builder(getActivity(), "Delete", "Ok");
+
+		            		// Now we can any of the following methods.
+		            		dialogbuilder.content("Label " + ((TextView) arg1).getText().toString()
+									+ " will be deleted");
+		            		dialogbuilder.negativeText("Cancel");
+		            		dialogbuilder.darkTheme(false);
+		            		dialogbuilder.rightToLeft(true);
+		            		dialogbuilder.titleTextSize(22);
+		            		dialogbuilder.contentTextSize(18);
+		            		dialogbuilder.buttonTextSize(14);
+		            		dialogbuilder.titleAlignment(Alignment.LEFT); 
+		            		dialogbuilder.buttonAlignment(Alignment.RIGHT);
+		            		dialogbuilder.titleColor(getResources().getColor(android.R.color.holo_blue_light)); 
+		            		dialogbuilder.contentColor(Color.BLACK); 
+		            		dialogbuilder.positiveColor(getResources().getColor(android.R.color.holo_blue_light)); 
+		            		location_del = dialogbuilder.build();
+		            		location_del.show();
+							location_del.setClickListener(new ClickListener() {
+								
+								@Override
+								public void onConfirmClick() {
+									// TODO Auto-generated method stub
+									Remove(viewl.getId() + "" + itempos);
+									((TextView) viewl).setText("New");
+									GradientDrawable mDrawable = (GradientDrawable) getResources()
+											.getDrawable(R.drawable.label_simple);
+									((TextView) viewl).setBackground(mDrawable);
+									((TextView) viewl).setTextColor(R.color.mountain_mist);
+
+									location_del.dismiss();
+								}
+								
+								@Override
+								public void onCancelClick() {
+									// TODO Auto-generated method stub
+									location_del.dismiss();
+								}
+							});
+						}
+					}
+				});
 			}
 			return false;
 		}
@@ -772,7 +880,8 @@ public class AddProjectFragment extends Fragment {
 
 			GradientDrawable mDrawable = (GradientDrawable) getResources()
 					.getDrawable(R.drawable.label_background_dialog);
-			mDrawable.setColor(Color.parseColor(colors1[position]));
+			mDrawable.setColor(Color
+					.parseColor(Constants.label_colors_dialog[position]));
 			imageView.setBackground(mDrawable);
 
 			// imageView.setImageResource(mThumbIds[position]);

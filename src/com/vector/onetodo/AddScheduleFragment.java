@@ -23,6 +23,12 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import uk.me.lewisdeane.ldialogs.CustomDialog;
+import uk.me.lewisdeane.ldialogs.CustomListDialog;
+import uk.me.lewisdeane.ldialogs.BaseDialog.Alignment;
+import uk.me.lewisdeane.ldialogs.CustomDialog.ClickListener;
+import uk.me.lewisdeane.ldialogs.CustomListDialog.ListClickListener;
+
 import net.simonvt.datepicker.DatePicker;
 import net.simonvt.datepicker.DatePicker.OnDateChangedListener;
 import net.simonvt.timepicker.TimePicker;
@@ -100,12 +106,13 @@ public class AddScheduleFragment extends Fragment {
 	// iMageview menu_dots_task,scheduale_attachment edittext task_comment
 	// linearlayout comment_box
 
-	public static AQuery aq, aqloc, aq_label, aq_label_edit, aq_label_del,aq_menu,aq_attach;
+	public static AQuery aq, aqloc, aq_label, aq_label_edit, aq_label_del,
+			aq_menu, aq_attach;
 	Uri filename;
 	List<NameValuePair> pairs;
 	static LinearLayout ll_iner;
 	static int FragmentCheck = 0;
-	int Tag=0;
+	int Tag = 0;
 	private PopupWindow popupWindowAttach;
 	static List<java.lang.Object> names;
 	int Label_postion = -1;
@@ -129,8 +136,6 @@ public class AddScheduleFragment extends Fragment {
 	private static final int TAKE_PICTURE = 1;
 
 	private static View previousSelected;
-	static final String[] repeatArray = new String[] { "Never", "Daily",
-			"Weekly", "Monthly", "Yearly" };
 	static LinearLayout lll;
 	static int currentHours, currentMin, currentDayDigit, currentYear,
 			currentMonDigit;
@@ -148,17 +153,16 @@ public class AddScheduleFragment extends Fragment {
 
 	public static HashMap<Integer, Integer> inflatingLayouts = new HashMap<Integer, Integer>();
 
-	private final String[] labels_array = new String[] { "Personal", "Home",
-			"Work", "New", "New", "New", "New", "New", "New" };
-
-	String[] colors1 = { "#790000", "#005826", "#0D004C", "#ED145B", "#E0D400",
-			"#0000FF", "#4B0049", "#005B7F", "#603913", "#005952" };
-
 	Editor editor, editorattach;
 	EditText label_field = null;
+	String[] itemsForLables = {"Edit","Delete"};
+	CustomDialog.Builder dialogbuilder;
+			CustomListDialog label_edit;CustomDialog location_del;
+	AlertDialog date_time_alert, add_new_label_alert, date_time;
+	String[] items = {"From Camera","From Gallery","From DropBox","From GoogleDrive"};
+	CustomListDialog.Builder listbuilder;
+			CustomListDialog attach_alert;
 
-	AlertDialog date_time_alert, add_new_label_alert, date_time, label_edit,
-			location_del,attach_alert;
 
 	protected static final int RESULT_CODE = 123;
 
@@ -272,8 +276,6 @@ public class AddScheduleFragment extends Fragment {
 		});
 		// *********************End Title
 
-		
-		
 		// ********************* Time Date
 		// ******************************ALL DAY sWITCH
 
@@ -333,7 +335,6 @@ public class AddScheduleFragment extends Fragment {
 			}
 		});
 
-		
 		// *******************dATE tIME
 
 		// Date picker implementation
@@ -435,8 +436,6 @@ public class AddScheduleFragment extends Fragment {
 
 		// *************************End time date
 
-		
-		
 		// ***************** Location
 
 		aq.id(R.id.sch_location)
@@ -476,8 +475,6 @@ public class AddScheduleFragment extends Fragment {
 
 		// ******************Location END
 
-		
-		
 		// *******************Repeat
 
 		aq.id(R.id.repeat_schedule_lay).clicked(new GeneralOnClickListner());
@@ -486,7 +483,8 @@ public class AddScheduleFragment extends Fragment {
 				.getGridView()
 				.setAdapter(
 						new ArrayAdapter<String>(getActivity(),
-								R.layout.grid_layout_textview, repeatArray) {
+								R.layout.grid_layout_textview, Constants.repeatArray) {
+
 
 							@Override
 							public View getView(int position, View convertView,
@@ -542,11 +540,13 @@ public class AddScheduleFragment extends Fragment {
 				}
 				((TextView) view).setTextColor(Color.WHITE);
 				view.setSelected(true);
-				if (repeatArray[position] == "Never") {
-					aq.id(R.id.sch_repeat_txt).text(repeatArray[position])
+				if (Constants.repeatArray[position] == "Never") {
+
+					aq.id(R.id.sch_repeat_txt).text(Constants.repeatArray[position])
 					/* .textColorId(R.color.deep_sky_blue) */;
 				} else {
-					aq.id(R.id.sch_repeat_txt).text(repeatArray[position])
+					aq.id(R.id.sch_repeat_txt).text(Constants.repeatArray[position])
+
 					/* .textColorId(R.color.deep_sky_blue) */;
 				}/*
 				 * aq.id(R.id.sch_repeat_img).background(R.drawable.repeat_blue);
@@ -593,8 +593,10 @@ public class AddScheduleFragment extends Fragment {
 
 				});
 
+
 		aq.id(R.id.sch_time_radio)
 				.textColor(Color.parseColor("#bababa"));
+
 		final TextView set = (TextView) dateTimePickerDialog
 				.findViewById(R.id.set);
 		set.setOnClickListener(new OnClickListener() {
@@ -608,8 +610,10 @@ public class AddScheduleFragment extends Fragment {
 				aq.id(R.id.sch_repeat_txt).text(
 						/* setday + " " + */((TextView) previousSelected)
 								.getText().toString() + " until " + setmon1);
+
 				RadioButton rb = (RadioButton) aq
 						.id(R.id.sch_time_radio).getView();
+
 				rb.setText(setmon1);/*
 									 * aq.id(R.id.sch_repeat_txt).textColorId(R.
 									 * color.active);
@@ -677,21 +681,21 @@ public class AddScheduleFragment extends Fragment {
 
 		aq.id(R.id.sch_label_layout).clicked(new GeneralOnClickListner());
 
-		LayoutInflater inflater5 = getActivity().getLayoutInflater();
-
-		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
-				false);
-		aq_label_edit = new AQuery(dialoglayout6);
-		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
-		builder6.setView(dialoglayout6);
-		label_edit = builder6.create();
-
-		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
-				null, false);
-		aq_label_del = new AQuery(dialoglayout7);
-		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
-		builder7.setView(dialoglayout7);
-		location_del = builder7.create();
+//		LayoutInflater inflater5 = getActivity().getLayoutInflater();
+//
+//		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
+//				false);
+//		aq_label_edit = new AQuery(dialoglayout6);
+//		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
+//		builder6.setView(dialoglayout6);
+//		label_edit = builder6.create();
+//
+//		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
+//				null, false);
+//		aq_label_del = new AQuery(dialoglayout7);
+//		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
+//		builder7.setView(dialoglayout7);
+//		location_del = builder7.create();
 
 		GridView gridView;
 
@@ -731,14 +735,15 @@ public class AddScheduleFragment extends Fragment {
 		builderLabel.setView(vie);
 		add_new_label_alert = builderLabel.create();
 
-		add_new_label_alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
-			
-			@Override
-			public void onDismiss(DialogInterface dialog) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+		add_new_label_alert
+				.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						// TODO Auto-generated method stub
+
+					}
+				});
 		TextView saveLabel = (TextView) vie.findViewById(R.id.save);
 		saveLabel.setOnClickListener(new OnClickListener() {
 
@@ -750,7 +755,7 @@ public class AddScheduleFragment extends Fragment {
 						GradientDrawable mDrawable = (GradientDrawable) getResources()
 								.getDrawable(R.drawable.label_background);
 						mDrawable.setColor(Color
-								.parseColor(colors1[Label_postion]));
+								.parseColor(Constants.label_colors_dialog[Label_postion]));
 						Save(label_view.getId() + "" + itempos, label_text
 								.getText().toString(), Label_postion);
 						Label_postion = -1;
@@ -784,13 +789,12 @@ public class AddScheduleFragment extends Fragment {
 		});
 
 		// Init labels adapter
-		final String[] colors = { "#AC7900", "#4D6600", "#5A0089" };
 		aq.id(R.id.sch_label_grid)
 				.getGridView()
 				.setAdapter(
 						new ArrayAdapter<String>(getActivity(),
 								R.layout.grid_layout_label_text_view,
-								labels_array) {
+								Constants.labels_array) {
 
 							@Override
 							public View getView(int position, View convertView,
@@ -811,7 +815,7 @@ public class AddScheduleFragment extends Fragment {
 											.getDrawable(
 													R.drawable.label_background);
 									mDrawable.setColor(Color
-											.parseColor(colors[position]));
+											.parseColor(Constants.label_colors[position]));
 									textView.setBackground(mDrawable);
 								}
 								if (plabel != null) {
@@ -821,7 +825,7 @@ public class AddScheduleFragment extends Fragment {
 											.getDrawable(
 													R.drawable.label_background);
 									mDrawable.setColor(Color
-											.parseColor(colors1[pposition]));
+											.parseColor(Constants.label_colors_dialog[pposition]));
 									textView.setBackground(mDrawable);
 								}
 								return textView;
@@ -860,55 +864,55 @@ public class AddScheduleFragment extends Fragment {
 		aq.id(R.id.sch_label_grid).getGridView()
 				.setOnItemLongClickListener(new LabelEditClickListener());
 
-		aq_label_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				location_del.dismiss();
-			}
-		});
-
-		aq_label_del.id(R.id.edit_del).clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				Remove(viewl.getId() + "" + itempos);
-				((TextView) viewl).setText("New");
-				GradientDrawable mDrawable = (GradientDrawable) getResources()
-						.getDrawable(R.drawable.label_simple);
-				((TextView) viewl).setBackground(mDrawable);
-				((TextView) viewl).setTextColor(R.color.mountain_mist);
-
-				location_del.dismiss();
-			}
-		});
-
-		aq_label_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				label_edit.dismiss();
-				location_del.show();
-			}
-		});
-
-		aq_label_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub=
-				// aqd.id(R.id.sch_label_txt).text(((TextView)
-				// viewl).getText().)
-				aq_label.id(R.id.label_title).text("Edit");
-				aq_label.id(R.id.save).text("Save");
-				label_view = viewl;
-				label_edit.dismiss();
-				add_new_label_alert.show();
-			}
-		});
+//		aq_label_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				// TODO Auto-generated method stub
+//				location_del.dismiss();
+//			}
+//		});
+//
+//		aq_label_del.id(R.id.edit_del).clicked(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				// TODO Auto-generated method stub
+//				Remove(viewl.getId() + "" + itempos);
+//				((TextView) viewl).setText("New");
+//				GradientDrawable mDrawable = (GradientDrawable) getResources()
+//						.getDrawable(R.drawable.label_simple);
+//				((TextView) viewl).setBackground(mDrawable);
+//				((TextView) viewl).setTextColor(R.color.mountain_mist);
+//
+//				location_del.dismiss();
+//			}
+//		});
+//
+//		aq_label_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				// TODO Auto-generated method stub
+//				label_edit.dismiss();
+//				location_del.show();
+//			}
+//		});
+//
+//		aq_label_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				// TODO Auto-generated method stub=
+//				// aqd.id(R.id.sch_label_txt).text(((TextView)
+//				// viewl).getText().)
+//				aq_label.id(R.id.label_title).text("Edit");
+//				aq_label.id(R.id.save).text("Save");
+//				label_view = viewl;
+//				label_edit.dismiss();
+//				add_new_label_alert.show();
+//			}
+//		});
 
 		// ******************** END Label
 
@@ -937,12 +941,8 @@ public class AddScheduleFragment extends Fragment {
 		tabs.setShouldExpand(true);
 		tabs.setViewPager(pager);
 
-		
-		
-		
-		//************************** Attachment
-		
-		
+		// ************************** Attachment
+
 		final View view12 = getActivity().getLayoutInflater().inflate(
 				R.layout.landing_menu, null, false);
 		aq_menu = new AQuery(getActivity(), view12);
@@ -953,21 +953,23 @@ public class AddScheduleFragment extends Fragment {
 				android.R.drawable.dialog_holo_light_frame));
 		popupWindowAttach.setOutsideTouchable(true);
 		popupWindowAttach.setOnDismissListener(new OnDismissListener() {
-			
+
 			@Override
 			public void onDismiss() {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 		});
-		
+
 		// Show image choose options
-	/*	aq.id(R.id.event_attachment)
-				.clicked(new GeneralOnClickListner());*/
-		
+		/*
+		 * aq.id(R.id.event_attachment) .clicked(new GeneralOnClickListner());
+		 */
 
 		// Gallery and Camera intent
+/*<<<<<<< HEAD
+=======
 
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 
@@ -1023,17 +1025,126 @@ public class AddScheduleFragment extends Fragment {
 				getActivity());
 		attach_builder.setView(attachment);
 		attach_alert = attach_builder.create();
-		
-		
-	
-		aq.id(R.id.event_attachment).clicked(new OnClickListener() {
 
+>>>>>>> e7b31beea00fa091b4bda49ca22abe0e45e23679*/
+		aq.id(R.id.event_attachment).clicked(new OnClickListener() {
+			
 			@Override
-			public void onClick(View v) {
-				// slideUpDown(aq.id(R.id.attachement_layout_include).getView());
+			public void onClick(View v) {		
+				listbuilder = new CustomListDialog.Builder(getActivity(), "Add Attachment",items);
+			
+				listbuilder.darkTheme(false);		
+				listbuilder.typeface(TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE));
+				listbuilder.titleAlignment(Alignment.LEFT); 
+				listbuilder.itemAlignment(Alignment.LEFT); 
+				listbuilder.titleColor(getResources().getColor(android.R.color.holo_blue_dark)); 
+				listbuilder.itemColor(Color.BLACK);
+				listbuilder.titleTextSize(22);
+				listbuilder.itemTextSize(18);
+				attach_alert = listbuilder.build();
 				attach_alert.show();
+				attach_alert.setListClickListener(new ListClickListener() {
+					
+					@Override
+					public void onListItemSelected(int position, String[] items, String item) {
+						if(position==0)
+						{
+							attach_alert.dismiss();
+							Intent intent = new Intent(
+									"android.media.action.IMAGE_CAPTURE");
+
+							String path = Environment.getExternalStorageDirectory()
+									.toString();
+							File makeDirectory = new File(path + File.separator
+									+ "OneTodo");
+							makeDirectory.mkdir();
+							File photo = new File(Environment
+									.getExternalStorageDirectory()
+									+ File.separator
+									+ "OneToDo" + File.separator, "OneToDo_"
+									+ System.currentTimeMillis() + ".JPG");
+							intent.putExtra(MediaStore.EXTRA_OUTPUT,
+									Uri.fromFile(photo));
+							imageUri = Uri.fromFile(photo);
+							startActivityForResult(intent, TAKE_PICTURE);
+						}
+						if(position==1)
+						{
+							attach_alert.dismiss();
+							Intent galleryIntent = new Intent(
+									Intent.ACTION_PICK,
+									android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+							startActivityForResult(galleryIntent, RESULT_GALLERY);
+						}
+					}
+				});				
 			}
 		});
+//		LayoutInflater inflater = getActivity().getLayoutInflater();
+//
+//		View attachment = inflater
+//				.inflate(R.layout.add_attachment, null, false);
+//		aq_attach = new AQuery(attachment);
+//
+//		// Gallery and Camera intent
+//		aq_attach
+//				.id(R.id.gallery1)
+//				.typeface(
+//						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
+//				.clicked(new OnClickListener() {
+//
+//					@Override
+//					public void onClick(View v) {
+//						attach_alert.dismiss();
+//						Intent galleryIntent = new Intent(
+//								Intent.ACTION_PICK,
+//								android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//						startActivityForResult(galleryIntent, RESULT_GALLERY);
+//					}
+//				});
+//		aq_attach
+//				.id(R.id.camera1)
+//				.typeface(
+//						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
+//				.clicked(new OnClickListener() {
+//
+//					@Override
+//					public void onClick(View v) {
+//						attach_alert.dismiss();
+//						Intent intent = new Intent(
+//								"android.media.action.IMAGE_CAPTURE");
+//
+//						String path = Environment.getExternalStorageDirectory()
+//								.toString();
+//						File makeDirectory = new File(path + File.separator
+//								+ "OneTodo");
+//						makeDirectory.mkdir();
+//						File photo = new File(Environment
+//								.getExternalStorageDirectory()
+//								+ File.separator
+//								+ "OneToDo" + File.separator, "OneToDo_"
+//								+ System.currentTimeMillis() + ".JPG");
+//						intent.putExtra(MediaStore.EXTRA_OUTPUT,
+//								Uri.fromFile(photo));
+//						imageUri = Uri.fromFile(photo);
+//						startActivityForResult(intent, TAKE_PICTURE);
+//					}
+//				});
+//		AlertDialog.Builder attach_builder = new AlertDialog.Builder(
+//				getActivity());
+//		attach_builder.setView(attachment);
+//		attach_alert = attach_builder.create();
+//		
+//		
+//	
+//		aq.id(R.id.event_attachment).clicked(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// slideUpDown(aq.id(R.id.attachement_layout_include).getView());
+//				attach_alert.show();
+//			}
+//		});
 		
 		
 		
@@ -1056,28 +1167,33 @@ public class AddScheduleFragment extends Fragment {
 				.typeface(
 						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
 				.clicked(new OnClickListener() {
+=======
+>>>>>>> e7b31beea00fa091b4bda49ca22abe0e45e23679
 
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(
-								"android.media.action.IMAGE_CAPTURE");
-
-						String path = Environment.getExternalStorageDirectory()
-								.toString();
-						File makeDirectory = new File(path + File.separator
-								+ "OneTodo");
-						makeDirectory.mkdir();
-						File photo = new File(Environment
-								.getExternalStorageDirectory()
-								+ File.separator
-								+ "OneToDo" + File.separator, "OneToDo_"
-								+ System.currentTimeMillis() + ".JPG");
-						intent.putExtra(MediaStore.EXTRA_OUTPUT,
-								Uri.fromFile(photo));
-						imageUri = Uri.fromFile(photo);
-						startActivityForResult(intent, TAKE_PICTURE);
-					}
-				});*/
+		/*
+		 * // Gallery and Camera intent aq.id(R.id.gallery) .typeface(
+		 * TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE)) .clicked(new
+		 * OnClickListener() {
+		 * 
+		 * @Override public void onClick(View v) { Intent galleryIntent = new
+		 * Intent( Intent.ACTION_PICK,
+		 * android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		 * startActivityForResult(galleryIntent, RESULT_GALLERY); } });
+		 * aq.id(R.id.camera) .typeface( TypeFaces.get(getActivity(),
+		 * Constants.ROMAN_TYPEFACE)) .clicked(new OnClickListener() {
+		 * 
+		 * @Override public void onClick(View v) { Intent intent = new Intent(
+		 * "android.media.action.IMAGE_CAPTURE");
+		 * 
+		 * String path = Environment.getExternalStorageDirectory() .toString();
+		 * File makeDirectory = new File(path + File.separator + "OneTodo");
+		 * makeDirectory.mkdir(); File photo = new File(Environment
+		 * .getExternalStorageDirectory() + File.separator + "OneToDo" +
+		 * File.separator, "OneToDo_" + System.currentTimeMillis() + ".JPG");
+		 * intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photo));
+		 * imageUri = Uri.fromFile(photo); startActivityForResult(intent,
+		 * TAKE_PICTURE); } });
+		 */
 
 		View switchView = aq.id(R.id.add_sub_sch).getView();
 		toggleCheckList(switchView);
@@ -1174,6 +1290,15 @@ public class AddScheduleFragment extends Fragment {
 						.startAnimation(
 								new ScaleAnimToHide(1.0f, 1.0f, 1.0f, 0.0f,
 										200, aq.id(view).getView(), true));
+
+		aq.id(R.id.schedule_time_to_layout).background(
+				R.drawable.input_fields_gray);
+		aq.id(R.id.schedule_time_from_layout).background(
+				R.drawable.input_fields_gray);
+		aq.id(R.id.sch_repeat).background(R.drawable.input_fields_gray);
+		aq.id(R.id.before_schedule_layout).background(
+				R.drawable.input_fields_gray);
+		aq.id(R.id.sch_label_layout).background(R.drawable.input_fields_gray);
 	}
 
 	private void showCurrentView(View v) {
@@ -1190,7 +1315,7 @@ public class AddScheduleFragment extends Fragment {
 		 */
 		// break;
 		case R.id.sch_time_to_layout:
-			if (aq.id(R.id.sch_time_date_to_include).getView().getVisibility() == View.GONE)
+			if (aq.id(R.id.sch_time_date_to_include).getView().getVisibility() == View.GONE) {
 				aq.id(R.id.sch_time_date_to_include)
 						.getView()
 						.startAnimation(
@@ -1198,10 +1323,15 @@ public class AddScheduleFragment extends Fragment {
 										200, aq.id(
 												R.id.sch_time_date_to_include)
 												.getView(), true));
+
+				aq.id(R.id.schedule_time_to_layout).background(
+						R.drawable.input_fields_blue);
+
+			}
 			break;
 		case R.id.sch_time_from_layout:
 			if (aq.id(R.id.sch_time_date_from_include).getView()
-					.getVisibility() == View.GONE)
+					.getVisibility() == View.GONE) {
 				aq.id(R.id.sch_time_date_from_include)
 						.getView()
 						.startAnimation(
@@ -1209,12 +1339,17 @@ public class AddScheduleFragment extends Fragment {
 										200,
 										aq.id(R.id.sch_time_date_from_include)
 												.getView(), true));
+
+				aq.id(R.id.schedule_time_from_layout).background(
+						R.drawable.input_fields_blue);
+
+			}
 			break;
 
 		case R.id.repeat_schedule_lay:
 			if (aq.id(R.id.sch_repeat_grid_layout).getView().getVisibility() == View.GONE) {
 				if (aq.id(R.id.sch_repeat_txt).getText().toString() == "") {
-					aq.id(R.id.sch_repeat_txt).text(repeatArray[2])
+					aq.id(R.id.sch_repeat_txt).text(Constants.repeatArray[2])
 							.visibility(View.VISIBLE);
 
 				}
@@ -1225,6 +1360,8 @@ public class AddScheduleFragment extends Fragment {
 										200, aq.id(R.id.sch_repeat_grid_layout)
 												.getView(), true));
 
+				aq.id(R.id.sch_repeat).background(R.drawable.input_fields_blue);
+
 			}
 			break;
 		case R.id.before_schedule_lay:
@@ -1232,8 +1369,10 @@ public class AddScheduleFragment extends Fragment {
 					.getVisibility() == View.GONE) {
 				if (aq.id(R.id.before_schedule).getText().toString() == "") {
 					aq.id(R.id.before_schedule)
-							.text(AddEventBeforeFragment.beforeArray[1]
+
+							.text(Constants.beforeArray[1]
 									+ " Before").visibility(View.VISIBLE);
+
 					/*
 					 * aq.id(R.id.before_event_image).background(
 					 * R.drawable.reminder_blue);
@@ -1251,16 +1390,23 @@ public class AddScheduleFragment extends Fragment {
 										200,
 										aq.id(R.id.before_grid_view_linear_schedule)
 												.getView(), true));
+				aq.id(R.id.before_schedule_layout).background(
+						R.drawable.input_fields_blue);
+
 			}
 			break;
 		case R.id.sch_label_layout:
-			if (aq.id(R.id.sch_label_grid).getView().getVisibility() == View.GONE)
+			if (aq.id(R.id.sch_label_grid).getView().getVisibility() == View.GONE) {
 				aq.id(R.id.sch_label_grid)
 						.getView()
 						.startAnimation(
 								new ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f,
 										200, aq.id(R.id.sch_label_grid)
 												.getView(), true));
+
+				aq.id(R.id.sch_label_layout).background(
+						R.drawable.input_fields_blue);
+			}
 		default:
 			break;
 		}
@@ -1420,7 +1566,7 @@ public class AddScheduleFragment extends Fragment {
 				Tag = Tag + 1;
 				imagemenu.setTag(Tag);
 				child.setId(Tag);
-				
+
 				imagemenu.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -1431,7 +1577,7 @@ public class AddScheduleFragment extends Fragment {
 								Toast.LENGTH_LONG).show();
 						ll_iner = (LinearLayout) item.findViewById(Integer
 								.parseInt(arg0.getTag().toString()));
-						
+
 						if (popupWindowAttach.isShowing()) {
 							popupWindowAttach.dismiss();
 
@@ -1509,9 +1655,11 @@ public class AddScheduleFragment extends Fragment {
 		}
 	}
 
+
 	
 	//public void imageupload() 
 	{/*
+
 
 		HttpEntity entity = null;
 
@@ -1717,27 +1865,102 @@ public class AddScheduleFragment extends Fragment {
 		editor.remove(3 + "key_color_position" + id); // will delete key email
 		editor.commit();
 	}
-
 	private class LabelEditClickListener implements OnItemLongClickListener {
 
 		@Override
-		public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+		public boolean onItemLongClick(AdapterView<?> arg0, final View arg1,
 				int position, long arg3) {
 			// TODO Auto-generated method stub
 			if (((TextView) arg1).getText().toString().equals("New")
 					|| position < 3) {
 
 			} else {
-				aq_label.id(R.id.add_label_text).text(
-						((TextView) arg1).getText().toString());
-				aq_label_del.id(R.id.body).text(
-						"Label " + ((TextView) arg1).getText().toString()
-								+ " will be deleted");
-				aq_label_edit.id(R.id.add_task_edit_title).text(
-						"Label: " + ((TextView) arg1).getText().toString());
+//				aqd.id(R.id.add_label_text).text(
+//						((TextView) arg1).getText().toString());
+//				aq_del.id(R.id.body).text(
+//						"Label " + ((TextView) arg1).getText().toString()
+//								+ " will be deleted");
+//				aq_edit.id(R.id.add_task_edit_title).text(
+//						"Label: " + ((TextView) arg1).getText().toString());
 				viewl = arg1;
 				itempos = position;
-				label_edit.show();
+				listbuilder = new CustomListDialog.Builder(getActivity(), "Label: " + ((TextView) arg1).getText().toString(),itemsForLables);
+						listbuilder.darkTheme(false);				
+						listbuilder.titleAlignment(Alignment.LEFT); 
+						listbuilder.itemAlignment(Alignment.LEFT); 
+						listbuilder.titleColor(getResources().getColor(android.R.color.holo_blue_dark)); 
+						listbuilder.itemColor(Color.BLACK);
+						listbuilder.titleTextSize(22);
+						listbuilder.itemTextSize(18);
+						label_edit = listbuilder.build();
+						label_edit.show();
+				label_edit.setListClickListener(new ListClickListener() {
+					
+					@Override
+					public void onListItemSelected(int position, String[] items, String item) {
+						// TODO Auto-generated method stub
+						if(position == 0)
+		            	{
+							aq_label.id(R.id.add_label_text).text(
+									((TextView) arg1).getText().toString());
+//							aq_label_del.id(R.id.body).text(
+//									"Label " + ((TextView) arg1).getText().toString()
+//											+ " will be deleted");
+//							aq_label_edit.id(R.id.add_task_edit_title).text(
+//									"Label: " + ((TextView) arg1).getText().toString());
+							viewl = arg1;
+							itempos = position;
+							label_edit.dismiss();
+
+							add_new_label_alert.getWindow().setBackgroundDrawable(
+									new ColorDrawable(android.graphics.Color.TRANSPARENT));
+							add_new_label_alert.show();
+		            	}
+						if(position==1)
+						{
+							label_edit.dismiss();
+							dialogbuilder = new CustomDialog.Builder(getActivity(), "Delete", "Ok");
+
+		            		// Now we can any of the following methods.
+		            		dialogbuilder.content("Label " + ((TextView) arg1).getText().toString()
+									+ " will be deleted");
+		            		dialogbuilder.negativeText("Cancel");
+		            		dialogbuilder.darkTheme(false);
+		            		dialogbuilder.rightToLeft(true);
+		            		dialogbuilder.titleTextSize(22);
+		            		dialogbuilder.contentTextSize(18);
+		            		dialogbuilder.buttonTextSize(14);
+		            		dialogbuilder.titleAlignment(Alignment.LEFT); 
+		            		dialogbuilder.buttonAlignment(Alignment.RIGHT);
+		            		dialogbuilder.titleColor(getResources().getColor(android.R.color.holo_blue_light)); 
+		            		dialogbuilder.contentColor(Color.BLACK); 
+		            		dialogbuilder.positiveColor(getResources().getColor(android.R.color.holo_blue_light)); 
+		            		location_del = dialogbuilder.build();
+		            		location_del.show();
+							location_del.setClickListener(new ClickListener() {
+								
+								@Override
+								public void onConfirmClick() {
+									// TODO Auto-generated method stub
+									Remove(viewl.getId() + "" + itempos);
+									((TextView) viewl).setText("New");
+									GradientDrawable mDrawable = (GradientDrawable) getResources()
+											.getDrawable(R.drawable.label_simple);
+									((TextView) viewl).setBackground(mDrawable);
+									((TextView) viewl).setTextColor(R.color.mountain_mist);
+
+									location_del.dismiss();
+								}
+								
+								@Override
+								public void onCancelClick() {
+									// TODO Auto-generated method stub
+									location_del.dismiss();
+								}
+							});
+						}
+					}
+				});
 			}
 			return false;
 		}
@@ -1776,7 +1999,9 @@ public class AddScheduleFragment extends Fragment {
 
 			GradientDrawable mDrawable = (GradientDrawable) getResources()
 					.getDrawable(R.drawable.label_background_dialog);
-			mDrawable.setColor(Color.parseColor(colors1[position]));
+
+			mDrawable.setColor(Color.parseColor(Constants.label_colors_dialog[position]));
+
 			imageView.setBackground(mDrawable);
 
 			return imageView;
@@ -1806,5 +2031,9 @@ public class AddScheduleFragment extends Fragment {
 		editorattach.remove(3 + "type" + id); // will delete key email
 		editorattach.commit();
 	}
+
+	
+
+	
 
 }

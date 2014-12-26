@@ -41,7 +41,9 @@
             android:textSize="17.78sp" />
     </LinearLayout>
 
-    <LinearLayout
+
+    <!-- <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -121,7 +123,9 @@
                 android:textColor="@color/deep_sky_blue"
                 android:textStyle="bold" />
         </RadioGroup>
-    </LinearLayout>
+
+    </LinearLayout> -->
+
 
     <LinearLayout
         android:layout_width="match_parent"

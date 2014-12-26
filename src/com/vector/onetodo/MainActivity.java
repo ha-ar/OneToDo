@@ -138,9 +138,9 @@ public class MainActivity extends BaseActivity implements
 		drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
 		// ******* Phone contact , name list
-		// Constants.Name = new ArrayList<String>();
-		// Constants.Contact = new ArrayList<String>();
-		// new Phone_contact().execute();
+		Constants.Name = new ArrayList<String>();
+		Constants.Contact = new ArrayList<String>();
+		new Phone_contact().execute();
 
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -196,6 +196,7 @@ public class MainActivity extends BaseActivity implements
 		// Inflate the menu; this adds items to the action bar if it is present.
 		menu.clear();
 		getMenuInflater().inflate(R.menu.main, menu);
+
 		this.menu = menu;
 		SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		SearchView search = (SearchView) menu.findItem(R.id.action_search)
@@ -704,6 +705,7 @@ public class MainActivity extends BaseActivity implements
 
 		tabs.setViewPager(pager);
 		tabPagerAdapter.notifyDataSetChanged();
+
 
 		aq.id(R.id.add_task_button).typeface(
 				TypeFaces.get(this, Constants.ICON_FONT));

@@ -60,7 +60,6 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
@@ -69,6 +68,7 @@ import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 import com.vector.model.TaskData;
 import com.vector.model.TaskData.Todos;
+import com.vector.onetodo.R;
 import com.vector.onetodo.db.gen.Assign;
 import com.vector.onetodo.db.gen.AssignDao;
 import com.vector.onetodo.db.gen.CheckListDao;
@@ -109,7 +109,6 @@ public class AddTask extends FragmentActivity {
 	ReminderDao reminderdao;
 	ShareDao sharedao;
 	Cursor cursor;
-	String[] array;
 	List<ToDo> tod;
 	ProgressDialog dialog;
 	public static PopupWindow popupWindowAdd;
@@ -118,6 +117,10 @@ public class AddTask extends FragmentActivity {
 	ArrayAdapter<String> adapterTask, adapterEvent, adapterSchedule;
 	SQLiteDatabase db;
 	public static FrameLayout layout_MainMenu;
+	String[] array = { "Assign", "Due date", "Location", "Reminder",
+			"Repeat", "Label", "Subtasks", "Notes","Attachment" };
+
+
 
 	// *******************ADD DATA
 	String title = null, notes = null, label_name = null, r_location = null,
@@ -129,7 +132,7 @@ public class AddTask extends FragmentActivity {
 	static SharedPreferences pref, label, attach;
 	Boolean is_time = true, is_location = false, is_allday = false,
 			is_alertEmail = false, is_alertNotification = false,
-			is_priority = false,repeat_forever=false;
+			is_priority = false, repeat_forever = false;
 	long r_time = 0, r_repeat = 0, todo_id = 0, dateInMilliseconds = 0;
 	static int priority = 0;
 	HttpClient client;
@@ -207,7 +210,11 @@ public class AddTask extends FragmentActivity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				finish();
+				if (Constants.Project_task_check == 1) {
+					getSupportFragmentManager().popBackStack();
+				} else {
+					finish();
+				}
 			}
 		});
 		convertPixelsToDp(38, this);
@@ -293,23 +300,15 @@ public class AddTask extends FragmentActivity {
 		TextView tx = (TextView) view.findViewById(R.id.show_hid_text);
 		tx.setTypeface(TypeFaces.get(this, Constants.MED_TYPEFACE));
 
-		final String[] array = { "Assign", "Due date", "Location", "Reminder",
-				"Repeat", "Label", "Subtasks", "Notes" };
-
-		String[] arrayEvent = { "Assign", "Due date", "Location", "Reminder",
-				"Repeat", "Label", "Subtasks", "Notes" };
-
-		String[] arraySchedule = { "Assign", "Due date", "Location",
-				"Reminder", "Repeat", "Label", "Subtasks", "Notes" };
-
+		
 		ArrayList<String> arrayList = new ArrayList<String>(
 				Arrays.asList(array));
 
 		ArrayList<String> arrayListEvent = new ArrayList<String>(
-				Arrays.asList(arrayEvent));
+				Arrays.asList(array));
 
 		ArrayList<String> arrayListSchedule = new ArrayList<String>(
-				Arrays.asList(arraySchedule));
+				Arrays.asList(array));
 
 		listViewSchedule = (DragSortListView) viewS
 				.findViewById(R.id.list_schedule);
@@ -354,11 +353,11 @@ public class AddTask extends FragmentActivity {
 			@Override
 			public void onDismiss() {
 				// TODO Auto-generated method stub
-				aq.id(R.id.imageView11234).image(
+				aq.id(R.id.addtask_menu).image(
 						getResources().getDrawable(R.drawable.ic_show_white));
 			}
 		});
-		aq.id(R.id.imageView11234).clicked(new OnClickListener() {
+		aq.id(R.id.addtask_menu).clicked(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -379,12 +378,12 @@ public class AddTask extends FragmentActivity {
 								.textColorId(R.color._4d4d4d);
 					}
 				}
-				aq.id(R.id.imageView11234).image(
+				aq.id(R.id.addtask_menu).image(
 						getResources().getDrawable(R.drawable.ic_show_black));
 				if (popupWindowAdd.isShowing())
 					popupWindowAdd.dismiss();
 				else {
-					popupWindowAdd.showAsDropDown(aq.id(R.id.imageView11234)
+					popupWindowAdd.showAsDropDown(aq.id(R.id.addtask_menu)
 							.getView(), 0, 10);
 				}
 			}
@@ -431,24 +430,9 @@ public class AddTask extends FragmentActivity {
 			}
 		});
 
-		cancel_event.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				popupWindowEvent.dismiss();
-			}
-		});
-		ok_event.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-
-				popupWindowEvent.dismiss();
-			}
-		});
-
+		
+		//*******************PoP CUSTOMIZATION CANCEL OK LISNER
+		
 		cancel.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -466,6 +450,44 @@ public class AddTask extends FragmentActivity {
 				popupWindowTask.dismiss();
 			}
 		});
+		
+		cancel_event.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				popupWindowEvent.dismiss();
+			}
+		});
+		ok_event.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+
+				popupWindowEvent.dismiss();
+			}
+		});
+		cancel_schedule.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				popupWindowSchedule.dismiss();
+
+			}
+		});
+		ok_schedule.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				popupWindowSchedule.dismiss();
+				
+			}
+		});
+
+		
 		popupWindowEvent = new PopupWindow(view2, Utils.getDpValue(270, this),
 				WindowManager.LayoutParams.WRAP_CONTENT, true);
 		popupWindowEvent.setBackgroundDrawable(new BitmapDrawable());
@@ -801,8 +823,8 @@ public class AddTask extends FragmentActivity {
 					is_alertNotification = aq.id(R.id.notification_radio)
 							.getCheckBox().isChecked();
 				}
-				
-				repeat_forever=aq.id(R.id.forever_radio).isChecked();
+
+				repeat_forever = aq.id(R.id.forever_radio).isChecked();
 				repeat = aq.id(R.id.repeat).getText().toString();
 
 				label_name = aq.id(R.id.spinner_labels_task).getText()
@@ -857,7 +879,7 @@ public class AddTask extends FragmentActivity {
 							.getCheckBox().isChecked();
 				}
 
-				repeat_forever=aq.id(R.id.repeat_forever_radio).isChecked();
+				repeat_forever = aq.id(R.id.repeat_forever_radio).isChecked();
 				repeat = aq.id(R.id.repeat_event).getText().toString();
 
 				label_name = aq.id(R.id.spinner_labels_event).getText()
@@ -914,8 +936,8 @@ public class AddTask extends FragmentActivity {
 					is_alertNotification = aq.id(R.id.notification_radio_sch)
 							.getCheckBox().isChecked();
 				}
-				
-				repeat_forever=aq.id(R.id.sch_forever_radio).isChecked();
+
+				repeat_forever = aq.id(R.id.sch_forever_radio).isChecked();
 				repeat = aq.id(R.id.sch_repeat_txt).getText().toString();
 
 				label_name = aq.id(R.id.sch_label_txt).getText().toString();
@@ -965,11 +987,15 @@ public class AddTask extends FragmentActivity {
 							.toString();
 				}
 
-				is_alertEmail = aq.id(R.id.email_radio_appoin).getCheckBox()
-						.isChecked();
-				is_alertNotification = aq.id(R.id.notification_radio_appoin)
-						.getCheckBox().isChecked();
-
+				if (!(aq.id(R.id.before_appoinment).getText().toString()
+						.equals("") || aq.id(R.id.before_appoinment).getText()
+						.toString() == null)) {
+					is_alertEmail = aq.id(R.id.email_radio_appoin)
+							.getCheckBox().isChecked();
+					is_alertNotification = aq
+							.id(R.id.notification_radio_appoin).getCheckBox()
+							.isChecked();
+				}
 				repeat = null; // aq.id(R.id.sch_repeat_txt).getText().toString();
 
 				label_name = aq.id(R.id.spinner_labels_appoin).getText()
@@ -1064,7 +1090,7 @@ public class AddTask extends FragmentActivity {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-
+if(before!=null){
 			if (is_time == true) {
 				if (before.contains(" Mins") || before.contains(" Min"))
 					r_time = (Integer.parseInt(before.replaceAll("\\D+", "")) * 60 * 1000);
@@ -1091,24 +1117,27 @@ public class AddTask extends FragmentActivity {
 					locationtype = "On Leave";
 				}
 			}
-
-			if(repeat!=null){
-			if (repeat.contains("once") || repeat.contains("Once")) {
-				r_repeat = 0;
-				repeat = "once";
-			} else if (repeat.contains("daily") || repeat.contains("daily")) {
-				r_repeat = 24 * 60 * 60 * 1000;
-				repeat = "daily";
-			} else if (repeat.contains("weekly") || repeat.contains("Weekly")) {
-				r_repeat = 7 * 24 * 60 * 60 * 1000;
-				repeat = "weekly";
-			} else if (repeat.contains("monthly") || repeat.contains("Monthly")) {
-				r_repeat = 31 * 24 * 60 * 60 * 1000;
-				repeat = "monthly";
-			} else if (repeat.contains("yearly") || repeat.contains("Yearly")) {
-				r_repeat = 12 * 31 * 24 * 60 * 60 * 1000;
-				repeat = "yearly";
-			}
+}
+			if (repeat != null) {
+				if (repeat.contains("once") || repeat.contains("Once")) {
+					r_repeat = 0;
+					repeat = "once";
+				} else if (repeat.contains("daily") || repeat.contains("daily")) {
+					r_repeat = 24 * 60 * 60 * 1000;
+					repeat = "daily";
+				} else if (repeat.contains("weekly")
+						|| repeat.contains("Weekly")) {
+					r_repeat = 7 * 24 * 60 * 60 * 1000;
+					repeat = "weekly";
+				} else if (repeat.contains("monthly")
+						|| repeat.contains("Monthly")) {
+					r_repeat = 31 * 24 * 60 * 60 * 1000;
+					repeat = "monthly";
+				} else if (repeat.contains("yearly")
+						|| repeat.contains("Yearly")) {
+					r_repeat = 12 * 31 * 24 * 60 * 60 * 1000;
+					repeat = "yearly";
+				}
 			}
 			AlarmManagerBroadcastReceiver alarm = new AlarmManagerBroadcastReceiver();
 
@@ -1402,6 +1431,7 @@ public class AddTask extends FragmentActivity {
 			if (notes != null)
 				pairs.add(new BasicNameValuePair("todo[notes]", notes));
 
+			if(before!=null){
 			if (is_location == false) {
 				pairs.add(new BasicNameValuePair("todo_reminder[time]", r_time
 						+ ""));
@@ -1418,14 +1448,15 @@ public class AddTask extends FragmentActivity {
 				pairs.add(new BasicNameValuePair(
 						"todo_reminder[location_type]", locationtype));
 			}
-
+			}
 			if (repeat != null) {
 				pairs.add(new BasicNameValuePair(
 						"todo_repeat[repeat_interval]", repeat));
-				
-				if(repeat_forever!=true)
-				pairs.add(new BasicNameValuePair("todo_repeat[repeat_until]",
-						AddTaskFragment.repeatdate));
+
+				if (repeat_forever != true)
+					pairs.add(new BasicNameValuePair(
+							"todo_repeat[repeat_until]",
+							AddTaskFragment.repeatdate));
 			}
 			for (int i = 1; i <= MaxId; i++) {
 				// AddTask.attach.getString(1 + "path" + i, null);
@@ -1433,7 +1464,6 @@ public class AddTask extends FragmentActivity {
 						+ "][attachment_path]", AddTask.attach.getString(
 						titlecheck + "path" + i, null)));
 			}
-			
 
 			MaxId = 0;
 			if (comment != null && comment.size() > 0) {

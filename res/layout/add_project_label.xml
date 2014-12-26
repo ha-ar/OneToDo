@@ -37,7 +37,7 @@
     </LinearLayout>
 
     <GridView
-        android:id="@+id/label_event_grid_view"
+        android:id="@+id/label_project_grid_view"
         android:layout_width="fill_parent"
         android:layout_height="130dp"
         android:layout_marginLeft="40dp"

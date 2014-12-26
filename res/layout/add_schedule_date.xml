@@ -52,6 +52,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/schedule_time_from_layout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:animateLayoutChanges="true"
@@ -137,6 +138,7 @@
         android:visibility="gone" />
 
     <LinearLayout
+        android:id="@+id/schedule_time_to_layout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:animateLayoutChanges="true"
