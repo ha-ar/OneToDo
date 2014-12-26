@@ -1,5 +1,6 @@
 package com.vector.onetodo;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +29,15 @@ public class Projects extends Fragment implements ProjectsScrollHolder {
 	private ViewPager pager;
 	private TabPagerAdapterpro tabPagerAdapter;
 	
+	private ActionBar actionBar;
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		actionBar = ((ActionBarActivity) activity).getSupportActionBar();
+
+	}
+	
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,10 +45,13 @@ public class Projects extends Fragment implements ProjectsScrollHolder {
 		// TODO Auto-generated method stub
 		View view = inflater.inflate(R.layout.projects, container, false);
 		aq=new AQuery(getActivity(), view);
+		actionBar.setTitle("Projects");
 //		title=(TextView) getActivity().findViewById(R.id.weather);
 		
 		return view;
 	}
+	
+	
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -79,7 +94,7 @@ public class Projects extends Fragment implements ProjectsScrollHolder {
 		 * LinearLayout.LayoutParams(size.x/2, LayoutParams.MATCH_PARENT);
 		 * tabs.setLayoutParams(defaultTabLayoutParams);
 		 */
-		tabs.setShouldExpand(false);
+		tabs.setShouldExpand(true);
 		tabs.setDividerColorResource(android.R.color.transparent);
 		// tabs.setIndicatorColorResource(R.color.graytab);
 		tabs.setUnderlineColorResource(android.R.color.transparent);
@@ -91,9 +106,8 @@ public class Projects extends Fragment implements ProjectsScrollHolder {
 		tabs.setIndicatorColor(Color.parseColor("#ffffff"));
 		tabs.setTextColor(Color.parseColor("#ffffff"));
 		tabs.setSmoothScrollingEnabled(true);
-		tabs.setShouldExpand(false);
 		// tabs.setTextColorResource(R.color.graytab);
-		tabs.setAllCaps(false);
+		tabs.setAllCaps(true);
 		tabs.setTypeface(null, Typeface.NORMAL);
 		//tabs.setOnPageChangeListener(new OnPageChangeListener(getActivity()));
 

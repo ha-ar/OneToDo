@@ -194,6 +194,7 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
+		menu.clear();
 		getMenuInflater().inflate(R.menu.main, menu);
 		this.menu = menu;
 		SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -342,26 +343,6 @@ public class MainActivity extends BaseActivity implements
 
 		inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
-		// ********* Old
-		/*
-		 * aq.id(R.id.navigation_menu).clicked(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) { mDrawer.toggleMenu(true); }
-		 * });
-		 */
-
-		// ***** right drawer open close**********//
-		// aq.id(R.id.notif).clicked(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View arg0) {
-		// if (!(mDrawerr.isActivated())) {
-		// mDrawerr.openMenu();
-		// } else {
-		// mDrawerr.closeMenu();
-		// }
-		// }
-		// });
 
 		// ***** left drawer open close**********//
 		aq.id(R.id.right_back).clicked(new OnClickListener() {
@@ -574,6 +555,8 @@ public class MainActivity extends BaseActivity implements
 				// // TextView title = (TextView) findViewById(R.id.weather);
 				// title.setText("To-do's");
 				getSupportFragmentManager().popBackStack();
+				
+				refreshMenu();
 				drawerLayout.closeDrawer(Gravity.LEFT);
 				arg0.setBackgroundColor(Color.parseColor("#F2F2F2"));
 
@@ -750,6 +733,15 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
+		 if (this.getSupportFragmentManager().getBackStackEntryCount() == 0){
+			 refreshMenu();
+		 }
+	}
+	
+	public void refreshMenu(){
+		getSupportActionBar().setTitle(R.string.close_drawer);
+		menu.clear();
+		onCreateOptionsMenu(menu);
 	}
 
 	void updateDate(int days) {

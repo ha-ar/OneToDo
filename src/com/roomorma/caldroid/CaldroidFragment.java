@@ -27,6 +27,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -1106,6 +1109,7 @@ public class CaldroidFragment extends DialogFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		retrieveInitialArgs();
+		setHasOptionsMenu(true);
 
 		// To support keeping instance for dialog
 		if (getDialog() != null) {
@@ -1298,6 +1302,22 @@ public class CaldroidFragment extends DialogFragment {
 
 		return view;
 	}
+	
+	 @Override
+	    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	        menu.clear();
+	        inflater.inflate(R.menu.calendar, menu);
+	        super.onCreateOptionsMenu(menu, inflater);
+	    }
+
+	    @Override
+	    public boolean onOptionsItemSelected(MenuItem item) {
+	        switch (item.getItemId()) {
+	            case R.id.action_search:
+	                return true;
+	        }
+	        return super.onOptionsItemSelected(item);
+	    }
 
 	/**
 	 * Setup 4 pages contain date grid views. These pages are recycled to use

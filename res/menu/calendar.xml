@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" >
 
@@ -8,17 +9,21 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/action_notification"
-        android:icon="@drawable/bell"
-        android:title="Notifications"
+        android:id="@+id/action_today"
+        android:icon="@drawable/ic_action_today"
+        android:title="Today"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/action_type"
-        android:title="By Type"
+        android:id="@+id/action_ivitation"
+        android:title="Invitation"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/action_label"
-        android:title="By Label"
+        android:id="@+id/action_visible_calendars"
+        android:title="Visible Calendars"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_goto"
+        android:title="Go to"
         app:showAsAction="never"/>
 
 </menu>

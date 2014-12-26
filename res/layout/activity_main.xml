@@ -15,17 +15,6 @@
         app:popupTheme="@style/Theme.AppCompat.Light"
         app:theme="@style/ThemeToolbarLightOverflow" />
 
-    <ImageView
-        android:id="@+id/add_task_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="40dp"
-        android:layout_marginRight="20dp"
-        android:src="@drawable/ic_plus"
-        android:text="TextView" />
-
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
@@ -85,5 +74,16 @@
             android:layout_gravity="end"
             layout="@layout/menu_drawer_right" />
     </android.support.v4.widget.DrawerLayout>
+
+    <ImageView
+        android:id="@+id/add_task_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="40dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/ic_plus"
+        android:text="TextView" />
 
 </RelativeLayout>
