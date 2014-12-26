@@ -3,10 +3,12 @@ package com.vector.onetodo;
 import it.feio.android.checklistview.ChecklistManager;
 import it.feio.android.checklistview.exceptions.ViewNotSupportedException;
 import it.feio.android.checklistview.interfaces.CheckListChangedListener;
+
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
 import net.simonvt.datepicker.DatePicker;
 import net.simonvt.datepicker.DatePicker.OnDateChangedListener;
 import net.simonvt.timepicker.TimePicker;
@@ -61,6 +63,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.androidquery.AQuery;
 import com.astuetz.PagerSlidingTabStrip;
 import com.devspark.appmsg.AppMsg;
@@ -129,7 +132,8 @@ public class AddAppoinmentFragment extends Fragment {
 
 	public static Activity act;
 
-	public static AddAppoinmentFragment newInstance(int position, int dayPosition) {
+	public static AddAppoinmentFragment newInstance(int position,
+			int dayPosition) {
 		AddAppoinmentFragment myFragment = new AddAppoinmentFragment();
 		Bundle args = new Bundle();
 		args.putInt("position", position);
@@ -146,7 +150,7 @@ public class AddAppoinmentFragment extends Fragment {
 
 		aq = new AQuery(getActivity(), view);
 		act = getActivity();
-		
+
 		return view;
 	}
 
@@ -291,8 +295,7 @@ public class AddAppoinmentFragment extends Fragment {
 
 		// ***********************bEFORE fRAGMENT
 
-		aq.id(R.id.before_appoinment_lay)
-				.clicked(new GeneralOnClickListner());
+		aq.id(R.id.before_appoinment_lay).clicked(new GeneralOnClickListner());
 		/**
 		 * View pager for before and location
 		 * 
@@ -397,7 +400,7 @@ public class AddAppoinmentFragment extends Fragment {
 								.setBackground(label_view.getBackground());
 						aq.id(R.id.spinner_labels_appoin).getTextView()
 								.setTextColor(Color.WHITE);
-					
+
 					}
 				}
 			}
@@ -469,7 +472,7 @@ public class AddAppoinmentFragment extends Fragment {
 									.setBackground(view.getBackground());
 							aq.id(R.id.spinner_labels_appoin).getTextView()
 									.setTextColor(Color.WHITE);
-							
+
 						} else {
 							add_new_label_alert.show();
 						}
@@ -534,32 +537,24 @@ public class AddAppoinmentFragment extends Fragment {
 		View switchView = aq.id(R.id.add_sub_appoinment).getView();
 		toggleCheckList(switchView);
 
-		/*lastCheckedId = ((RadioGroup) aq.id(R.id.priority_radio_buttons)
-				.getView()).getCheckedRadioButtonId();
-		((RadioGroup) aq.id(R.id.priority_radio_buttons).getView())
-				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-					@Override
-					public void onCheckedChanged(RadioGroup group, int checkedId) {
-						((RadioButton) group.findViewById(lastCheckedId))
-								.setTextColor(getResources().getColor(
-										R.color.deep_sky_blue));
-						((RadioButton) group.findViewById(checkedId))
-								.setTextColor(getResources().getColor(
-										android.R.color.white));
-						String abc = ((RadioButton) group
-								.findViewById(checkedId)).getText().toString();
-						if (abc.equals("None"))
-							AddTask.priority = 0;
-						else if (abc.equals("!"))
-							AddTask.priority = 1;
-						else if (abc.equals("! !"))
-							AddTask.priority = 2;
-						else if (abc.equals("! ! !"))
-							AddTask.priority = 3;
-						lastCheckedId = checkedId;
-					}
-				});*/
+		/*
+		 * lastCheckedId = ((RadioGroup) aq.id(R.id.priority_radio_buttons)
+		 * .getView()).getCheckedRadioButtonId(); ((RadioGroup)
+		 * aq.id(R.id.priority_radio_buttons).getView())
+		 * .setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		 * 
+		 * @Override public void onCheckedChanged(RadioGroup group, int
+		 * checkedId) { ((RadioButton) group.findViewById(lastCheckedId))
+		 * .setTextColor(getResources().getColor( R.color.deep_sky_blue));
+		 * ((RadioButton) group.findViewById(checkedId))
+		 * .setTextColor(getResources().getColor( android.R.color.white));
+		 * String abc = ((RadioButton) group
+		 * .findViewById(checkedId)).getText().toString(); if
+		 * (abc.equals("None")) AddTask.priority = 0; else if (abc.equals("!"))
+		 * AddTask.priority = 1; else if (abc.equals("! !")) AddTask.priority =
+		 * 2; else if (abc.equals("! ! !")) AddTask.priority = 3; lastCheckedId
+		 * = checkedId; } });
+		 */
 	}
 
 	// ***************Main End**********************
@@ -650,6 +645,13 @@ public class AddAppoinmentFragment extends Fragment {
 						.startAnimation(
 								new ScaleAnimToHide(1.0f, 1.0f, 1.0f, 0.0f,
 										200, aq.id(view).getView(), true));
+		aq.id(R.id.spinner_label_layout).background(
+				R.drawable.input_fields_gray);
+		aq.id(R.id.before_appoinment_layout).background(
+				R.drawable.input_fields_gray);
+		aq.id(R.id.appoinment_time_date).background(
+				R.drawable.input_fields_gray);
+
 	}
 
 	private void showCurrentView(View v) {
@@ -659,7 +661,7 @@ public class AddAppoinmentFragment extends Fragment {
 		switch (v.getId()) {
 		case R.id.time_date_appoinment:
 			if (aq.id(R.id.date_time_include_appoinment).getView()
-					.getVisibility() == View.GONE)
+					.getVisibility() == View.GONE) {
 				aq.id(R.id.date_time_include_appoinment)
 						.getView()
 						.startAnimation(
@@ -671,15 +673,19 @@ public class AddAppoinmentFragment extends Fragment {
 										200,
 										aq.id(R.id.date_time_include_appoinment)
 												.getView(), true));
+				aq.id(R.id.appoinment_time_date).background(
+						R.drawable.input_fields_blue);
+			}
 
 			break;
-		case R.id.before_appoinment_lay:
+		case R.id.before_appoinment_lay: {
 
 			if (aq.id(R.id.before_grid_view_linear_appoinment).getView()
 					.getVisibility() == View.GONE) {
 				if (aq.id(R.id.before_appoinment).getText().toString() == "") {
-					aq.id(R.id.before_appoinment).text(
-							Constants.beforeArray[1]+" Before").visibility(View.VISIBLE);
+					aq.id(R.id.before_appoinment)
+							.text(Constants.beforeArray[1] + " Before")
+							.visibility(View.VISIBLE);
 
 				}
 				aq.id(R.id.before_grid_view_linear_appoinment)
@@ -693,16 +699,24 @@ public class AddAppoinmentFragment extends Fragment {
 										200,
 										aq.id(R.id.before_grid_view_linear_appoinment)
 												.getView(), true));
+				aq.id(R.id.before_appoinment_layout).background(
+						R.drawable.input_fields_blue);
+
 			}
+		}
 			break;
 		case R.id.spinner_label_layout:
-			if (aq.id(R.id.label_grid_view3).getView().getVisibility() == View.GONE)
+			if (aq.id(R.id.label_grid_view3).getView().getVisibility() == View.GONE) {
 				aq.id(R.id.label_grid_view3)
 						.getView()
 						.startAnimation(
 								new ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f,
 										200, aq.id(R.id.label_grid_view3)
 												.getView(), true));
+				aq.id(R.id.spinner_label_layout).background(
+						R.drawable.input_fields_blue);
+
+			}
 
 		default:
 
@@ -947,7 +961,8 @@ public class AddAppoinmentFragment extends Fragment {
 
 			GradientDrawable mDrawable = (GradientDrawable) getResources()
 					.getDrawable(R.drawable.label_background_dialog);
-			mDrawable.setColor(Color.parseColor(Constants.label_colors_dialog[position]));
+			mDrawable.setColor(Color
+					.parseColor(Constants.label_colors_dialog[position]));
 			imageView.setBackground(mDrawable);
 			return imageView;
 		}

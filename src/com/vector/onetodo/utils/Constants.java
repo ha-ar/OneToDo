@@ -2,6 +2,8 @@ package com.vector.onetodo.utils;
 
 import java.util.List;
 
+import android.widget.RelativeLayout;
+
 import com.vector.onetodo.db.gen.LabelName;
 
 public class Constants {
@@ -50,6 +52,7 @@ public class Constants {
 	public static String[] beforevalues = { "Mins", "Hours", "Days", "Weeks",
 		"Months", "Years" };
 	
+	public static int Project_task_check=0;
 	// public static String[] state = { "View Tasks", "Settings", "Help",
 	// "About" };
 	// public static String[][] parent = { { "aa", "bb", "cc", "dd", "ee" },

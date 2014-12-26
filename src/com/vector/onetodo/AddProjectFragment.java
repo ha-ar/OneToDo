@@ -52,6 +52,7 @@ import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -65,6 +66,8 @@ import com.vector.onetodo.utils.ScaleAnimToHide;
 import com.vector.onetodo.utils.ScaleAnimToShow;
 import com.vector.onetodo.utils.TypeFaces;
 import com.vector.onetodo.utils.Utils;
+import com.viewpagerindicator.CirclePageIndicator;
+import com.viewpagerindicator.PageIndicator;
 
 public class AddProjectFragment extends Fragment {
 
@@ -486,6 +489,30 @@ public class AddProjectFragment extends Fragment {
 		aq.id(R.id.spinner_label_layout).clicked(new GeneralOnClickListner());
 
 		// ********************************* Label END
+
+		aq.id(R.id.projec_subtask_lay).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+
+				//PageIndicator mIndicator= (CirclePageIndicator) getActivity().findViewById(R.id.indicator);
+				//aq.id(R.id.indicator).getView().setVisibility(View.GONE);
+
+				Constants.Project_task_check=1;
+				Fragment fr=new AddTaskFragment();
+				FragmentManager manager=getFragmentManager();
+				FragmentTransaction trans=manager.beginTransaction();
+				Bundle b=new Bundle();
+				b.putInt("dayPosition",dayPosition );
+				fr.setArguments(b);
+				trans.replace(R.id.main_container, fr);
+				
+				trans.addToBackStack("ADDPROJECT");
+				
+				trans.commit();
+			}
+		});
 	}
 
 	public static void inflateLayouts() {
@@ -525,6 +552,9 @@ public class AddProjectFragment extends Fragment {
 						.startAnimation(
 								new ScaleAnimToHide(1.0f, 1.0f, 1.0f, 0.0f,
 										200, aq.id(view).getView(), true));
+		aq.id(R.id.spinner_label_layout).background(R.drawable.input_fields_gray);
+		aq.id(R.id.project_time_date).background(R.drawable.input_fields_gray);
+		
 	}
 
 	private void showCurrentView(View v) {
@@ -533,22 +563,29 @@ public class AddProjectFragment extends Fragment {
 
 		switch (v.getId()) {
 		case R.id.time_date:
-			if (aq.id(R.id.date_time_include).getView().getVisibility() == View.GONE)
+			if (aq.id(R.id.date_time_include).getView().getVisibility() == View.GONE){
 				aq.id(R.id.date_time_include)
 						.getView()
 						.startAnimation(
 								new ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f,
 										200, aq.id(R.id.date_time_include)
 												.getView(), true));
+
+				aq.id(R.id.project_time_date).background(R.drawable.input_fields_blue);
+			}
 			break;
 		case R.id.spinner_label_layout:
-			if (aq.id(R.id.label_project_grid_view).getView().getVisibility() == View.GONE)
+			if (aq.id(R.id.label_project_grid_view).getView().getVisibility() == View.GONE){
 				aq.id(R.id.label_project_grid_view)
 						.getView()
 						.startAnimation(
 								new ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f,
-										200, aq.id(R.id.label_project_grid_view)
+										200,
+										aq.id(R.id.label_project_grid_view)
 												.getView(), true));
+
+				aq.id(R.id.spinner_label_layout).background(R.drawable.input_fields_blue);
+			}
 			break;
 
 		default:
@@ -759,7 +796,8 @@ public class AddProjectFragment extends Fragment {
 
 			GradientDrawable mDrawable = (GradientDrawable) getResources()
 					.getDrawable(R.drawable.label_background_dialog);
-			mDrawable.setColor(Color.parseColor(Constants.label_colors_dialog[position]));
+			mDrawable.setColor(Color
+					.parseColor(Constants.label_colors_dialog[position]));
 			imageView.setBackground(mDrawable);
 
 			// imageView.setImageResource(mThumbIds[position]);

@@ -18,6 +18,7 @@
         android:typeface="monospace" />
 
     <LinearLayout
+        android:id="@+id/appoinment_time_date"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:animateLayoutChanges="true"
