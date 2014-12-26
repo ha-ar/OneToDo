@@ -5,22 +5,16 @@ import java.util.Calendar;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 
 import com.androidquery.AQuery;
 import com.roomorma.caldroid.CaldroidFragment;
 import com.roomorma.caldroid.CaldroidListener;
-import com.vector.onetodo.utils.Constants;
-import com.vector.onetodo.utils.TypeFaces;
 
 @SuppressLint("SimpleDateFormat")
 public class Calender extends Fragment {

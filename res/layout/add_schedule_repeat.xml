@@ -97,7 +97,7 @@
                 android:padding="5dp" >
 
                 <RadioButton
-                    android:id="@+id/sch_repeat_forever_radio"
+                    android:id="@+id/sch_forever_radio"
                     android:layout_width="wrap_content"
                     android:layout_height="25dp"
                     android:button="@drawable/blue_chechk_box"
@@ -107,7 +107,7 @@
                     android:textColor="@color/_4d4d4d" />
 
                 <RadioButton
-                    android:id="@+id/sch_repeat_time_radio"
+                    android:id="@+id/sch_time_radio"
                     android:layout_width="wrap_content"
                     android:layout_height="25dp"
                     android:layout_marginLeft="10dp"
