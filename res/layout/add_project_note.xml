@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:background="@drawable/view_background" />
+
+    <RelativeLayout
+        android:id="@+id/title_event_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:animateLayoutChanges="true"
+        android:background="@drawable/input_fields_gray"
+        android:padding="10dp" >
+
+        <CheckBox
+            android:id="@+id/completed_event"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="2dp"
+            android:button="@drawable/task_chechk_box" />
+
+        <EditText
+            android:id="@+id/project_title"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_toRightOf="@id/completed_event"
+            android:background="@android:color/transparent"
+            android:hint="Task one"
+            android:paddingLeft="18dp"
+            android:paddingRight="5dp"
+            android:singleLine="true"
+            android:textColorHint="#bababa"
+            android:textSize="17.78sp" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/project_title"
+            android:layout_centerVertical="true"
+            android:src="@drawable/next_arrow" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -84,9 +84,6 @@ public class AddAppoinmentFragment extends Fragment {
 	private int lastCheckedId = -1;
 	EditText taskTitle;
 
-	String[] colors1 = { "#790000", "#005826", "#0D004C", "#ED145B", "#E0D400",
-			"#0000FF", "#4B0049", "#005B7F", "#603913", "#005952" };
-
 	Editor editor;
 	View label_view, viewl;
 	GradientDrawable label_color;
@@ -385,7 +382,7 @@ public class AddAppoinmentFragment extends Fragment {
 						GradientDrawable mDrawable = (GradientDrawable) getResources()
 								.getDrawable(R.drawable.label_background);
 						mDrawable.setColor(Color
-								.parseColor(colors1[Label_postion]));
+								.parseColor(Constants.label_colors_dialog[Label_postion]));
 						Save(label_view.getId() + "" + itempos, label_text
 								.getText().toString(), Label_postion);
 						Label_postion = -1;
@@ -448,7 +445,7 @@ public class AddAppoinmentFragment extends Fragment {
 											.getDrawable(
 													R.drawable.label_background);
 									mDrawable.setColor(Color
-											.parseColor(colors1[pposition]));
+											.parseColor(Constants.label_colors_dialog[pposition]));
 									textView.setBackground(mDrawable);
 								}
 								return textView;
@@ -537,7 +534,7 @@ public class AddAppoinmentFragment extends Fragment {
 		View switchView = aq.id(R.id.add_sub_appoinment).getView();
 		toggleCheckList(switchView);
 
-		lastCheckedId = ((RadioGroup) aq.id(R.id.priority_radio_buttons)
+		/*lastCheckedId = ((RadioGroup) aq.id(R.id.priority_radio_buttons)
 				.getView()).getCheckedRadioButtonId();
 		((RadioGroup) aq.id(R.id.priority_radio_buttons).getView())
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -562,7 +559,7 @@ public class AddAppoinmentFragment extends Fragment {
 							AddTask.priority = 3;
 						lastCheckedId = checkedId;
 					}
-				});
+				});*/
 	}
 
 	// ***************Main End**********************
@@ -682,7 +679,7 @@ public class AddAppoinmentFragment extends Fragment {
 					.getVisibility() == View.GONE) {
 				if (aq.id(R.id.before_appoinment).getText().toString() == "") {
 					aq.id(R.id.before_appoinment).text(
-							AddTaskBeforeFragment.beforeArray[1]+" Before").visibility(View.VISIBLE);
+							Constants.beforeArray[1]+" Before").visibility(View.VISIBLE);
 
 				}
 				aq.id(R.id.before_grid_view_linear_appoinment)
@@ -950,7 +947,7 @@ public class AddAppoinmentFragment extends Fragment {
 
 			GradientDrawable mDrawable = (GradientDrawable) getResources()
 					.getDrawable(R.drawable.label_background_dialog);
-			mDrawable.setColor(Color.parseColor(colors1[position]));
+			mDrawable.setColor(Color.parseColor(Constants.label_colors_dialog[position]));
 			imageView.setBackground(mDrawable);
 			return imageView;
 		}

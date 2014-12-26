@@ -83,15 +83,9 @@ public class AddProjectFragment extends Fragment {
 	int MaxId = -1;
 	EditText taskTitle;
 
-	final String[] colors1 = { "#790000", "#005826", "#0D004C", "#ED145B",
-			"#E0D400", "#0000FF", "#4B0049", "#005B7F", "#603913", "#005952" };
-	private final String[] labels_array = new String[] { "Personal", "Home",
-			"Work", "New", "New", "New", "New", "New", "New" };
 	static List<java.lang.Object> names;
 
 	public static HashMap<Integer, Integer> inflatingLayouts = new HashMap<Integer, Integer>();
-
-	public static HashMap<Integer, Integer> inflatingLayoutsSelector = new HashMap<Integer, Integer>();
 
 	private String currentDay, currentMon;
 	static String checkedId2 = null;
@@ -112,12 +106,9 @@ public class AddProjectFragment extends Fragment {
 	int Month, Year;
 
 	private int[] collapsingViews = { R.id.date_time_include,
-			R.id.label_event_grid_view };
+			R.id.label_project_grid_view };
 
 	private int[] allViews = { R.id.time_date, R.id.spinner_label_layout };
-
-	static final String[] repeatArray = new String[] { "Once", "Daily",
-			"Weekly", "Monthly", "Yearly" };
 
 	int dayPosition;
 	Editor editor;
@@ -168,10 +159,10 @@ public class AddProjectFragment extends Fragment {
 		currentMin = Utils.getCurrentMins();
 
 		// inflatingLayouts.put(0, R.layout.project_title);
-		inflatingLayouts.put(0, R.layout.project_title);
-		inflatingLayouts.put(1, R.layout.project_duration);
-		inflatingLayouts.put(2, R.layout.project_task);
-		inflatingLayouts.put(3, R.layout.project_note);
+		inflatingLayouts.put(0, R.layout.add_project_title);
+		inflatingLayouts.put(1, R.layout.add_project_date);
+		inflatingLayouts.put(2, R.layout.add_project_label);
+		inflatingLayouts.put(3, R.layout.add_project_note);
 
 		inflateLayouts();
 		main();
@@ -268,9 +259,6 @@ public class AddProjectFragment extends Fragment {
 		aq.id(R.id.time_date).clicked(new GeneralOnClickListner());
 		GridView gridView;
 
-		final String[] labels_array1 = new String[] { "A", "A", "A", "A", "A",
-				"A", "A", "A", "A", "A", };
-
 		View vie = getActivity().getLayoutInflater().inflate(
 				R.layout.add_label_event, null, false);
 
@@ -330,7 +318,7 @@ public class AddProjectFragment extends Fragment {
 						GradientDrawable mDrawable = (GradientDrawable) getResources()
 								.getDrawable(R.drawable.label_background);
 						mDrawable.setColor(Color
-								.parseColor(colors1[Label_postion]));
+								.parseColor(Constants.label_colors_dialog[Label_postion]));
 						Save(label_view.getId() + "" + itempos, label_text
 								.getText().toString(), Label_postion);
 						Label_postion = -1;
@@ -339,11 +327,11 @@ public class AddProjectFragment extends Fragment {
 								.toString());
 						((TextView) label_view).setTextColor(Color.WHITE);
 
-						aq.id(R.id.spinner_labels_event).text(
+						aq.id(R.id.spinner_labels_project).text(
 								((TextView) label_view).getText().toString());
-						aq.id(R.id.spinner_labels_event).getTextView()
+						aq.id(R.id.spinner_labels_project).getTextView()
 								.setBackground(label_view.getBackground());
-						aq.id(R.id.spinner_labels_event).getTextView()
+						aq.id(R.id.spinner_labels_project).getTextView()
 								.setTextColor(Color.WHITE);
 
 					}
@@ -361,13 +349,12 @@ public class AddProjectFragment extends Fragment {
 		});
 
 		// Init labels adapter
-		final String[] colors = { "#AC7900", "#4D6600", "#5A0089" };
-		aq.id(R.id.label_event_grid_view)
+		aq.id(R.id.label_project_grid_view)
 				.getGridView()
 				.setAdapter(
 						new ArrayAdapter<String>(getActivity(),
 								R.layout.grid_layout_label_text_view,
-								labels_array) {
+								Constants.labels_array) {
 
 							@Override
 							public View getView(int position, View convertView,
@@ -386,7 +373,7 @@ public class AddProjectFragment extends Fragment {
 											.getDrawable(
 													R.drawable.label_background);
 									mDrawable.setColor(Color
-											.parseColor(colors[position]));
+											.parseColor(Constants.label_colors[position]));
 									textView.setBackground(mDrawable);
 								}
 								if (plabel != null) {
@@ -396,14 +383,14 @@ public class AddProjectFragment extends Fragment {
 											.getDrawable(
 													R.drawable.label_background);
 									mDrawable.setColor(Color
-											.parseColor(colors1[pposition]));
+											.parseColor(Constants.label_colors_dialog[pposition]));
 									textView.setBackground(mDrawable);
 								}
 								return textView;
 							}
 
 						});
-		aq.id(R.id.label_event_grid_view).getGridView()
+		aq.id(R.id.label_project_grid_view).getGridView()
 				.setOnItemClickListener(new OnItemClickListener() {
 
 					@Override
@@ -414,11 +401,11 @@ public class AddProjectFragment extends Fragment {
 						label_view = view;
 						if (!((TextView) view).getText().toString()
 								.equalsIgnoreCase("new")) {
-							aq.id(R.id.spinner_labels_event).text(
+							aq.id(R.id.spinner_labels_project).text(
 									((TextView) view).getText().toString());
-							aq.id(R.id.spinner_labels_event).getTextView()
+							aq.id(R.id.spinner_labels_project).getTextView()
 									.setBackground(view.getBackground());
-							aq.id(R.id.spinner_labels_event).getTextView()
+							aq.id(R.id.spinner_labels_project).getTextView()
 									.setTextColor(Color.WHITE);
 						} else {
 							add_new_label_alert.show();
@@ -428,7 +415,7 @@ public class AddProjectFragment extends Fragment {
 
 				});
 
-		aq.id(R.id.label_event_grid_view).getGridView()
+		aq.id(R.id.label_project_grid_view).getGridView()
 				.setOnItemLongClickListener(new LabelEditClickListener());
 
 		LayoutInflater inflater5 = getActivity().getLayoutInflater();
@@ -555,12 +542,12 @@ public class AddProjectFragment extends Fragment {
 												.getView(), true));
 			break;
 		case R.id.spinner_label_layout:
-			if (aq.id(R.id.label_event_grid_view).getView().getVisibility() == View.GONE)
-				aq.id(R.id.label_event_grid_view)
+			if (aq.id(R.id.label_project_grid_view).getView().getVisibility() == View.GONE)
+				aq.id(R.id.label_project_grid_view)
 						.getView()
 						.startAnimation(
 								new ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f,
-										200, aq.id(R.id.label_event_grid_view)
+										200, aq.id(R.id.label_project_grid_view)
 												.getView(), true));
 			break;
 
@@ -772,7 +759,7 @@ public class AddProjectFragment extends Fragment {
 
 			GradientDrawable mDrawable = (GradientDrawable) getResources()
 					.getDrawable(R.drawable.label_background_dialog);
-			mDrawable.setColor(Color.parseColor(colors1[position]));
+			mDrawable.setColor(Color.parseColor(Constants.label_colors_dialog[position]));
 			imageView.setBackground(mDrawable);
 
 			// imageView.setImageResource(mThumbIds[position]);

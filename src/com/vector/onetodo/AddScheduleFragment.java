@@ -129,8 +129,6 @@ public class AddScheduleFragment extends Fragment {
 	private static final int TAKE_PICTURE = 1;
 
 	private static View previousSelected;
-	static final String[] repeatArray = new String[] { "Never", "Daily",
-			"Weekly", "Monthly", "Yearly" };
 	static LinearLayout lll;
 	static int currentHours, currentMin, currentDayDigit, currentYear,
 			currentMonDigit;
@@ -147,12 +145,6 @@ public class AddScheduleFragment extends Fragment {
 			R.id.before_schedule_lay, R.id.schedule_all_lay };
 
 	public static HashMap<Integer, Integer> inflatingLayouts = new HashMap<Integer, Integer>();
-
-	private final String[] labels_array = new String[] { "Personal", "Home",
-			"Work", "New", "New", "New", "New", "New", "New" };
-
-	String[] colors1 = { "#790000", "#005826", "#0D004C", "#ED145B", "#E0D400",
-			"#0000FF", "#4B0049", "#005B7F", "#603913", "#005952" };
 
 	Editor editor, editorattach;
 	EditText label_field = null;
@@ -486,7 +478,7 @@ public class AddScheduleFragment extends Fragment {
 				.getGridView()
 				.setAdapter(
 						new ArrayAdapter<String>(getActivity(),
-								R.layout.grid_layout_textview, repeatArray) {
+								R.layout.grid_layout_textview, Constants.repeatArray) {
 
 							@Override
 							public View getView(int position, View convertView,
@@ -542,11 +534,11 @@ public class AddScheduleFragment extends Fragment {
 				}
 				((TextView) view).setTextColor(Color.WHITE);
 				view.setSelected(true);
-				if (repeatArray[position] == "Never") {
-					aq.id(R.id.sch_repeat_txt).text(repeatArray[position])
+				if (Constants.repeatArray[position] == "Never") {
+					aq.id(R.id.sch_repeat_txt).text(Constants.repeatArray[position])
 					/* .textColorId(R.color.deep_sky_blue) */;
 				} else {
-					aq.id(R.id.sch_repeat_txt).text(repeatArray[position])
+					aq.id(R.id.sch_repeat_txt).text(Constants.repeatArray[position])
 					/* .textColorId(R.color.deep_sky_blue) */;
 				}/*
 				 * aq.id(R.id.sch_repeat_img).background(R.drawable.repeat_blue);
@@ -750,7 +742,7 @@ public class AddScheduleFragment extends Fragment {
 						GradientDrawable mDrawable = (GradientDrawable) getResources()
 								.getDrawable(R.drawable.label_background);
 						mDrawable.setColor(Color
-								.parseColor(colors1[Label_postion]));
+								.parseColor(Constants.label_colors_dialog[Label_postion]));
 						Save(label_view.getId() + "" + itempos, label_text
 								.getText().toString(), Label_postion);
 						Label_postion = -1;
@@ -784,13 +776,12 @@ public class AddScheduleFragment extends Fragment {
 		});
 
 		// Init labels adapter
-		final String[] colors = { "#AC7900", "#4D6600", "#5A0089" };
 		aq.id(R.id.sch_label_grid)
 				.getGridView()
 				.setAdapter(
 						new ArrayAdapter<String>(getActivity(),
 								R.layout.grid_layout_label_text_view,
-								labels_array) {
+								Constants.labels_array) {
 
 							@Override
 							public View getView(int position, View convertView,
@@ -811,7 +802,7 @@ public class AddScheduleFragment extends Fragment {
 											.getDrawable(
 													R.drawable.label_background);
 									mDrawable.setColor(Color
-											.parseColor(colors[position]));
+											.parseColor(Constants.label_colors[position]));
 									textView.setBackground(mDrawable);
 								}
 								if (plabel != null) {
@@ -821,7 +812,7 @@ public class AddScheduleFragment extends Fragment {
 											.getDrawable(
 													R.drawable.label_background);
 									mDrawable.setColor(Color
-											.parseColor(colors1[pposition]));
+											.parseColor(Constants.label_colors_dialog[pposition]));
 									textView.setBackground(mDrawable);
 								}
 								return textView;
@@ -1214,7 +1205,7 @@ public class AddScheduleFragment extends Fragment {
 		case R.id.repeat_schedule_lay:
 			if (aq.id(R.id.sch_repeat_grid_layout).getView().getVisibility() == View.GONE) {
 				if (aq.id(R.id.sch_repeat_txt).getText().toString() == "") {
-					aq.id(R.id.sch_repeat_txt).text(repeatArray[2])
+					aq.id(R.id.sch_repeat_txt).text(Constants.repeatArray[2])
 							.visibility(View.VISIBLE);
 
 				}
@@ -1232,7 +1223,7 @@ public class AddScheduleFragment extends Fragment {
 					.getVisibility() == View.GONE) {
 				if (aq.id(R.id.before_schedule).getText().toString() == "") {
 					aq.id(R.id.before_schedule)
-							.text(AddEventBeforeFragment.beforeArray[1]
+							.text(Constants.beforeArray[1]
 									+ " Before").visibility(View.VISIBLE);
 					/*
 					 * aq.id(R.id.before_event_image).background(
@@ -1776,7 +1767,7 @@ public class AddScheduleFragment extends Fragment {
 
 			GradientDrawable mDrawable = (GradientDrawable) getResources()
 					.getDrawable(R.drawable.label_background_dialog);
-			mDrawable.setColor(Color.parseColor(colors1[position]));
+			mDrawable.setColor(Color.parseColor(Constants.label_colors_dialog[position]));
 			imageView.setBackground(mDrawable);
 
 			return imageView;
