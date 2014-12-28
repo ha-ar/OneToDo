@@ -1,7 +1,6 @@
 package com.vector.onetodo;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -22,10 +21,6 @@ import android.widget.PopupWindow.OnDismissListener;
 
 import com.androidquery.AQuery;
 import com.astuetz.PagerSlidingTabStrip;
-import com.vector.onetodo.R;
-import com.vector.onetodo.R.drawable;
-import com.vector.onetodo.R.id;
-import com.vector.onetodo.R.layout;
 import com.vector.onetodo.utils.Utils;
 
 public class AddTaskAssign extends Fragment {

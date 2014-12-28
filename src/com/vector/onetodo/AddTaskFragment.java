@@ -30,12 +30,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import uk.me.lewisdeane.ldialogs.BaseDialog.Alignment;
 import uk.me.lewisdeane.ldialogs.CustomDialog;
 import uk.me.lewisdeane.ldialogs.CustomDialog.ClickListener;
 import uk.me.lewisdeane.ldialogs.CustomListDialog;
-import uk.me.lewisdeane.ldialogs.BaseDialog.Alignment;
 import uk.me.lewisdeane.ldialogs.CustomListDialog.ListClickListener;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -108,12 +107,9 @@ import com.vector.onetodo.utils.Utils;
 
 public class AddTaskFragment extends Fragment {
 
-	// iMageview menu_dots_task,task_attachment edittext task_comment
-	// linearlayout comment_box
 
 	@Override
 	public void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 		Constants.Project_task_check = 0;
 		aq.id(R.id.addtask_header).getView().setVisibility(View.GONE);
@@ -1481,21 +1477,6 @@ public class AddTaskFragment extends Fragment {
 		return view.getVisibility() == View.VISIBLE;
 	}
 
-	private class AssignOnClickListner implements OnClickListener {
-
-		@Override
-		public void onClick(View v) {
-			assig_alert.show();
-		}
-	}
-
-	private class ShareOnClickListner implements OnClickListener {
-
-		@Override
-		public void onClick(View v) {
-			share_alert.show();
-		}
-	}
 
 	private class GeneralOnClickListner implements OnClickListener {
 
@@ -1957,47 +1938,6 @@ public class AddTaskFragment extends Fragment {
 		}
 	}
 
-	/*
-	 * public class ImageUploadTask extends AsyncTask<String, Integer, Void> {
-	 * 
-	 * @Override protected Void doInBackground(String... params) { // TODO
-	 * Auto-generated method stub try { post.setEntity(new
-	 * UrlEncodedFormEntity(pairs)); } catch (UnsupportedEncodingException e1) {
-	 * // TODO Auto-generated catch block e1.printStackTrace(); }
-	 * 
-	 * try { response = client.execute(post); } catch (ClientProtocolException
-	 * e1) { // TODO Auto-generated catch block e1.printStackTrace();
-	 * asyn.cancel(true); } catch (IOException e1) { // TODO Auto-generated
-	 * catch block e1.printStackTrace(); asyn.cancel(true); } return null; }
-	 * 
-	 * @Override protected void onPostExecute(Void result) { // TODO
-	 * Auto-generated method stub super.onPostExecute(result); String temp =
-	 * null;
-	 * 
-	 * try { temp = EntityUtils.toString(response.getEntity()); } catch
-	 * (org.apache.http.ParseException | IOException e) { // TODO Auto-generated
-	 * catch block e.printStackTrace(); asyn.cancel(true); } Log.v("Response ",
-	 * temp); }
-	 * 
-	 * @Override protected void onPreExecute() { // TODO Auto-generated method
-	 * stub super.onPreExecute(); client = new DefaultHttpClient(); post = new
-	 * HttpPost( "http://api.heuristix.net/one_todo/v1/upload.php"); pairs = new
-	 * ArrayList<NameValuePair>(); if (filename.contains("external")) {
-	 * 
-	 * } else { String filepath = filename; } Log.v("PATH ", path.get(0)); File
-	 * imagefile = new File(filepath); FileInputStream fis = null; try { fis =
-	 * new FileInputStream(imagefile); } catch (FileNotFoundException e) {
-	 * e.printStackTrace(); } Bitmap bm = BitmapFactory.decodeStream(fis);
-	 * Bitmap bm = null; try { bm =
-	 * MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),
-	 * filename); } catch (FileNotFoundException e) { // TODO Auto-generated
-	 * catch block e.printStackTrace(); } catch (IOException e) { // TODO
-	 * Auto-generated catch block e.printStackTrace(); } ByteArrayOutputStream
-	 * baos = new ByteArrayOutputStream();
-	 * bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); byte[] byteArray =
-	 * baos.toByteArray(); String encoded = Base64.encodeToString(byteArray,
-	 * Base64.DEFAULT); pairs.add(new BasicNameValuePair("image", encoded)); } }
-	 */
 
 	public void imageupload() {
 
@@ -2008,10 +1948,8 @@ public class AddTaskFragment extends Fragment {
 			bm = MediaStore.Images.Media.getBitmap(getActivity()
 					.getContentResolver(), filename);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();

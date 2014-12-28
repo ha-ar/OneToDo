@@ -15,7 +15,7 @@ public class RootAdapter extends BaseExpandableListAdapter {
 
 	private final LayoutInflater inflater;
 
-	private int[] drawables = {R.drawable.tasks, R.drawable.settings, R.drawable.about_us, R.drawable.about_us};
+//	private int[] drawables = {R.drawable.tasks, R.drawable.settings, R.drawable.about_us, R.drawable.about_us};
 	public class Entry {
 		public final CustExpListview cls;
 		public final SecondLevelAdapter sadpt;
@@ -110,7 +110,7 @@ public class RootAdapter extends BaseExpandableListAdapter {
 		}
 		
 		holder.title.setText(item.title.trim());
-		holder.img.setImageResource(drawables[groupPosition]);
+//		holder.img.setImageResource(drawables[groupPosition]);
 		return layout;
 	}
 
