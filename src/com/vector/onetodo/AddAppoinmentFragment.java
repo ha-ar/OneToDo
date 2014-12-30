@@ -3,28 +3,27 @@ package com.vector.onetodo;
 import it.feio.android.checklistview.ChecklistManager;
 import it.feio.android.checklistview.exceptions.ViewNotSupportedException;
 import it.feio.android.checklistview.interfaces.CheckListChangedListener;
-
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import uk.me.lewisdeane.ldialogs.CustomDialog;
+import uk.me.lewisdeane.ldialogs.CustomListDialog;
+import uk.me.lewisdeane.ldialogs.BaseDialog.Alignment;
+import uk.me.lewisdeane.ldialogs.CustomDialog.ClickListener;
+import uk.me.lewisdeane.ldialogs.CustomListDialog.ListClickListener;
 import net.simonvt.datepicker.DatePicker;
 import net.simonvt.datepicker.DatePicker.OnDateChangedListener;
 import net.simonvt.timepicker.TimePicker;
 import net.simonvt.timepicker.TimePicker.OnTimeChangedListener;
-import uk.me.lewisdeane.ldialogs.BaseDialog.Alignment;
-import uk.me.lewisdeane.ldialogs.CustomDialog;
-import uk.me.lewisdeane.ldialogs.CustomDialog.ClickListener;
-import uk.me.lewisdeane.ldialogs.CustomListDialog;
-import uk.me.lewisdeane.ldialogs.CustomListDialog.ListClickListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -54,7 +53,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -62,12 +63,14 @@ import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.androidquery.AQuery;
 import com.astuetz.PagerSlidingTabStrip;
 import com.devspark.appmsg.AppMsg;
+import com.google.android.gms.internal.bt;
 import com.vector.onetodo.utils.Constants;
 import com.vector.onetodo.utils.ScaleAnimToHide;
 import com.vector.onetodo.utils.ScaleAnimToShow;
@@ -85,6 +88,7 @@ public class AddAppoinmentFragment extends Fragment {
 	int pposition = -1;
 	int itempos = -1;
 	int MaxId = -1;
+	private int lastCheckedId = -1;
 	EditText taskTitle;
 
 	Editor editor;
@@ -157,6 +161,7 @@ public class AddAppoinmentFragment extends Fragment {
 		return view;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
@@ -347,6 +352,7 @@ public class AddAppoinmentFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				// TODO Auto-generated method stub
 
 				ImageView img = (ImageView) view;
 				if (last != null) {
@@ -371,6 +377,8 @@ public class AddAppoinmentFragment extends Fragment {
 
 			@Override
 			public void onDismiss(DialogInterface arg0) {
+				// TODO Auto-generated method stub
+
 				label_text.setText("");
 			}
 		});
@@ -482,12 +490,104 @@ public class AddAppoinmentFragment extends Fragment {
 		aq.id(R.id.label_grid_view).getGridView()
 				.setOnItemLongClickListener(new LabelEditClickListener());
 
+//		aq_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				// TODO Auto-generated method stub
+//				location_del.dismiss();
+//			}
+//		});
+//
+//		aq_del.id(R.id.edit_del).clicked(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				// TODO Auto-generated method stub
+//				Remove(viewl.getId() + "" + itempos);
+//				((TextView) viewl).setText("New");
+//				GradientDrawable mDrawable = (GradientDrawable) getResources()
+//						.getDrawable(R.drawable.label_simple);
+//				((TextView) viewl).setBackground(mDrawable);
+//				((TextView) viewl).setTextColor(R.color.mountain_mist);
+//
+//				location_del.dismiss();
+//			}
+//		});
+//
+//		aq_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				// TODO Auto-generated method stub
+//				label_edit.dismiss();
+//				location_del.show();
+//			}
+//		});
+//
+//		aq_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				// TODO Auto-generated method
+//				aqd.id(R.id.label_title).text("Edit");
+//				aqd.id(R.id.save).text("Save");
+//				label_view = viewl;
+//				label_edit.dismiss();
+//				add_new_label_alert.show();
+//			}
+//		});
+
 
 		aq.id(R.id.spinner_label_layout).clicked(new GeneralOnClickListner());
 
 		View switchView = aq.id(R.id.add_sub_appoinment).getView();
 		toggleCheckList(switchView);
 
+		/*lastCheckedId = ((RadioGroup) aq.id(R.id.priority_radio_buttons)
+				.getView()).getCheckedRadioButtonId();
+		((RadioGroup) aq.id(R.id.priority_radio_buttons).getView())
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+					@Override
+					public void onCheckedChanged(RadioGroup group, int checkedId) {
+						((RadioButton) group.findViewById(lastCheckedId))
+								.setTextColor(getResources().getColor(
+										R.color.deep_sky_blue));
+						((RadioButton) group.findViewById(checkedId))
+								.setTextColor(getResources().getColor(
+										android.R.color.white));
+						String abc = ((RadioButton) group
+								.findViewById(checkedId)).getText().toString();
+						if (abc.equals("None"))
+							AddTask.priority = 0;
+						else if (abc.equals("!"))
+							AddTask.priority = 1;
+						else if (abc.equals("! !"))
+							AddTask.priority = 2;
+						else if (abc.equals("! ! !"))
+							AddTask.priority = 3;
+						lastCheckedId = checkedId;
+					}
+				});*/
+		/*
+		 * lastCheckedId = ((RadioGroup) aq.id(R.id.priority_radio_buttons)
+		 * .getView()).getCheckedRadioButtonId(); ((RadioGroup)
+		 * aq.id(R.id.priority_radio_buttons).getView())
+		 * .setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		 * 
+		 * @Override public void onCheckedChanged(RadioGroup group, int
+		 * checkedId) { ((RadioButton) group.findViewById(lastCheckedId))
+		 * .setTextColor(getResources().getColor( R.color.deep_sky_blue));
+		 * ((RadioButton) group.findViewById(checkedId))
+		 * .setTextColor(getResources().getColor( android.R.color.white));
+		 * String abc = ((RadioButton) group
+		 * .findViewById(checkedId)).getText().toString(); if
+		 * (abc.equals("None")) AddTask.priority = 0; else if (abc.equals("!"))
+		 * AddTask.priority = 1; else if (abc.equals("! !")) AddTask.priority =
+		 * 2; else if (abc.equals("! ! !")) AddTask.priority = 3; lastCheckedId
+		 * = checkedId; } });
+		 */
 	}
 
 	// ***************Main End**********************
@@ -838,10 +938,18 @@ public class AddAppoinmentFragment extends Fragment {
 		@Override
 		public boolean onItemLongClick(AdapterView<?> arg0, final View arg1,
 				int position, long arg3) {
+			// TODO Auto-generated method stub
 			if (((TextView) arg1).getText().toString().equals("New")
 					|| position < 3) {
 
 			} else {
+				// aqd.id(R.id.add_label_text).text(
+				// ((TextView) arg1).getText().toString());
+				// aq_del.id(R.id.body).text(
+				// "Label " + ((TextView) arg1).getText().toString()
+				// + " will be deleted");
+				// aq_edit.id(R.id.add_task_edit_title).text(
+				// "Label: " + ((TextView) arg1).getText().toString());
 				viewl = arg1;
 				itempos = position;
 				listbuilder = new CustomListDialog.Builder(getActivity(),
@@ -862,7 +970,16 @@ public class AddAppoinmentFragment extends Fragment {
 					@Override
 					public void onListItemSelected(int position,
 							String[] items, String item) {
+						// TODO Auto-generated method stub
 						if (position == 0) {
+							// aq_label.id(R.id.add_label_text).text(
+							// ((TextView) arg1).getText().toString());
+							// aq_label_del.id(R.id.body).text(
+							// "Label " + ((TextView) arg1).getText().toString()
+							// + " will be deleted");
+							// aq_label_edit.id(R.id.add_task_edit_title).text(
+							// "Label: " + ((TextView)
+							// arg1).getText().toString());
 							viewl = arg1;
 							itempos = position;
 							label_edit.dismiss();
@@ -928,6 +1045,31 @@ public class AddAppoinmentFragment extends Fragment {
 			return false;
 		}
 	}
+
+	// private class LabelEditClickListener implements OnItemLongClickListener {
+	//
+	// @Override
+	// public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+	// int position, long arg3) {
+	// // TODO Auto-generated method stub
+	// if (((TextView) arg1).getText().toString().equals("New")
+	// || position < 3) {
+	//
+	// } else {
+	// aqd.id(R.id.add_label_text).text(
+	// ((TextView) arg1).getText().toString());
+	// aq_del.id(R.id.body).text(
+	// "Label " + ((TextView) arg1).getText().toString()
+	// + " will be deleted");
+	// aq_edit.id(R.id.add_task_edit_title).text(
+	// "Label: " + ((TextView) arg1).getText().toString());
+	// viewl = arg1;
+	// itempos = position;
+	// label_edit.show();
+	// }
+	// return false;
+	// }
+	// }
 
 	public class LabelImageAdapter extends BaseAdapter {
 		private Context mContext;
