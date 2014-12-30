@@ -131,7 +131,7 @@ public class Accounts extends Fragment {
         		dialogbuilder.contentTextSize(18);
         		dialogbuilder.buttonTextSize(14);
         		dialogbuilder.titleAlignment(Alignment.LEFT); 
-        		dialogbuilder.buttonAlignment(Alignment.RIGHT);
+        		dialogbuilder.buttonAlignment(Alignment.CENTER);
         		dialogbuilder.titleColor(getResources().getColor(android.R.color.holo_blue_light)); 
         		dialogbuilder.contentColor(Color.BLACK); 
         		dialogbuilder.positiveColor(getResources().getColor(android.R.color.holo_blue_light)); 
@@ -238,7 +238,6 @@ public class Accounts extends Fragment {
 				Picasso.with(getActivity()).load(imageUri).resize(100, 100)
 				.into(imageEvent);
 				aq.id(R.id.image_event).background(R.drawable.round_photobutton);
-//				showImageURI(imageUri);
 			}
 		case RESULT_GALLERY:
 			if (null != data) {
@@ -246,7 +245,6 @@ public class Accounts extends Fragment {
 				Picasso.with(getActivity()).load(selectedImage).resize(100, 100)
 				.into(imageEvent);
 				aq.id(R.id.image_event).background(R.drawable.round_photobutton);
-//				//showImageURI(data.getData());
 			}
 			break;
 		default:

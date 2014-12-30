@@ -170,7 +170,6 @@ public class AddProjectFragment extends Fragment {
 		currentHours = Utils.getCurrentHours();
 		currentMin = Utils.getCurrentMins();
 
-		// inflatingLayouts.put(0, R.layout.project_title);
 		inflatingLayouts.put(0, R.layout.add_project_title);
 		inflatingLayouts.put(1, R.layout.add_project_date);
 		inflatingLayouts.put(2, R.layout.add_project_label);
@@ -300,7 +299,6 @@ public class AddProjectFragment extends Fragment {
 
 				Label_postion = position;
 
-				// buttonColor = (ColorDrawable) view.getBackground();
 			}
 		});
 
@@ -429,72 +427,7 @@ public class AddProjectFragment extends Fragment {
 
 		aq.id(R.id.label_project_grid_view).getGridView()
 				.setOnItemLongClickListener(new LabelEditClickListener());
-
-//		LayoutInflater inflater5 = getActivity().getLayoutInflater();
-//
-//		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
-//				false);
-//		AQlabel_edit = new AQuery(dialoglayout6);
-//		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
-//		builder6.setView(dialoglayout6);
-//		label_edit = builder6.create();
-//
-//		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
-//				null, false);
-//		AQlabel_del = new AQuery(dialoglayout7);
-//		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
-//		builder7.setView(dialoglayout7);
-//		location_del = builder7.create();
-
-//		AQlabel_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//				location_del.dismiss();
-//			}
-//		});
-//
-//		AQlabel_del.id(R.id.edit_del).clicked(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//				Remove(viewl.getId() + "" + itempos);
-//				((TextView) viewl).setText("New");
-//				GradientDrawable mDrawable = (GradientDrawable) getResources()
-//						.getDrawable(R.drawable.label_simple);
-//				((TextView) viewl).setBackground(mDrawable);
-//				((TextView) viewl).setTextColor(R.color.mountain_mist);
-//
-//				location_del.dismiss();
-//			}
-//		});
-//
-//		AQlabel_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//				label_edit.dismiss();
-//				location_del.show();
-//			}
-//		});
-//
-//		AQlabel_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub=
-//				// aqd.id(R.id.add_label_text).text(((TextView)
-//				// viewl).getText().)
-//				AQlabel.id(R.id.label_title_event).text("Edit");
-//				AQlabel.id(R.id.save).text("Save");
-//				label_view = viewl;
-//				label_edit.dismiss();
-//				add_new_label_alert.show();
-//			}
-//		});
+ 
 		aq.id(R.id.spinner_label_layout).clicked(new GeneralOnClickListner());
 
 		// ********************************* Label END
@@ -630,10 +563,7 @@ public class AddProjectFragment extends Fragment {
 			view.setVisibility(View.VISIBLE);
 			Drawable tintColor = new ColorDrawable(getResources().getColor(
 					R.color.dim_background));
-			/*
-			 * ((FrameLayout) aq.id(R.id.add_project_frame).getView())
-			 * .setForeground(tintColor);
-			 */
+		 
 		} else {
 			// Hide the Panel
 			Animation bottomDown = AnimationUtils.loadAnimation(getActivity(),
@@ -643,10 +573,7 @@ public class AddProjectFragment extends Fragment {
 			view.setVisibility(View.GONE);
 			Drawable tintColor = new ColorDrawable(getResources().getColor(
 					android.R.color.transparent));
-			/*
-			 * ((FrameLayout) aq.id(R.id.add_project_frame).getView())
-			 * .setForeground(tintColor);
-			 */
+		 
 		}
 	}
 
@@ -710,8 +637,7 @@ public class AddProjectFragment extends Fragment {
 
 						@Override
 						public void onClick(View v) {
-							item.removeView(child);
-							// child.setVisibility(View.GONE);
+							item.removeView(child); 
 						}
 					});
 			item.addView(child);
@@ -752,14 +678,7 @@ public class AddProjectFragment extends Fragment {
 			if (((TextView) arg1).getText().toString().equals("New")
 					|| position < 3) {
 
-			} else {
-//				aqd.id(R.id.add_label_text).text(
-//						((TextView) arg1).getText().toString());
-//				aq_del.id(R.id.body).text(
-//						"Label " + ((TextView) arg1).getText().toString()
-//								+ " will be deleted");
-//				aq_edit.id(R.id.add_task_edit_title).text(
-//						"Label: " + ((TextView) arg1).getText().toString());
+			} else { 
 				viewl = arg1;
 				itempos = position;
 				listbuilder = new CustomListDialog.Builder(getActivity(), "Label: " + ((TextView) arg1).getText().toString(),itemsForLables);
@@ -778,14 +697,7 @@ public class AddProjectFragment extends Fragment {
 					public void onListItemSelected(int position, String[] items, String item) {
 						// TODO Auto-generated method stub
 						if(position == 0)
-		            	{
-//							aq_label.id(R.id.add_label_text).text(
-//									((TextView) arg1).getText().toString());
-//							aq_label_del.id(R.id.body).text(
-//									"Label " + ((TextView) arg1).getText().toString()
-//											+ " will be deleted");
-//							aq_label_edit.id(R.id.add_task_edit_title).text(
-//									"Label: " + ((TextView) arg1).getText().toString());
+		            	{ 
 							viewl = arg1;
 							itempos = position;
 							label_edit.dismiss();
@@ -871,9 +783,7 @@ public class AddProjectFragment extends Fragment {
 				imageView = new ImageView(mContext);
 				imageView.setLayoutParams(new GridView.LayoutParams(Utils
 						.convertDpToPixel(40, mContext), Utils
-						.convertDpToPixel(40, mContext)));
-				// imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-				// imageView.setPadding(8, 8, 8, 8);
+						.convertDpToPixel(40, mContext))); 
 			} else {
 				imageView = (ImageView) convertView;
 			}
@@ -883,8 +793,7 @@ public class AddProjectFragment extends Fragment {
 			mDrawable.setColor(Color
 					.parseColor(Constants.label_colors_dialog[position]));
 			imageView.setBackground(mDrawable);
-
-			// imageView.setImageResource(mThumbIds[position]);
+ 
 			return imageView;
 		}
 

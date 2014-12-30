@@ -19,17 +19,13 @@ import com.roomorma.caldroid.CaldroidListener;
 @SuppressLint("SimpleDateFormat")
 public class Calender extends Fragment {
 
-	//Button list;
+ 
 	AQuery aq;
 	private CaldroidFragment caldroidFragment;
 
 	private void setCustomResourceForDates() {
 	}
-
-	/*
-	 * private void setCustomResourceForDates() { Calendar cal =
-	 * Calendar.getInstance();
-	 */
+ 
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,28 +33,7 @@ public class Calender extends Fragment {
 		View view = inflater.inflate(R.layout.task_calender, container, false);
 		aq = new AQuery(getActivity(), view);
 		
-		/*list = (Button) getActivity().findViewById(R.id.list_button);
-		aq.id(list).visible().clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				getActivity().getActionBar().show();
-				getFragmentManager().popBackStack();
-			}
-		});*/
-//		aq.id(R.id.add_task_button).text(Constants.ADD)
-//				.typeface(TypeFaces.get(getActivity(), Constants.ICON_FONT))
-//				.clicked(new OnClickListener() {
-//
-//					@Override
-//					public void onClick(View v) {
-//						Intent intent = new Intent(getActivity(), AddTask.class);
-//						intent.putExtra("position", 0);
-//						startActivity(intent);
-//						getActivity().overridePendingTransition(
-//								R.anim.bottom_up, R.anim.bottom_down);
-//					}
-//				});
+	 
 		return view;
 	}
 
@@ -66,11 +41,7 @@ public class Calender extends Fragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		/*
-		 * @Override protected void onCreate(Bundle savedInstanceState) {
-		 * super.onCreate(savedInstanceState);
-		 * setContentView(R.layout.activity_main);
-		 */
+		 
 
 		final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
 
@@ -104,22 +75,18 @@ public class Calender extends Fragment {
 
 			@Override
 			public void onSelectDate(Date date, View view) {
-//				Toast.makeText(getActivity(), formatter.format(date),
-//						Toast.LENGTH_SHORT).show();
+ 	 
 
 			}
 
 			@Override
 			public void onChangeMonth(int month, int year) {
-//				String text = "month: " + month + " year: " + year;
-//				Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+ 			 
 			}
 
 			@Override
 			public void onLongClickDate(Date date, View view) {
-//				Toast.makeText(getActivity(),
-//						"Long click " + formatter.format(date),
-//						Toast.LENGTH_SHORT).show();
+ 
 			}
 
 			@Override

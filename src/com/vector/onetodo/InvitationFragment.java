@@ -27,9 +27,7 @@ public class InvitationFragment extends Invitationtabholder implements
 	private int position;
 
 	private static long[] Currentdate;
-
-	// public static ItemLazyListAdapter todaysAdapter, tomorrowsAdapter,
-	// upcomingAdapter;
+ 
 
 	public static InvitationFragment newInstance(int position) {
 		InvitationFragment myFragment = new InvitationFragment();
@@ -80,9 +78,7 @@ public class InvitationFragment extends Invitationtabholder implements
 
 	}
 
-	/*
-	 * public class Holder { TextView title, location, reminderDate; }
-	 */
+ 
 
 	public class LandingAdapter extends BaseAdapter {
 
@@ -134,8 +130,7 @@ public class InvitationFragment extends Invitationtabholder implements
 
 				@Override
 				public void onClick(View arg0) {
-					// TODO Auto-generated method stub
-					// holder.Details_layout.setVisibility(View.VISIBLE);
+					// TODO Auto-generated method stub 
 					Toast.makeText(getActivity(), "asda", Toast.LENGTH_LONG)
 							.show();
 				}
@@ -172,9 +167,7 @@ public class InvitationFragment extends Invitationtabholder implements
 		// nothing
 	}
 
-	private void setadapter(Context context, int position) {
-		// todayQuery();
-		// todayAdapter = new LandingAdapter(getActivity(), todayQuery.list());
+	private void setadapter(Context context, int position) { 
 		LandingAdapter adapter = new LandingAdapter(getActivity());
 		listView.setAdapter(adapter);
 	}

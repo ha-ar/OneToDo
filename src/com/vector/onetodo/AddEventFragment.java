@@ -42,6 +42,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -57,6 +58,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -103,8 +105,14 @@ import com.vector.onetodo.utils.Utils;
 
 public class AddEventFragment extends Fragment {
 
-	// iMageview menu_dots_task,event_attachment edittext task_comment
-	// linearlayout comment_box
+	
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		SharedPreferences sprefrences = getActivity().getSharedPreferences("Comment", 0);
+		sprefrences.edit().clear().commit();
+	}
 	public AQuery aq, AQlabel, AQlabel_edit, AQlabel_del, aq_attach,aq_menu;
 
 	// HttpClient client;
@@ -118,7 +126,7 @@ public class AddEventFragment extends Fragment {
 	private PopupWindow popupWindowAttach;
 	static LinearLayout ll_iner;
 	private static View previousSelected;
-	static String checkedId2 = null, setmon1;
+	static String checkedId2 = null, setmon1,title=null;
 	View label_view, viewl;;
 	GradientDrawable label_color;
 	int Label_postion = -1;
@@ -313,11 +321,6 @@ public class AddEventFragment extends Fragment {
 
 					try {
 						String name = typedWords[typedWords.length - 1];
-						/*
-						 * if (name.equalsIgnoreCase(words))
-						 * showCurrentView(aq.id(R.id.contacts_layout_include)
-						 * .getView());
-						 */
 					} catch (ArrayIndexOutOfBoundsException aiobe) {
 
 					}
@@ -350,13 +353,6 @@ public class AddEventFragment extends Fragment {
 				// TODO Auto-generated method stub
 
 				if (isChecked == true) {
-					/*
-					 * aq.id(R.id.all_day_all).textColorId(R.color.blue_color);
-					 */
-					/*
-					 * aq.id(R.id.all_day_image)
-					 * .background(R.drawable.allday_blue);
-					 */
 					aq.id(R.id.time_from).getTextView()
 							.setVisibility(View.GONE);
 					aq.id(R.id.time_to).getTextView().setVisibility(View.GONE);
@@ -370,12 +366,7 @@ public class AddEventFragment extends Fragment {
 					aq.id(R.id.time_picker).getView()
 							.setVisibility(View.VISIBLE);
 					aq.id(R.id.time_picker_event_end).getView()
-							.setVisibility(View.VISIBLE);/*
-														 * aq.id(R.id.all_day_all
-														 * )
-														 * .textColorId(R.color.
-														 * hint_color);
-														 */
+							.setVisibility(View.VISIBLE);
 					aq.id(R.id.all_day_image).background(R.drawable.allday);
 					aq.id(R.id.time_from).getTextView()
 							.setVisibility(View.VISIBLE);
@@ -659,8 +650,8 @@ public class AddEventFragment extends Fragment {
 		// ****************************** Label Dialog
 		GridView gridView;
 
-		final String[] labels_array1 = new String[] { "A", "A", "A", "A", "A",
-				"A", "A", "A", "A", "A", };
+//		final String[] labels_array1 = new String[] { "A", "A", "A", "A", "A",
+//				"A", "A", "A", "A", "A", };
 
 		View vie = getActivity().getLayoutInflater().inflate(
 				R.layout.add_label_event, null, false);
@@ -691,7 +682,6 @@ public class AddEventFragment extends Fragment {
 
 				Label_postion = position;
 
-				// buttonColor = (ColorDrawable) view.getBackground();
 			}
 		});
 
@@ -736,10 +726,6 @@ public class AddEventFragment extends Fragment {
 								.setBackground(label_view.getBackground());
 						aq.id(R.id.spinner_labels_event).getTextView()
 								.setTextColor(Color.WHITE);
-						/*
-						 * aq.id(R.id.label_image).background(
-						 * R.drawable.label_blue);
-						 */
 
 					}
 				}
@@ -813,10 +799,6 @@ public class AddEventFragment extends Fragment {
 									.setBackground(view.getBackground());
 							aq.id(R.id.spinner_labels_event).getTextView()
 									.setTextColor(Color.WHITE);
-							/*
-							 * aq.id(R.id.label_image).background(
-							 * R.drawable.label_blue);
-							 */
 						} else {
 							add_new_label_alert.show();
 						}
@@ -828,71 +810,6 @@ public class AddEventFragment extends Fragment {
 		aq.id(R.id.label_event_grid_view).getGridView()
 				.setOnItemLongClickListener(new LabelEditClickListener());
 
-//		LayoutInflater inflater5 = getActivity().getLayoutInflater();
-//
-//		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
-//				false);
-//		AQlabel_edit = new AQuery(dialoglayout6);
-//		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
-//		builder6.setView(dialoglayout6);
-//		label_edit = builder6.create();
-//
-//		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
-//				null, false);
-//		AQlabel_del = new AQuery(dialoglayout7);
-//		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
-//		builder7.setView(dialoglayout7);
-//		location_del = builder7.create();
-
-//		AQlabel_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//				location_del.dismiss();
-//			}
-//		});
-//
-//		AQlabel_del.id(R.id.edit_del).clicked(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//				Remove(viewl.getId() + "" + itempos);
-//				((TextView) viewl).setText("New");
-//				GradientDrawable mDrawable = (GradientDrawable) getResources()
-//						.getDrawable(R.drawable.label_simple);
-//				((TextView) viewl).setBackground(mDrawable);
-//				((TextView) viewl).setTextColor(R.color.mountain_mist);
-//
-//				location_del.dismiss();
-//			}
-//		});
-
-//		AQlabel_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//				label_edit.dismiss();
-//				location_del.show();
-//			}
-//		});
-//
-//		AQlabel_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub=
-//				// aqd.id(R.id.add_label_text).text(((TextView)
-//				// viewl).getText().)
-//				AQlabel.id(R.id.label_title_event).text("Edit");
-//				AQlabel.id(R.id.save).text("Save");
-//				label_view = viewl;
-//				label_edit.dismiss();
-//				add_new_label_alert.show();
-//			}
-//		});
 		aq.id(R.id.spinner_label_layout).clicked(new GeneralOnClickListner());
 
 		// ********************************* Label END
@@ -919,8 +836,6 @@ public class AddEventFragment extends Fragment {
 		});
 		
 		// Show image choose options
-	/*	aq.id(R.id.event_attachment)
-				.clicked(new GeneralOnClickListner());*/
 		
 
 		// Gallery and Camera intent
@@ -977,100 +892,7 @@ public class AddEventFragment extends Fragment {
 				});				
 			}
 		});
-//		LayoutInflater inflater = getActivity().getLayoutInflater();
-//
-//		View attachment = inflater
-//				.inflate(R.layout.add_attachment, null, false);
-//		aq_attach = new AQuery(attachment);
 
-		// Gallery and Camera intent
-//		aq_attach
-//				.id(R.id.gallery1)
-//				.typeface(
-//						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
-//				.clicked(new OnClickListener() {
-//
-//					@Override
-//					public void onClick(View v) {
-//						attach_alert.dismiss();
-//						Intent galleryIntent = new Intent(
-//								Intent.ACTION_PICK,
-//								android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//						startActivityForResult(galleryIntent, RESULT_GALLERY);
-//					}
-//				});
-//		aq_attach
-//				.id(R.id.camera1)
-//				.typeface(
-//						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
-//				.clicked(new OnClickListener() {
-//
-//					@Override
-//					public void onClick(View v) {
-//						attach_alert.dismiss();
-//						Intent intent = new Intent(
-//								"android.media.action.IMAGE_CAPTURE");
-//
-//						String path = Environment.getExternalStorageDirectory()
-//								.toString();
-//						File makeDirectory = new File(path + File.separator
-//								+ "OneTodo");
-//						makeDirectory.mkdir();
-//						File photo = new File(Environment
-//								.getExternalStorageDirectory()
-//								+ File.separator
-//								+ "OneToDo" + File.separator, "OneToDo_"
-//								+ System.currentTimeMillis() + ".JPG");
-//						intent.putExtra(MediaStore.EXTRA_OUTPUT,
-//								Uri.fromFile(photo));
-//						imageUri = Uri.fromFile(photo);
-//						startActivityForResult(intent, TAKE_PICTURE);
-//					}
-//				});
-//		aq.id(R.id.add)
-//		AlertDialog.Builder attach_builder = new AlertDialog.Builder(
-//				getActivity());
-//		attach_builder.setView(attachment);
-//		attach_alert = attach_builder.create();
-//		
-//		
-//	
-//		aq.id(R.id.event_attachment).clicked(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// slideUpDown(aq.id(R.id.attachement_layout_include).getView());
-//				attach_alert.show();
-//			}
-//		});
-
-		/*
-		 * aq.id(R.id.event_attachment).clicked(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) { //
-		 * slideUpDown(aq.id(R.id.attachement_layout_include).getView());
-		 * attach_alert.show(); } });
-		 */
-
-		// *********************Priority*******
-		/*
-		 * lastCheckedId = ((RadioGroup) aq.id(R.id.priority_radio_buttons)
-		 * .getView()).getCheckedRadioButtonId(); ((RadioGroup)
-		 * aq.id(R.id.priority_radio_buttons).getView())
-		 * .setOnCheckedChangeListener(new OnCheckedChangeListener() {
-		 * 
-		 * @Override public void onCheckedChanged(RadioGroup group, int
-		 * checkedId) { ((RadioButton) group.findViewById(lastCheckedId))
-		 * .setTextColor(getResources().getColor( R.color.deep_sky_blue));
-		 * ((RadioButton) group.findViewById(checkedId))
-		 * .setTextColor(getResources().getColor( android.R.color.white));
-		 * String abc = ((RadioButton) group
-		 * .findViewById(checkedId)).getText().toString(); if
-		 * (abc.equals("None")) AddTask.priority = 0; else if (abc.equals("!"))
-		 * AddTask.priority = 1; else if (abc.equals("! !")) AddTask.priority =
-		 * 2; else if (abc.equals("! ! !")) AddTask.priority = 3; lastCheckedId
-		 * = checkedId; } });
-		 */
 
 		/**
 		 * View pager for before and location
@@ -1097,12 +919,6 @@ public class AddEventFragment extends Fragment {
 		tabs.setShouldExpand(true);
 		tabs.setViewPager(pager);
 
-		/*
-		 * LayoutInflater inflater4 = getActivity().getLayoutInflater(); View
-		 * dateTimePickerDialog = inflater4.inflate(
-		 * R.layout.date_time_layout_dialog, null, false); AlertDialog.Builder
-		 * builder4 = new AlertDialog.Builder(getActivity());
-		 */
 		builder4.setView(dateTimePickerDialog);
 		date_time_alert = builder4.create();
 		final TextView dayField = (TextView) dateTimePickerDialog
@@ -1111,10 +927,7 @@ public class AddEventFragment extends Fragment {
 				.findViewById(R.id.month_year_field);
 
 		// Date picker implementation for forever dialog
-		/*
-		 * final DatePicker dialogDatePicker = (DatePicker) dateTimePickerDialog
-		 * .findViewById(R.id.date_picker_dialog);
-		 */
+	
 		showRightDateAndTimeForDialog(dayField, monthField);
 		dialogDatePicker.init(currentYear, currentMonDigit, currentDayDigit,
 				new OnDateChangedListener() {
@@ -1136,46 +949,7 @@ public class AddEventFragment extends Fragment {
 					}
 
 				});
-		/*
-		 * final TextView set1 = (TextView) dateTimePickerDialog
-		 * .findViewById(R.id.set); set1.setOnClickListener(new
-		 * OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) { // TODO set.requestFocus();
-		 * dialogDatePicker.clearFocus(); date_time_alert.dismiss(); } });
-		 * TextView cancel1 = (TextView) dateTimePickerDialog
-		 * .findViewById(R.id.cancel); cancel1.setOnClickListener(new
-		 * OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) { date_time_alert.cancel(); }
-		 * });
-		 */
-		// ************ Location
-
-		/*
-		 * locationTextView = (AutoCompleteTextView) aq.id(R.id.location_event)
-		 * .getView(); locationTextView.setAdapter(new
-		 * PlacesAutoCompleteAdapter( getActivity(),
-		 * android.R.layout.simple_spinner_dropdown_item));
-		 * locationTextView.addTextChangedListener(new TextWatcher() {
-		 * 
-		 * @Override public void onTextChanged(CharSequence s, int start, int
-		 * before, int count) { // TODO Auto-generated method stub
-		 * 
-		 * }
-		 * 
-		 * @Override public void beforeTextChanged(CharSequence s, int start,
-		 * int count, int after) { // TODO Auto-generated method stub
-		 * 
-		 * }
-		 * 
-		 * @Override public void afterTextChanged(Editable s) {
-		 * locationTextView.setTextColor(getResources().getColor(
-		 * R.color.deep_sky_blue)); aq.id(R.id.location_event_img).background(
-		 * R.drawable.location_blue);
-		 * 
-		 * } });
-		 */
+	
 
 		// *************************************** Check List
 
@@ -1196,6 +970,43 @@ public class AddEventFragment extends Fragment {
 					}
 				});
 
+		
+		AddTask.aq_menu.id(R.id.menu_item2).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated m111111ethod stub
+				if (taskTitle.length() > 0) {
+					if (taskTitle.getText().length() > 0) {
+						AddTask.aq_menu.id(R.id.menu_item1).textColor(
+								R.color._4d4d4d);
+						AddTask.aq_menu.id(R.id.menu_item2).textColor(
+								R.color._4d4d4d);
+						if (FragmentCheck == 0) {
+							FragmentCheck = 1;
+							title = aq.id(R.id.event_title).getText()
+									.toString();
+							AddTask.popupWindowAdd.dismiss();
+							Fragment fr = new AddTaskComment();
+							FragmentManager manager = getFragmentManager();
+							FragmentTransaction transaction = manager
+									.beginTransaction();
+							if (Constants.Project_task_check == 1) {
+
+								transaction.replace(R.id.content_task, fr);
+							} else {
+
+								transaction.replace(R.id.main_container, fr);
+							}
+							transaction.setCustomAnimations(R.anim.slide_in1,
+									R.anim.slide_out1);
+							transaction.addToBackStack(null);
+							transaction.commit();
+						}
+					}
+				}
+			}
+		});
 		View switchView = aq.id(R.id.add_sub_event).getView();
 		toggleCheckList(switchView);
 
@@ -1213,41 +1024,20 @@ public class AddEventFragment extends Fragment {
 					tempCurrentDayDigit
 							+ Utils.getDayOfMonthSuffix(currentDayDigit))
 			/* .textColor(getResources().getColor(R.color.deep_sky_blue)) */;
-			aq.id(R.id.month_year_field_to).text(currentMon)
-			/* .textColor(getResources().getColor(R.color.deep_sky_blue)) */;
-			/*
-			 * aq.id(R.id.date_time_to) .getImageView() .setBackground(
-			 * getResources() .getDrawable(R.drawable.calendar_blue))
-			 */;
-			/*
-			 * aq.id(R.id.to).textColor(
-			 * getResources().getColor(R.color.deep_sky_blue));
-			 */
+			aq.id(R.id.month_year_field_to).text(currentMon);
 			aq.id(R.id.time_to)
-					.text(tempCurrentHours + " : " + tempCurrentMins)
-			/* .textColor(getResources().getColor(R.color.deep_sky_blue)) */;
+					.text(tempCurrentHours + " : " + tempCurrentMins);
 
 		}
 
 		if (aq.id(R.id.date_time_include_from).getView().getVisibility() == 0) {
-			aq.id(R.id.day_field_from).text(currentDay)
-			/* .textColor(getResources().getColor(R.color.deep_sky_blue)) */;
+			aq.id(R.id.day_field_from).text(currentDay);
 			aq.id(R.id.date_field_from).text(
 					tempCurrentDayDigit
 							+ Utils.getDayOfMonthSuffix(currentDayDigit));
-			aq.id(R.id.month_year_field_from).text(currentMon)
-			/* .textColor(getResources().getColor(R.color.deep_sky_blue)) */;
-			/*
-			 * aq.id(R.id.date_time_from) .getImageView() .setBackground(
-			 * getResources() .getDrawable(R.drawable.calendar_blue));
-			 */
-			/*
-			 * aq.id(R.id.from).textColor(
-			 * getResources().getColor(R.color.deep_sky_blue));
-			 */
+			aq.id(R.id.month_year_field_from).text(currentMon);
 			aq.id(R.id.time_from).text(
-					tempCurrentHours + " : " + tempCurrentMins)
-			/* .textColor(getResources().getColor(R.color.deep_sky_blue)) */;
+					tempCurrentHours + " : " + tempCurrentMins);
 		}
 	}
 
@@ -1369,7 +1159,6 @@ public class AddEventFragment extends Fragment {
 		getActivity().getContentResolver().notifyChange(selectedImage, null);
 		ContentResolver cr = getActivity().getContentResolver();
 		Cursor returnCursor = cr.query(selectedImage, null, null, null, null);
-		// returnCursor.moveToFirst();
 
 		MimeTypeMap mime = MimeTypeMap.getSingleton();
 
@@ -1409,7 +1198,6 @@ public class AddEventFragment extends Fragment {
 							popupWindowAttach.dismiss();
 
 						} else {
-							// layout_MainMenu.getForeground().setAlpha(150);
 							popupWindowAttach.showAsDropDown(arg0, 5, 0);
 						}
 					}
@@ -1447,7 +1235,6 @@ public class AddEventFragment extends Fragment {
 				SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy");
 				by.setText("By Usman Ameer on " + sdf.format(cal.getTime()));
 				filename = selectedImage;
-				// AddTask.path.add(filename);
 				File myFile = new File(selectedImage.toString());
 
 				myFile.getAbsolutePath();
@@ -1469,7 +1256,6 @@ public class AddEventFragment extends Fragment {
 							@Override
 							public void onClick(View v) {
 								item.removeView(child);
-								// child.setVisibility(View.GONE);
 							}
 						});
 
@@ -1531,20 +1317,7 @@ public class AddEventFragment extends Fragment {
 
 			}
 			break;
-		/*
-		 * case R.id.contacts_layout_include: if
-		 * (aq.id(R.id.contacts_layout_include).getView().getVisibility() ==
-		 * View.GONE) { aq.id(R.id.contacts_layout_include) .getView()
-		 * .startAnimation( new ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f, 200,
-		 * aq.id(R.id.contacts_layout_include) .getView(), true)); } break;
-		 */
-		/*
-		 * case R.id.image: if
-		 * (aq.id(R.id.gallery_include).getView().getVisibility() == View.GONE)
-		 * aq.id(R.id.gallery_include) .getView() .startAnimation( new
-		 * ScaleAnimToShow(1.0f, 1.0f, 1.0f, 0.0f, 200,
-		 * aq.id(R.id.gallery_include) .getView(), true)); break;
-		 */
+	
 		case R.id.before_event_lay:
 			if (aq.id(R.id.before_grid_view_linear_event).getView()
 					.getVisibility() == View.GONE) {
@@ -1552,10 +1325,7 @@ public class AddEventFragment extends Fragment {
 					aq.id(R.id.before_event)
 							.text(Constants.beforeArray[1]
 									+ " Before").visibility(View.VISIBLE);
-					/*
-					 * aq.id(R.id.before_event_image).background(
-					 * R.drawable.reminder_blue);
-					 */
+				
 
 				}
 				aq.id(R.id.before_grid_view_linear_event)
@@ -1685,27 +1455,8 @@ public class AddEventFragment extends Fragment {
 		}
 	}
 
-	public void label_add(String name) {/*
-		// AddTask.labelnamedao.notifyAll();
-		List<LabelName> labelname_list1 = AddTask.labelnamedao.loadAll();
-		Toast.makeText(getActivity(), "" + labelname_list1.size(),
-				Toast.LENGTH_SHORT).show();
-		if (labelname_list1.size() < 6) {
-			int g = 0;
-			for (int i = 0; i < labelname_list1.size(); i++)
-				if (labelname_list1.get(i).getName().toString()
-						.equalsIgnoreCase(name)) {
-					g = 1;
-				}
-			if (g == 0) {
-				LabelName labelname = new LabelName(AddTask.f2, name);
-				AddTask.labelnamedao.insert(labelname);
 
-			}
-		}
-	*/}
 
-	// private ChecklistManager mChecklistManager;
 
 	private void toggleCheckList(View switchView) {
 		View newView;
@@ -1776,13 +1527,6 @@ public class AddEventFragment extends Fragment {
 					|| position < 3) {
 
 			} else {
-//				aqd.id(R.id.add_label_text).text(
-//						((TextView) arg1).getText().toString());
-//				aq_del.id(R.id.body).text(
-//						"Label " + ((TextView) arg1).getText().toString()
-//								+ " will be deleted");
-//				aq_edit.id(R.id.add_task_edit_title).text(
-//						"Label: " + ((TextView) arg1).getText().toString());
 				viewl = arg1;
 				itempos = position;
 				listbuilder = new CustomListDialog.Builder(getActivity(), "Label: " + ((TextView) arg1).getText().toString(),itemsForLables);
@@ -1804,11 +1548,6 @@ public class AddEventFragment extends Fragment {
 		            	{
 							AQlabel.id(R.id.add_label_text_event).text(
 									((TextView) arg1).getText().toString());
-//							AQlabel_del.id(R.id.body).text(
-//									"Label " + ((TextView) arg1).getText().toString()
-//											+ " will be deleted");
-//							AQlabel_edit.id(R.id.add_task_edit_title).text(
-//									"Label: " + ((TextView) arg1).getText().toString());
 							viewl = arg1;
 							itempos = position;
 							label_edit.dismiss();
@@ -1919,8 +1658,6 @@ public class AddEventFragment extends Fragment {
 				imageView.setLayoutParams(new GridView.LayoutParams(Utils
 						.convertDpToPixel(40, mContext), Utils
 						.convertDpToPixel(40, mContext)));
-				// imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-				// imageView.setPadding(8, 8, 8, 8);
 			} else {
 				imageView = (ImageView) convertView;
 			}
@@ -1930,7 +1667,6 @@ public class AddEventFragment extends Fragment {
 			mDrawable.setColor(Color.parseColor(Constants.label_colors_dialog[position]));
 			imageView.setBackground(mDrawable);
 
-			// imageView.setImageResource(mThumbIds[position]);
 			return imageView;
 		}
 
@@ -1965,11 +1701,10 @@ public class AddEventFragment extends Fragment {
 		pairs = new ArrayList<NameValuePair>();
 		pairs.add(new BasicNameValuePair("image", encoded));
 
-		// UrlEncodedFormEntity
-		// entity=null;
+
 		try {
 			entity = new UrlEncodedFormEntity(pairs, "UTF-8");
-			// entity.setContentType("application/json");
+
 		} catch (UnsupportedEncodingException e) {
 			// TODO
 			// Auto-generated
@@ -1985,13 +1720,11 @@ public class AddEventFragment extends Fragment {
 					@Override
 					public void callback(String url, JSONObject json,
 							AjaxStatus status) {
-						// dismis();
 						String path = null;
 						try {
 
 							JSONObject obj1 = new JSONObject(json.toString());
 							path = obj1.getString("path");
-							// id = obj1.getInt("result");
 
 						} catch (Exception e) {
 						}

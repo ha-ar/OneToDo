@@ -100,16 +100,13 @@ public class MainActivity extends BaseActivity implements
 	public static int pager_number = 0;
 	private AlarmManagerBroadcastReceiver alarm;
 	private SQLiteDatabase db;
-	static ToDoDao tododao;/*
-	static LabelNameDao labelnamedao;*/
+	static ToDoDao tododao;
 	static LabelDao labeldao;
-	static List<ToDo> todo_obj;
-	// private Long id = null;
+	static List<ToDo> todo_obj; 
 	public ViewPager pager;
 	public TabPagerAdapter tabPagerAdapter;
 	PagerSlidingTabStrip tabs;
-	static QueryBuilder<Label> label1, label2, label3, label4, label5, label6;
-	// private ImageView weatherImage;
+	static QueryBuilder<Label> label1, label2, label3, label4, label5, label6; 
 
 	public static List<Todos> Today, Tomorrow, Upcoming;
 	private ActionBarDrawerToggle actionBarDrawerToggle;
@@ -159,32 +156,7 @@ public class MainActivity extends BaseActivity implements
 		// ***** Initializinf Registration shared prefrences**********//
 		SharedPreferences pref = this.getSharedPreferences("registration", 0);
 		Constants.user_id = pref.getInt("userid", -1);
-
-		// **************************Api Call for Landing data
-		/*if (Constants.user_id != -1) {
-			aq.ajax("http://api.heuristix.net/one_todo/v1/tasks/"
-					+ Constants.user_id, JSONObject.class,
-					new AjaxCallback<JSONObject>() {
-						@Override
-						public void callback(String url, JSONObject json,
-								AjaxStatus status) {
-							Log.v("New ", Constants.user_id + "inside");
-							if (json != null) {
-								Gson gson = new Gson();
-								TaskData obj = new TaskData();
-								obj = gson.fromJson(json.toString(),
-										TaskData.class);
-								TaskData.getInstance().setList(obj);
-								Log.v("JSON",
-										TaskData.getInstance().todos.get(0).notes
-												+ "");
-							}
-							init();
-						}
-					});
-		} else {
-			init();
-		}*/
+ 
 		init();
 
 	}
@@ -257,15 +229,10 @@ public class MainActivity extends BaseActivity implements
 
 	private void init() {
 
-		// ListView notif_list = (ListView) findViewById(R.id.notif_list);
-		// Notify_adapter adapter = new Notify_adapter(this);
-		// notif_list.setAdapter(adapter);
+ 
 
 		// ***** LeftMenudrawer Mange Account feld**********//
-		if (Constants.user_id == -1) {/*
-									 * aq.id(R.id.manage_img).image(R.drawable.
-									 * allday_blue);
-									 */
+		if (Constants.user_id == -1) { 
 			aq.id(R.id.manage_text).text("Verify number");
 		} else {
 			aq.id(R.id.username).text("Registered User");
@@ -343,27 +310,7 @@ public class MainActivity extends BaseActivity implements
 
 		inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
-		// ********* Old
-		/*
-		 * aq.id(R.id.navigation_menu).clicked(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) { mDrawer.toggleMenu(true); }
-		 * });
-		 */
-
-		// ***** right drawer open close**********//
-		// aq.id(R.id.notif).clicked(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View arg0) {
-		// if (!(mDrawerr.isActivated())) {
-		// mDrawerr.openMenu();
-		// } else {
-		// mDrawerr.closeMenu();
-		// }
-		// }
-		// });
-
+		 
 		// ***** left drawer open close**********//
 		aq.id(R.id.right_back).clicked(new OnClickListener() {
 
@@ -372,8 +319,7 @@ public class MainActivity extends BaseActivity implements
 				// mDrawerr.closeMenu();
 			}
 		});
-		layout_MainMenu = (RelativeLayout) findViewById(R.id.container);
-		// layout_MainMenu.getForeground().setAlpha(0);
+		layout_MainMenu = (RelativeLayout) findViewById(R.id.container); 
 		final View view = getLayoutInflater().inflate(R.layout.landing_menu,
 				null, false);
 		aq_menu = new AQuery(this, view);
@@ -382,8 +328,7 @@ public class MainActivity extends BaseActivity implements
 
 		popupWindowTask.setBackgroundDrawable(getResources().getDrawable(
 				android.R.drawable.dialog_holo_light_frame));
-		popupWindowTask.setOutsideTouchable(true);
-		// popupWindowTask.setAnimationStyle(R.style.Animation);
+		popupWindowTask.setOutsideTouchable(true); 
 
 		popupWindowTask.setOnDismissListener(new OnDismissListener() {
 
@@ -399,8 +344,7 @@ public class MainActivity extends BaseActivity implements
 				if (popupWindowTask.isShowing()) {
 					popupWindowTask.dismiss();
 
-				} else {
-					// layout_MainMenu.getForeground().setAlpha(150);
+				} else { 
 					popupWindowTask.showAsDropDown(aq.id(R.id.menu).getView(),
 							5, 10);
 				}
@@ -510,8 +454,7 @@ public class MainActivity extends BaseActivity implements
 				inputMethodManager.toggleSoftInput(
 						InputMethodManager.SHOW_FORCED, 0);
 
-				aq.id(R.id.search_layout).getView().setVisibility(View.VISIBLE);
-				// aq.id(R.id.header_layout).getView().setVisibility(View.GONE);
+				aq.id(R.id.search_layout).getView().setVisibility(View.VISIBLE); 
 				aq.id(R.id.search_text).getEditText().setFocusable(true);
 			}
 		});
@@ -521,8 +464,7 @@ public class MainActivity extends BaseActivity implements
 			public void onClick(View arg0) {
 				inputMethodManager.toggleSoftInput(
 						InputMethodManager.SHOW_FORCED, 0);
-				aq.id(R.id.search_layout).getView().setVisibility(View.GONE);
-				// aq.id(R.id.header_layout).getView().setVisibility(View.VISIBLE);
+				aq.id(R.id.search_layout).getView().setVisibility(View.GONE); 
 			}
 		});
 
@@ -571,9 +513,7 @@ public class MainActivity extends BaseActivity implements
 		aq.id(R.id.todo_layout).clicked(new OnClickListener() {
 
 			@Override
-			public void onClick(View arg0) {
-				// // TextView title = (TextView) findViewById(R.id.weather);
-				// title.setText("To-do's");
+			public void onClick(View arg0) { 
 				getSupportFragmentManager().popBackStack();
 				drawerLayout.closeDrawer(Gravity.LEFT);
 				arg0.setBackgroundColor(Color.parseColor("#F2F2F2"));
@@ -626,10 +566,7 @@ public class MainActivity extends BaseActivity implements
 				Fragment fr = new Calender();
 				FragmentTransaction transaction = getSupportFragmentManager()
 						.beginTransaction(); //
-				/*
-				 * transaction.setCustomAnimations(R.anim.slide_in,
-				 * R.anim.slide_out, R.anim.slide_in, R.anim.slide_out);
-				 */
+			 
 				transaction.replace(R.id.container_inner, fr);
 				transaction.addToBackStack("CALENDAR");
 				transaction.commit();
@@ -641,9 +578,7 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-				getSupportFragmentManager().popBackStack();
-				// TextView title = (TextView) findViewById(R.id.weather);
-				// title.setText("Projects");
+				getSupportFragmentManager().popBackStack(); 
 
 				drawerLayout.closeDrawer(Gravity.LEFT);
 				arg0.setBackgroundColor(Color.parseColor("#F2F2F2"));
@@ -664,11 +599,8 @@ public class MainActivity extends BaseActivity implements
 
 				Fragment fr = new Projects();
 				FragmentTransaction transaction = getSupportFragmentManager()
-						.beginTransaction(); //
-				/*
-				 * transaction.setCustomAnimations(R.anim.slide_in,
-				 * R.anim.slide_out, R.anim.slide_in, R.anim.slide_out);
-				 */
+						.beginTransaction();  
+			 
 
 				transaction.replace(R.id.container_inner, fr);
 				transaction.addToBackStack("PROJECTS");
@@ -690,12 +622,10 @@ public class MainActivity extends BaseActivity implements
 		daoMaster = new DaoMaster(ex_db);
 		daoSession = daoMaster.newSession();
 
-		if (pager_number == 0) {
-			// getUpdatedTaskList(TODAY);
+		if (pager_number == 0) { 
 			updateDate(TODAY);
 		}
-		if (pager_number == 1) {
-			// getUpdatedTaskList(Work);
+		if (pager_number == 1) { 
 			updateDate(Work);
 		}
 
@@ -707,15 +637,13 @@ public class MainActivity extends BaseActivity implements
 		// Bind the tabs to the ViewPager
 		tabs = (PagerSlidingTabStrip) aq.id(R.id.tabs).getView();
 		tabs.setShouldExpand(false);
-		tabs.setDividerColorResource(android.R.color.transparent);
-		// tabs.setIndicatorColorResource(R.color.graytab);
+		tabs.setDividerColorResource(android.R.color.transparent); 
 		tabs.setUnderlineColorResource(android.R.color.transparent);
 		tabs.setTextSize(Utils.getPxFromDp(this, 13));
 		tabs.setIndicatorHeight(Utils.getPxFromDp(this, 3));
 		tabs.setIndicatorColor(Color.parseColor("#ffffff"));
 		tabs.setSmoothScrollingEnabled(true);
-		tabs.setShouldExpand(true);
-		// tabs.setTextColorResource(R.color.graytab);
+		tabs.setShouldExpand(true); 
 		tabs.setAllCaps(false);
 		tabs.setTypeface(null, Typeface.NORMAL);
 		tabs.setOnPageChangeListener(this);
@@ -821,10 +749,8 @@ public class MainActivity extends BaseActivity implements
 
 	}
 
-	public void startRepeatingTimer() {
-		// Context context = this.getApplicationContext();
-		if (alarm != null) {
-			// alarm.SetAlarm(this);
+	public void startRepeatingTimer() { 
+		if (alarm != null) { 
 
 		} else {
 			Toast.makeText(this, "Alarm is null", Toast.LENGTH_SHORT).show();
@@ -858,8 +784,7 @@ public class MainActivity extends BaseActivity implements
 		daoMaster = new DaoMaster(db);
 		daoSession = daoMaster.newSession();
 		tododao = daoSession.getToDoDao();
-		labeldao = daoSession.getLabelDao();/*
-		labelnamedao = daoSession.getLabelNameDao();*/
+		labeldao = daoSession.getLabelDao(); 
 
 	}
 
@@ -989,14 +914,13 @@ public class MainActivity extends BaseActivity implements
 												+ " = ?",
 										new String[] { cursor.getString(cursor
 												.getColumnIndex(ContactsContract.Contacts._ID)) },
-										null);
-						// while (phoneCursor.moveToNext()) {
+										null); 
 						phoneCursor.moveToNext();
 						phoneNumber = phoneCursor
 								.getString(phoneCursor
 										.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 						Constants.Contact.add(phoneNumber);
-						// }
+				 
 						phoneCursor.close();
 					}
 				}

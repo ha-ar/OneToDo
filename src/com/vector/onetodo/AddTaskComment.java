@@ -161,8 +161,7 @@ public class AddTaskComment extends Fragment {
 					aq.id(R.id.comment).text("");
 				}
 			}
-		});
-		// aq.id(R.id.comment_list).getListView().setStackFromBottom(true);
+		}); 
 	}
 
 	public class comment_A extends BaseAdapter {
@@ -221,30 +220,7 @@ public class AddTaskComment extends Fragment {
 			return row;
 		}
 	}
-
-/*	public void addcomment() {
-
-		List<NameValuePair> pairs;
-
-		pairs = new ArrayList<NameValuePair>();
-
-		pairs.add(new BasicNameValuePair("date_created", Constants.user_id + ""));
-
-		pairs.add(new BasicNameValuePair("date_created", aq.id(R.id.comment)
-				.getText().toString()));
-
-		pairs.add(new BasicNameValuePair("date_created", Utils
-				.getCurrentYear(1)
-				+ "-"
-				+ Utils.getCurrentMonthDigit(1)
-				+ "-"
-				+ Utils.getCurrentDayDigit(1)
-				+ " "
-				+ Utils.getCurrentHours()
-				+ ":" + Utils.getCurrentMins() + ":00"));
-
-	}*/
-
+ 
 	public void Savecomment(int id, String comment, String time) {
 		// 0 - for private mode
 		editor.putInt("cMax", id);

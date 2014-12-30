@@ -32,9 +32,7 @@ public class AssignListFragment extends ProjectsTabHolder implements
 	int position__list = -1;
 
 	ImageView img;
-
-	// public static ItemLazyListAdapter todaysAdapter, tomorrowsAdapter,
-	// upcomingAdapter;
+ 
 
 	public static AssignListFragment newInstance(int position) {
 		AssignListFragment myFragment = new AssignListFragment();
@@ -99,9 +97,7 @@ public class AssignListFragment extends ProjectsTabHolder implements
 				}
 				last = linearLayoutChild;
 				ImageView tvCountry = (ImageView) linearLayoutChild
-						.getChildAt(2);
-				// ImageView img=(ImageView) //
-				// arg1.findViewById(R.id.assign_image);
+						.getChildAt(2); 
 				tvCountry.setVisibility(View.VISIBLE);
 				img.setAlpha((float) 1);
 			}
@@ -109,9 +105,7 @@ public class AssignListFragment extends ProjectsTabHolder implements
 
 	}
 
-	/*
-	 * public class Holder { TextView title, location, reminderDate; }
-	 */
+ 
 
 	public class LandingAdapter extends BaseAdapter {
 
@@ -150,8 +144,7 @@ public class AssignListFragment extends ProjectsTabHolder implements
 				view.setTag(holder);
 			} else {
 				holder = (Holder) view.getTag();
-			}/*
-			holder.title.setText("Ttile " + position + 1);*/
+			} 
 			return view;
 		}
 	}
@@ -182,9 +175,7 @@ public class AssignListFragment extends ProjectsTabHolder implements
 		// nothing
 	}
 
-	private void setadapter(Context context, int position) {
-		// todayQuery();
-		// todayAdapter = new LandingAdapter(getActivity(), todayQuery.list());
+	private void setadapter(Context context, int position) { 
 		LandingAdapter adapter = new LandingAdapter(getActivity());
 		listView.setAdapter(adapter);
 	}

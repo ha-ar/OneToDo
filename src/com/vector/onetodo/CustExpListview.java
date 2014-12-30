@@ -24,8 +24,7 @@ public class CustExpListview extends ExpandableListView {
 		try {
 			super.onDetachedFromWindow();
 		} catch (IllegalArgumentException e) {
-			// TODO: Workaround for
-			// http://code.google.com/p/android/issues/detail?id=22751
+			// TODO: Workaround for 
 		}
 	}
 }

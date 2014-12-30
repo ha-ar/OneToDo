@@ -37,7 +37,7 @@ public class TaskListFragment extends ScrollTabHolderFragment implements
 	TextView tx;
 	private ListView listView;
 	public static QueryBuilder<ToDo> todayQuery, tomorrowQuery, upcommingQuery;
-	// private List<Label> label;
+ 
 	public static LandingAdapter todayAdapter, tomorrowAdapter,
 			upComingAdapter;
 	private int position;
@@ -45,10 +45,7 @@ public class TaskListFragment extends ScrollTabHolderFragment implements
 	private static long[] Currentdate;
 	private String[] ToDoName = { "Task", "Event", "Schedule", "Appoinment",
 			"Project" };
-	
-
-	// public static ItemLazyListAdapter todaysAdapter, tomorrowsAdapter,
-	// upcomingAdapter;
+	 
 
 	public static TaskListFragment newInstance(int position) {
 		TaskListFragment myFragment = new TaskListFragment();
@@ -137,45 +134,14 @@ public class TaskListFragment extends ScrollTabHolderFragment implements
 		setadapter(getActivity(), position);
 		listView.setOnScrollListener(this);
 
-		// listView.setOnItemClickListener(new OnItemClickListener() {
-		//
-		// @Override
-		// public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-		// long arg3) {
-		// // TODO Auto-generated method stub
-		// Toast.makeText(getActivity(), "" + arg2, Toast.LENGTH_LONG)
-		// .show();
-		// }
-		// });
+		 
 
 	}
 
-	/*
-	 * public class Holder { TextView title, location, reminderDate; }
-	 */
+	 
 
 	public class LandingAdapter extends BaseAdapter {
-
-		/*Context context;
-		int posit;
-		List<Todos> listToShow;
-
-		public LandingAdapter(Context context, List<Todos> whichList,
-				int poisiton) {
-
-			tx = (TextView) getActivity().findViewById(R.id.pagertext);
-			this.context = context;
-			this.listToShow = whichList;
-			this.posit = position;
-			if (listToShow.size() > 0) {
-				tx.setVisibility(View.GONE);
-			} else {
-
-				tx.setVisibility(View.VISIBLE);
-			}
-
-		}*/
-		
+ 
 		Context context;
 		List<ToDo> listToShow;
 
@@ -234,9 +200,7 @@ public class TaskListFragment extends ScrollTabHolderFragment implements
 			holder.title.setText(listToShow.get(position).getTitle());
 			SimpleDateFormat formatter = new SimpleDateFormat(
 					"dd-MM-yyyy hh:mm");
-			Calendar calendar = Calendar.getInstance();/*
-			calendar.setTimeInMillis(listToShow.get(position).getStart_date());*/
-			//holder.time.setText(formatter.format(calendar.getTime()));
+			Calendar calendar = Calendar.getInstance(); 
 			
 			holder.time.setText(calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT,
 					Locale.US)+" "+calendar.get(Calendar.DAY_OF_MONTH)+" "+calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT,

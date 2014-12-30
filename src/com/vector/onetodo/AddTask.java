@@ -85,13 +85,7 @@ import com.vector.onetodo.utils.Utils;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
 
-/*
- import com.vector.onetodo.db.gen.Repeat;
- import com.vector.onetodo.db.gen.Repeat;
- import com.vector.onetodo.db.gen.Repeat;
- import com.vector.onetodo.db.gen.Repeat;
- import com.vector.onetodo.db.gen.Repeat;
- import com.vector.onetodo.db.gen.LabelNameDao;*/
+ 
 
 public class AddTask extends FragmentActivity {
 
@@ -101,9 +95,7 @@ public class AddTask extends FragmentActivity {
 	int dayPosition;
 	static Long f2 = null;
 	DaoMaster daoMaster;
-	DaoSession daoSession;/*
-						 * static LabelNameDao labelnamedao;
-						 */
+	DaoSession daoSession; 
 	ToDoDao tododao;
 	AssignDao assigndao;
 	CheckListDao checklistdao;
@@ -784,13 +776,7 @@ public class AddTask extends FragmentActivity {
 
 	public void AddData() {
 
-		/*
-		 * Boolean is_allday = null, is_priority = null, is_alertNotification =
-		 * null, is_alertEmail = null; titlecheck = 0; String before = null,
-		 * before1 = "", location = "", givenDateString, assign_task = "assign",
-		 * share_task = "task"; SimpleDateFormat sdf; Date mDate = null; long
-		 * dateInMilliseconds = 0;
-		 */
+	 
 
 		if (Position == 0) {
 			if (!(aq.id(R.id.task_title1).getText().toString().equals(""))) {
@@ -834,13 +820,7 @@ public class AddTask extends FragmentActivity {
 
 				label_name = aq.id(R.id.spinner_labels_task).getText()
 						.toString();
-				if (!label_name.equals("")) {
-					/*
-					 * String label_color = aq.id(R.id.spinner_labels_task)
-					 * .getTextView().getBackground().getConstantState()
-					 * .toString(); Log.v("Log v ", label_color);
-					 */
-				} // location = aq.id(R.id.location_task).getText().toString();
+			 
 				toggleCheckList(aq.id(R.id.add_sub_task).getView());
 				checklist_data = aq.id(R.id.add_sub_task).getEditText()
 						.getText().toString();
@@ -893,13 +873,7 @@ public class AddTask extends FragmentActivity {
 
 				label_name = aq.id(R.id.spinner_labels_event).getText()
 						.toString();
-				if (!label_name.equals("")) {
-					/*
-					 * String label_color = aq.id(R.id.spinner_labels_task)
-					 * .getTextView().getBackground().getConstantState()
-					 * .toString(); Log.v("Log v ", label_color);
-					 */
-				} // location = aq.id(R.id.location_task).getText().toString();
+				 
 
 				toggleCheckList(aq.id(R.id.add_sub_event).getView());
 				checklist_data = aq.id(R.id.add_sub_event).getEditText()
@@ -954,13 +928,7 @@ public class AddTask extends FragmentActivity {
 				repeatdate = AddScheduleFragment.repeatdate;
 
 				label_name = aq.id(R.id.sch_label_txt).getText().toString();
-				if (!label_name.equals("")) {
-					/*
-					 * String label_color = aq.id(R.id.spinner_labels_task)
-					 * .getTextView().getBackground().getConstantState()
-					 * .toString(); Log.v("Log v ", label_color);
-					 */
-				} // location = aq.id(R.id.location_task).getText().toString();
+		 
 
 				toggleCheckList(aq.id(R.id.add_sub_sch).getView());
 				checklist_data = aq.id(R.id.add_sub_sch).getEditText()
@@ -977,10 +945,7 @@ public class AddTask extends FragmentActivity {
 
 				title = aq.id(R.id.appoinment_title).getText().toString();
 
-				/*
-				 * ToggleButton switCh = (ToggleButton)
-				 * findViewById(R.id.switch_sch);
-				 */
+			 
 				is_allday = false;
 
 				start_date = AddAppoinmentFragment.currentYear + "-"
@@ -990,7 +955,7 @@ public class AddTask extends FragmentActivity {
 						+ AddAppoinmentFragment.currentMin + ":00";
 				end_date = null;
 
-				location = null; // aq.id(R.id.sch_location).getText().toString();
+				location = null; 
 
 				before = aq.id(R.id.before_appoinment).getText().toString();
 				if (before.contains("On Arrive") || before.contains("On Leave")) {
@@ -1012,19 +977,13 @@ public class AddTask extends FragmentActivity {
 							.id(R.id.notification_radio_appoin).getCheckBox()
 							.isChecked();
 				}
-				repeat = null; // aq.id(R.id.sch_repeat_txt).getText().toString();
+				repeat = null; 
 
 				repeatdate = null;
 
 				label_name = aq.id(R.id.spinner_labels_appoin).getText()
 						.toString();
-				if (!label_name.equals("")) {
-					/*
-					 * String label_color = aq.id(R.id.spinner_labels_task)
-					 * .getTextView().getBackground().getConstantState()
-					 * .toString(); Log.v("Log v ", label_color);
-					 */
-				} // location = aq.id(R.id.location_task).getText().toString();
+		 
 
 				toggleCheckList(aq.id(R.id.add_sub_appoinment).getView());
 				checklist_data = aq.id(R.id.add_sub_appoinment).getEditText()
@@ -1040,11 +999,7 @@ public class AddTask extends FragmentActivity {
 				titlecheck = 5;
 
 				title = aq.id(R.id.project_title).getText().toString();
-
-				/*
-				 * ToggleButton switCh = (ToggleButton)
-				 * findViewById(R.id.switch_sch);
-				 */
+ 
 				is_allday = false;
 
 				start_date = AddProjectFragment.currentYear + "-"
@@ -1054,11 +1009,9 @@ public class AddTask extends FragmentActivity {
 						+ AddProjectFragment.currentMin + ":00";
 				end_date = null;
 
-				location = null; // aq.id(R.id.sch_location).getText().toString();
+				location = null;  
 
-				before = null; // aq.id(R.id.before_appoinment).getText().toString();
-				// if (before.contains("On Arrive") ||
-				// before.contains("On Leave")) {
+				before = null;  
 				is_time = false;
 				is_location = false;
 				r_location = null;
@@ -1068,24 +1021,17 @@ public class AddTask extends FragmentActivity {
 				is_alertEmail = false;
 				is_alertNotification = false;
 
-				repeat = null; // aq.id(R.id.sch_repeat_txt).getText().toString();
+				repeat = null; 
 
 				repeatdate = null;
 				
 				label_name = aq.id(R.id.spinner_labels_project).getText()
 						.toString();
-				if (!label_name.equals("")) {
-					/*
-					 * String label_color = aq.id(R.id.spinner_labels_task)
-					 * .getTextView().getBackground().getConstantState()
-					 * .toString(); Log.v("Log v ", label_color);
-					 */
-				} // location = aq.id(R.id.location_task).getText().toString();
+			 
 
-				checklist_data = null;// aq.id(R.id.add_sub_appoinment).getEditText()
-				// .getText().toString();
+				checklist_data = null; 
 
-				notes = null;// aq.id(R.id.notes_appoinment).getText().toString();
+				notes = null; 
 
 			}
 		}
@@ -1180,16 +1126,12 @@ public class AddTask extends FragmentActivity {
 			todoset.setTitle(title);
 			todoset.setStart_date(dateInMilliseconds);
 			todoset.setEnd_date(dateInMilliseconds);
-			todoset.setIs_allday(is_allday);/*
-											 * todoset.setIs_priority(is_priority
-											 * );
-											 */
+			todoset.setIs_allday(is_allday); 
 			todoset.setLocation(location);
 			todoset.setNotes(notes);
 
 			Label label = new Label();
-			label.setLabel_name(label_name);
-			// long f=60;
+			label.setLabel_name(label_name); 
 			label.setId(f2);
 			labeldao.insert(label);
 			todoset.setLabel(label);
@@ -1223,8 +1165,7 @@ public class AddTask extends FragmentActivity {
 			checklistdao.insert(checklist);
 			todoset.setCheckList(checklist);
 
-			for (int i = 1; i <= MaxId; i++) {
-				// AddTask.attach.getString(1 + "path" + i, null);
+			for (int i = 1; i <= MaxId; i++) { 
 				pairs.add(new BasicNameValuePair("todo_attachment[" + (i - 1)
 						+ "][attachment_path]", AddTask.attach.getString(
 						titlecheck + "path" + i, null)));
@@ -1244,15 +1185,7 @@ public class AddTask extends FragmentActivity {
 				}
 			}
 
-			/*
-			 * Share share = new Share(); share.setId(f2);
-			 * share.setFriends_id(share.getFriends_id());
-			 * share.setTodo_id(share.getTodo_id()); sharedao.insert(share);
-			 * 
-			 * Assign assign = new Assign(); assign.setId(f2);
-			 * assign.setFriends_id(share.getFriends_id());
-			 * assign.setTodo_id(share.getTodo_id()); assigndao.insert(assign);
-			 */
+		 
 
 			Friends friend = new Friends();
 			friend.setId(f2);
@@ -1293,9 +1226,7 @@ public class AddTask extends FragmentActivity {
 		tododao = daoSession.getToDoDao();
 		commentdao = daoSession.getCommentDao();
 		repeatdao = daoSession.getRepeatDao();
-		/*
-		 * labelnamedao = daoSession.getLabelNameDao();
-		 */
+ 
 		reminderdao = daoSession.getReminderDao();
 
 	}
@@ -1375,52 +1306,7 @@ public class AddTask extends FragmentActivity {
 			}
 
 			finish();
-			/*
-			 * Log.v("Response ", temp);
-			 * aq.ajax("http://api.heuristix.net/one_todo/v1/tasks/" +
-			 * Constants.user_id, JSONObject.class, new
-			 * AjaxCallback<JSONObject>() {
-			 * 
-			 * @Override public void callback(String url, JSONObject json,
-			 * AjaxStatus status) { Log.v("New ", Constants.user_id + "inside");
-			 * if (json != null) { Gson gson = new Gson(); TaskData obj = new
-			 * TaskData(); obj = gson.fromJson(json.toString(), TaskData.class);
-			 * TaskData.getInstance().setList(obj); Log.v("JSON",
-			 * TaskData.getInstance().todos.get(0).notes + ""); }
-			 * 
-			 * MainActivity.Today = new ArrayList<Todos>();
-			 * MainActivity.Tomorrow = new ArrayList<Todos>();
-			 * MainActivity.Upcoming = new ArrayList<Todos>();
-			 * MainActivity.CurrentDate = Calendar.getInstance();
-			 * SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd"); Date
-			 * today = null; try { today = sdf.parse(sdf
-			 * .format(MainActivity.CurrentDate .getTime())); } catch
-			 * (ParseException e1) { // TODO Auto-generated catch block
-			 * e1.printStackTrace(); }
-			 * 
-			 * MainActivity.CurrentDate.add(Calendar.DATE, 1); Date tomorrow =
-			 * null; try { tomorrow = sdf.parse(sdf
-			 * .format(MainActivity.CurrentDate .getTime())); } catch
-			 * (ParseException e1) { // TODO Auto-generated catch block
-			 * e1.printStackTrace(); } Date date = null; for (int i = 0; i <
-			 * TaskData.getInstance().todos .size(); i++) { if
-			 * (TaskData.getInstance().todos.get(i).start_date != null) { try {
-			 * date = sdf.parse(TaskData.getInstance().todos
-			 * .get(i).start_date); } catch (ParseException e) { // TODO
-			 * Auto-generated catch block e.printStackTrace(); }
-			 * 
-			 * if (date.equals(today)) { MainActivity.Today.add((TaskData
-			 * .getInstance().todos.get(i))); } else if (date.equals(tomorrow))
-			 * { MainActivity.Tomorrow.add((TaskData
-			 * .getInstance().todos.get(i))); } else if (date.after(tomorrow)) {
-			 * MainActivity.Upcoming.add((TaskData
-			 * .getInstance().todos.get(i))); } } } dialog.dismiss();
-			 * Log.v("today+  tomorw+ upcoming ", MainActivity.Today.size() +
-			 * " " + MainActivity.Tomorrow.size() + " " +
-			 * MainActivity.Upcoming.size()); finish();
-			 * 
-			 * } });
-			 */
+		 
 
 		}
 
@@ -1451,10 +1337,7 @@ public class AddTask extends FragmentActivity {
 						"2014-11-02 04:05:05"));
 			}
 
-			/*
-			 * if (titlecheck == 1 || titlecheck == 4) pairs.add(new
-			 * BasicNameValuePair("todo[priority]", priority + ""));
-			 */
+		 
 
 			if (notes != null)
 				pairs.add(new BasicNameValuePair("todo[notes]", notes));
@@ -1483,8 +1366,7 @@ public class AddTask extends FragmentActivity {
 					pairs.add(new BasicNameValuePair(
 							"todo_repeat[repeat_until]", repeatdate));
 			}
-			for (int i = 1; i <= MaxId; i++) {
-				// AddTask.attach.getString(1 + "path" + i, null);
+			for (int i = 1; i <= MaxId; i++) { 
 				pairs.add(new BasicNameValuePair("todo_attachment[" + (i - 1)
 						+ "][attachment_path]", AddTask.attach.getString(
 						titlecheck + "path" + i, null)));

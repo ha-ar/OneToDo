@@ -76,27 +76,9 @@ public class AddTaskBeforeFragment extends Fragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-//		LayoutInflater inflater5 = getActivity().getLayoutInflater();
-//
-//		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
-//				false);
-//		aq_edit = new AQuery(dialoglayout6);
-//		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
-//		builder6.setView(dialoglayout6);
-//		//location_edit = builder6.create();
-//
-//		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
-//				null, false);
-//		aq_del = new AQuery(dialoglayout7);
-//		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
-//		builder7.setView(dialoglayout7);
-//		
+ 
 
-		if (position == 0) {/*
-							 * final ArrayAdapter<String> beforeAdapter = new
-							 * ArrayAdapter<String>( getActivity(),
-							 * R.layout.grid_layout_textview, beforeArray);
-							 */
+		if (position == 0) { 
 
 			aq.id(R.id.notification_radio).getCheckBox()
 					.setOnClickListener(new OnClickListener() {
@@ -159,8 +141,7 @@ public class AddTaskBeforeFragment extends Fragment {
 										((TextView) textView)
 												.setTextColor(getResources()
 														.getColor(
-																R.color._4d4d4d));
-									// convertView.setSelected(true);
+																R.color._4d4d4d)); 
 									return textView;
 								}
 
@@ -222,13 +203,7 @@ public class AddTaskBeforeFragment extends Fragment {
 							before.setVisibility(View.VISIBLE);
 							before.setText(
 									Constants.beforeArray[position]+" Before");
-						}
-					/*	before.setTextColor(getResources().getColor(
-								R.color.deep_sky_blue));*/
-						/*ImageView reminderImage = (ImageView) getActivity()
-								.findViewById(R.id.reminder_image);
-						reminderImage.setBackground(getResources().getDrawable(
-								R.drawable.reminder_blue));*/
+						} 
 					}
 				}
 
@@ -250,13 +225,7 @@ public class AddTaskBeforeFragment extends Fragment {
 					numberPicker.clearFocus();
 					customDays.clearFocus();
 					before.setText(numberPicker.getValue()
-							+ " " + Constants.beforevalues[customDays.getValue()]+" Before");
-					/*before.setTextColor(getResources().getColor(
-							R.color.deep_sky_blue));*/
-					/*ImageView reminderImage = (ImageView) getActivity()
-							.findViewById(R.id.reminder_image);
-					reminderImage.setBackground(getResources().getDrawable(
-							R.drawable.reminder_blue));*/
+							+ " " + Constants.beforevalues[customDays.getValue()]+" Before"); 
 					numberPicker.getValue();
 					alert.dismiss();
 				}
@@ -299,9 +268,7 @@ public class AddTaskBeforeFragment extends Fragment {
 							.id(R.id.home).getText().toString().equals(""))) {
 
 						((TextView) viewP).setTextColor(Color
-								.parseColor("#000000"));
-						// ((TextView)
-						// viewP).setBackgroundColor(Color.parseColor("#999999"));
+								.parseColor("#000000"));  
 						aq.id(R.id.location_before).text(
 								aqd.id(R.id.adress).getText());
 						((TextView) viewP).setText(aqd.id(R.id.home).getText());
@@ -354,58 +321,7 @@ public class AddTaskBeforeFragment extends Fragment {
 			aq.id(R.id.pre_defined_2).clicked(new LocationTagClickListener());
 			aq.id(R.id.pre_defined_3).clicked(new LocationTagClickListener());
 			aq.id(R.id.pre_defined_4).clicked(new LocationTagClickListener());
-
-//			aq_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View arg0) {
-//					// TODO Auto-generated method stub
-//					location_del.dismiss();
-//				}
-//			});
-//
-//			aq_del.id(R.id.edit_del).clicked(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View arg0) {
-//					// TODO Auto-generated method stub
-//					((TextView) viewl).setText("New");
-//					((TextView) viewl).setTextColor(Color.GRAY);
-//					((TextView) viewl)
-//							.setBackgroundResource(R.color.light_grey_color);
-//					remove(viewl.getId());
-//					aq.id(R.id.location_before).text("");
-//					location_del.dismiss();
-//				}
-//			});
-
-//			aq_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View arg0) {
-//					// TODO Auto-generated method stub
-//					aqd.id(R.id.adress).text("");
-//					aqd.id(R.id.home).text("");
-//					location_edit.dismiss();
-//					location_del.show();
-//				}
-//			});
-//
-//			aq_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View arg0) {
-//					// TODO Auto-generated method stub=
-//					aqd.id(R.id.add_location_title).text("Edit");
-//					aqd.id(R.id.save).text("SAVE");
-//					location_edit.dismiss();
-//					location.show();
-//				}
-//			});
-
-			// aq.id(R.id.pre_defined_new).clicked(new
-			// LocationTagClickListener());
-
+ 
 			aq.id(R.id.arrive_leave_checkbox_layout).visible();
 			AutoCompleteTextView locationTextView = (AutoCompleteTextView) aq
 					.id(R.id.location_before).getView();
@@ -432,13 +348,7 @@ public class AddTaskBeforeFragment extends Fragment {
 							before.setText("On "
 									+ aq.id(checkedId).getText().toString());
 							previousSelectedLocation = group
-									.findViewById(checkedId);
-							/*before.setTextColor(getResources().getColor(
-									R.color.active));*/
-							/*ImageView reminderImage = (ImageView) getActivity()
-									.findViewById(R.id.reminder_image);
-							reminderImage.setBackground(getResources()
-									.getDrawable(R.drawable.reminder_blue));*/
+									.findViewById(checkedId); 
 						}
 					});
 		}
@@ -482,14 +392,7 @@ public class AddTaskBeforeFragment extends Fragment {
 			} else {
 				load(view.getId());
 				aqd.id(R.id.adress).text(padress);
-				aqd.id(R.id.home).text(((TextView) view).getText().toString());
-//				aq_del.id(R.id.body).text(
-//						"Location tag "
-//								+ ((TextView) view).getText().toString()
-//								+ " will be deleted");
-//				aq_edit.id(R.id.add_task_edit_title).text(
-//						"Location tag:"
-//								+ ((TextView) view).getText().toString());
+				aqd.id(R.id.home).text(((TextView) view).getText().toString()); 
 				viewl = view;
 				listbuilder = new CustomListDialog.Builder(getActivity(), "Location tag:"
 				+ ((TextView) view).getText().toString(),items);

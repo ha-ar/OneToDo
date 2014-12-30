@@ -81,27 +81,9 @@ public class AddAppoinmentBeforeFragment extends Fragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		setRetainInstance(true);
-//		LayoutInflater inflater5 = getActivity().getLayoutInflater();
-//
-//		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
-//				false);
-//		aq_edit = new AQuery(dialoglayout6);
-//		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
-//		builder6.setView(dialoglayout6);
-//		location_edit = builder6.create();
-//
-//		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
-//				null, false);
-//		aq_del = new AQuery(dialoglayout7);
-//		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
-//		builder7.setView(dialoglayout7);
-//		location_del = builder7.create();
 
-		if (position == 0) {/*
-							 * final ArrayAdapter<String> beforeAdapter = new
-							 * ArrayAdapter<String>( getActivity(),
-							 * R.layout.grid_layout_textview, beforeArray);
-							 */
+
+		if (position == 0) {
 
 			aq.id(R.id.notification_radio_appoin).getCheckBox()
 					.setOnClickListener(new OnClickListener() {
@@ -165,7 +147,6 @@ public class AddAppoinmentBeforeFragment extends Fragment {
 												.setTextColor(getResources()
 														.getColor(
 																R.color._4d4d4d));
-									// convertView.setSelected(true);
 									return textView;
 								}
 
@@ -295,8 +276,6 @@ public class AddAppoinmentBeforeFragment extends Fragment {
 
 						((TextView) viewP).setTextColor(Color
 								.parseColor("#000000"));
-						// ((TextView)
-						// viewP).setBackgroundColor(Color.parseColor("#999999"));
 						aq.id(R.id.location_before_appoin).text(
 								aqd.id(R.id.adress).getText());
 						((TextView) viewP).setText(aqd.id(R.id.home).getText());
@@ -351,56 +330,6 @@ public class AddAppoinmentBeforeFragment extends Fragment {
 			aq.id(R.id.pre_defined_3).clicked(new LocationTagClickListener());
 			aq.id(R.id.pre_defined_4).clicked(new LocationTagClickListener());
 
-//			aq_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View arg0) {
-//					// TODO Auto-generated method stub
-//					location_del.dismiss();
-//				}
-//			});
-//
-//			aq_del.id(R.id.edit_del).clicked(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View arg0) {
-//					// TODO Auto-generated method stub
-//					((TextView) viewl).setText("New");
-//					((TextView) viewl).setTextColor(R.color.grey);
-//					((TextView) viewl)
-//							.setBackgroundResource(R.color.light_grey_color);
-//					remove(viewl.getId());
-//					aq.id(R.id.location_before_appoin).text("");
-//					location_del.dismiss();
-//				}
-//			});
-//
-//			aq_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View arg0) {
-//					// TODO Auto-generated method stub
-//					aqd.id(R.id.adress).text("");
-//					aqd.id(R.id.home).text("");
-//					location_edit.dismiss();
-//					location_del.show();
-//				}
-//			});
-//
-//			aq_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View arg0) {
-//					// TODO Auto-generated method stub=
-//					aqd.id(R.id.add_location_title).text("Edit");
-//					aqd.id(R.id.save).text("Save");
-//					location_edit.dismiss();
-//					location.show();
-//				}
-//			});
-
-			// aq.id(R.id.pre_defined_new).clicked(new
-			// LocationTagClickListener());
 
 			aq.id(R.id.arrive_leave_checkbox_layout).visible();
 			AutoCompleteTextView locationTextView = (AutoCompleteTextView) aq
@@ -471,13 +400,6 @@ public class AddAppoinmentBeforeFragment extends Fragment {
 				load(view.getId());
 				aqd.id(R.id.adress).text(padress);
 				aqd.id(R.id.home).text(((TextView) view).getText().toString());
-//				aq_del.id(R.id.body).text(
-//						"Location tag "
-//								+ ((TextView) view).getText().toString()
-//								+ " will be deleted");
-//				aq_edit.id(R.id.add_task_edit_title).text(
-//						"Location tag:"
-//								+ ((TextView) view).getText().toString());
 				viewl = view;
 				listbuilder = new CustomListDialog.Builder(getActivity(), "Location tag:"
 				+ ((TextView) view).getText().toString(),items);
