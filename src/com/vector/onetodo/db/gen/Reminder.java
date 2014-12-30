@@ -7,11 +7,11 @@ package com.vector.onetodo.db.gen;
 public class Reminder {
 
     private Long id;
-    private Boolean is_time;
-    private Boolean is_location;
+    private Boolean is_time_location;
     private Boolean is_alertNotification;
     private Boolean is_alertEmail;
     private String location;
+    private String location_tag;
     private Integer location_type;
     private Long time;
 
@@ -22,13 +22,13 @@ public class Reminder {
         this.id = id;
     }
 
-    public Reminder(Long id, Boolean is_time, Boolean is_location, Boolean is_alertNotification, Boolean is_alertEmail, String location, Integer location_type, Long time) {
+    public Reminder(Long id, Boolean is_time_location, Boolean is_alertNotification, Boolean is_alertEmail, String location, String location_tag, Integer location_type, Long time) {
         this.id = id;
-        this.is_time = is_time;
-        this.is_location = is_location;
+        this.is_time_location = is_time_location;
         this.is_alertNotification = is_alertNotification;
         this.is_alertEmail = is_alertEmail;
         this.location = location;
+        this.location_tag = location_tag;
         this.location_type = location_type;
         this.time = time;
     }
@@ -41,20 +41,12 @@ public class Reminder {
         this.id = id;
     }
 
-    public Boolean getIs_time() {
-        return is_time;
+    public Boolean getIs_time_location() {
+        return is_time_location;
     }
 
-    public void setIs_time(Boolean is_time) {
-        this.is_time = is_time;
-    }
-
-    public Boolean getIs_location() {
-        return is_location;
-    }
-
-    public void setIs_location(Boolean is_location) {
-        this.is_location = is_location;
+    public void setIs_time_location(Boolean is_time_location) {
+        this.is_time_location = is_time_location;
     }
 
     public Boolean getIs_alertNotification() {
@@ -79,6 +71,14 @@ public class Reminder {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getLocation_tag() {
+        return location_tag;
+    }
+
+    public void setLocation_tag(String location_tag) {
+        this.location_tag = location_tag;
     }
 
     public Integer getLocation_type() {

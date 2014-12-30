@@ -1,5 +1,6 @@
 package com.vector.onetodo;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -64,6 +65,14 @@ public class Calender extends Fragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+
+		/*
+		 * @Override protected void onCreate(Bundle savedInstanceState) {
+		 * super.onCreate(savedInstanceState);
+		 * setContentView(R.layout.activity_main);
+		 */
+
+		final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
 
 		// **** If you want normal CaldroidFragment, use below line ****
 		caldroidFragment = new CaldroidFragment();

@@ -1,10 +1,10 @@
 package com.vector.onetodo;
 
-import net.simonvt.numberpicker.NumberPicker;
-import uk.me.lewisdeane.ldialogs.BaseDialog.Alignment;
 import uk.me.lewisdeane.ldialogs.CustomDialog;
-import uk.me.lewisdeane.ldialogs.CustomDialog.ClickListener;
 import uk.me.lewisdeane.ldialogs.CustomListDialog;
+import uk.me.lewisdeane.ldialogs.BaseDialog.Alignment;
+import uk.me.lewisdeane.ldialogs.CustomDialog.ClickListener;
+import net.simonvt.numberpicker.NumberPicker;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -23,6 +23,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -80,6 +81,22 @@ public class AddEventBeforeFragment extends Fragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+
+//		LayoutInflater inflater5 = getActivity().getLayoutInflater();
+//
+//		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
+//				null, false);
+//		aq_del = new AQuery(dialoglayout7);
+//		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
+//		builder7.setView(dialoglayout7);
+//		location_del = builder7.create();
+//
+//		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
+//				false);
+//		aq_edit = new AQuery(dialoglayout6);
+//		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
+//		builder6.setView(dialoglayout6);
+//		location_edit = builder6.create();
 
 		if (position == 0) {
 
@@ -544,7 +561,6 @@ public class AddEventBeforeFragment extends Fragment {
 									+ " will be deleted");
 		            		dialogbuilder.negativeText("Cancel");
 		            		dialogbuilder.darkTheme(false);
-		            		dialogbuilder.rightToLeft(true);
 		            		dialogbuilder.titleTextSize(22);
 		            		dialogbuilder.contentTextSize(18);
 		            		dialogbuilder.buttonTextSize(14);

@@ -71,7 +71,6 @@ import com.vector.onetodo.db.gen.DaoMaster.DevOpenHelper;
 import com.vector.onetodo.db.gen.DaoSession;
 import com.vector.onetodo.db.gen.Label;
 import com.vector.onetodo.db.gen.LabelDao;
-import com.vector.onetodo.db.gen.LabelNameDao;
 import com.vector.onetodo.db.gen.ToDo;
 import com.vector.onetodo.db.gen.ToDoDao;
 import com.vector.onetodo.utils.Constants;
@@ -101,8 +100,8 @@ public class MainActivity extends BaseActivity implements
 	public static int pager_number = 0;
 	private AlarmManagerBroadcastReceiver alarm;
 	private SQLiteDatabase db;
-	static ToDoDao tododao;
-	static LabelNameDao labelnamedao;
+	static ToDoDao tododao;/*
+	static LabelNameDao labelnamedao;*/
 	static LabelDao labeldao;
 	static List<ToDo> todo_obj;
 	// private Long id = null;
@@ -140,7 +139,7 @@ public class MainActivity extends BaseActivity implements
 		// ******* Phone contact , name list
 		Constants.Name = new ArrayList<String>();
 		Constants.Contact = new ArrayList<String>();
-//		new Phone_contact().execute();
+		new Phone_contact().execute();
 
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -162,7 +161,7 @@ public class MainActivity extends BaseActivity implements
 		Constants.user_id = pref.getInt("userid", -1);
 
 		// **************************Api Call for Landing data
-		if (Constants.user_id != -1) {
+		/*if (Constants.user_id != -1) {
 			aq.ajax("http://api.heuristix.net/one_todo/v1/tasks/"
 					+ Constants.user_id, JSONObject.class,
 					new AjaxCallback<JSONObject>() {
@@ -185,7 +184,8 @@ public class MainActivity extends BaseActivity implements
 					});
 		} else {
 			init();
-		}
+		}*/
+		init();
 
 	}
 
@@ -194,7 +194,6 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		menu.clear();
 		getMenuInflater().inflate(R.menu.main, menu);
 
 		this.menu = menu;
@@ -236,29 +235,12 @@ public class MainActivity extends BaseActivity implements
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		switch (id) {
-		case R.id.action_notification:
-			toggleRightDrawer();
-			break;
-
-		default:
-			break;
-		}
 		if (id == R.id.action_settings) {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	private void toggleRightDrawer(){
-		if(drawerLayout.isDrawerVisible(Gravity.RIGHT)){
-			drawerLayout.closeDrawer(Gravity.RIGHT);
-			getSupportActionBar().setTitle(R.string.close_drawer);
-		}
-		else{
-			drawerLayout.openDrawer(Gravity.RIGHT);
-			getSupportActionBar().setTitle("Notifications");
-		}
-	}
+
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
@@ -361,8 +343,35 @@ public class MainActivity extends BaseActivity implements
 
 		inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
+		// ********* Old
+		/*
+		 * aq.id(R.id.navigation_menu).clicked(new OnClickListener() {
+		 * 
+		 * @Override public void onClick(View v) { mDrawer.toggleMenu(true); }
+		 * });
+		 */
+
+		// ***** right drawer open close**********//
+		// aq.id(R.id.notif).clicked(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View arg0) {
+		// if (!(mDrawerr.isActivated())) {
+		// mDrawerr.openMenu();
+		// } else {
+		// mDrawerr.closeMenu();
+		// }
+		// }
+		// });
 
 		// ***** left drawer open close**********//
+		aq.id(R.id.right_back).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// mDrawerr.closeMenu();
+			}
+		});
 		layout_MainMenu = (RelativeLayout) findViewById(R.id.container);
 		// layout_MainMenu.getForeground().setAlpha(0);
 		final View view = getLayoutInflater().inflate(R.layout.landing_menu,
@@ -383,6 +392,20 @@ public class MainActivity extends BaseActivity implements
 			}
 		});
 
+		aq.id(R.id.menu).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				if (popupWindowTask.isShowing()) {
+					popupWindowTask.dismiss();
+
+				} else {
+					// layout_MainMenu.getForeground().setAlpha(150);
+					popupWindowTask.showAsDropDown(aq.id(R.id.menu).getView(),
+							5, 10);
+				}
+			}
+		});
 
 		// DATE Dialog
 		View dateTimePickerDialog = getLayoutInflater().inflate(
@@ -492,6 +515,16 @@ public class MainActivity extends BaseActivity implements
 				aq.id(R.id.search_text).getEditText().setFocusable(true);
 			}
 		});
+		aq.id(R.id.search_back).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				inputMethodManager.toggleSoftInput(
+						InputMethodManager.SHOW_FORCED, 0);
+				aq.id(R.id.search_layout).getView().setVisibility(View.GONE);
+				// aq.id(R.id.header_layout).getView().setVisibility(View.VISIBLE);
+			}
+		});
 
 
 		// Menu Drawer on click change items
@@ -518,9 +551,9 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-//				if (Constants.user_id == -1) {
-//
-//				} else {
+				if (Constants.user_id == -1) {
+
+				} else {
 					getSupportFragmentManager().popBackStack("SETTING",
 							FragmentManager.POP_BACK_STACK_INCLUSIVE);
 					Fragment fr = new Accounts();
@@ -530,7 +563,7 @@ public class MainActivity extends BaseActivity implements
 					transaction.addToBackStack("ACCOUNTS");
 					transaction.commit();
 					drawerLayout.closeDrawer(Gravity.LEFT);
-//				}
+				}
 
 			}
 		});
@@ -542,8 +575,6 @@ public class MainActivity extends BaseActivity implements
 				// // TextView title = (TextView) findViewById(R.id.weather);
 				// title.setText("To-do's");
 				getSupportFragmentManager().popBackStack();
-				
-				refreshMenu();
 				drawerLayout.closeDrawer(Gravity.LEFT);
 				arg0.setBackgroundColor(Color.parseColor("#F2F2F2"));
 
@@ -660,9 +691,11 @@ public class MainActivity extends BaseActivity implements
 		daoSession = daoMaster.newSession();
 
 		if (pager_number == 0) {
+			// getUpdatedTaskList(TODAY);
 			updateDate(TODAY);
 		}
 		if (pager_number == 1) {
+			// getUpdatedTaskList(Work);
 			updateDate(Work);
 		}
 
@@ -693,6 +726,11 @@ public class MainActivity extends BaseActivity implements
 
 		aq.id(R.id.add_task_button).typeface(
 				TypeFaces.get(this, Constants.ICON_FONT));
+		Intent intent = new Intent(MainActivity.this, AddTask.class);
+		intent.putExtra("position", pager.getCurrentItem());
+		startActivity(intent);
+		overridePendingTransition(R.anim.slide_in1, R.anim.slide_out1);
+		
 		aq.id(R.id.add_task_button).clicked(new OnClickListener() {
 
 			@Override
@@ -719,15 +757,6 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		 if (this.getSupportFragmentManager().getBackStackEntryCount() == 0){
-			 refreshMenu();
-		 }
-	}
-	
-	public void refreshMenu(){
-		getSupportActionBar().setTitle(R.string.close_drawer);
-		menu.clear();
-		onCreateOptionsMenu(menu);
 	}
 
 	void updateDate(int days) {
@@ -829,8 +858,8 @@ public class MainActivity extends BaseActivity implements
 		daoMaster = new DaoMaster(db);
 		daoSession = daoMaster.newSession();
 		tododao = daoSession.getToDoDao();
-		labeldao = daoSession.getLabelDao();
-		labelnamedao = daoSession.getLabelNameDao();
+		labeldao = daoSession.getLabelDao();/*
+		labelnamedao = daoSession.getLabelNameDao();*/
 
 	}
 

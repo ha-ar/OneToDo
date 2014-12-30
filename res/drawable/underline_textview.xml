@@ -6,9 +6,11 @@
             <solid android:color="@color/active" />
         </shape>
     </item>
-    <item android:bottom="1.5dp">
+    <item
+        android:bottom="1.5dp"
+       >
         <shape android:shape="rectangle" >
-            <solid android:color="@color/light_grey_color" />
+            <solid android:color="#ffffff" />
         </shape>
     </item>
 

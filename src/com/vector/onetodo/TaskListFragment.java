@@ -40,12 +40,12 @@ public class TaskListFragment extends ScrollTabHolderFragment implements
 	// private List<Label> label;
 	public static LandingAdapter todayAdapter, tomorrowAdapter,
 			upComingAdapter;
-
 	private int position;
 	private View mFakeHeader;
 	private static long[] Currentdate;
 	private String[] ToDoName = { "Task", "Event", "Schedule", "Appoinment",
 			"Project" };
+	
 
 	// public static ItemLazyListAdapter todaysAdapter, tomorrowsAdapter,
 	// upcomingAdapter;
@@ -135,6 +135,7 @@ public class TaskListFragment extends ScrollTabHolderFragment implements
 		super.onViewCreated(view, savedInstanceState);
 		position = getArguments().getInt("position");
 		setadapter(getActivity(), position);
+		listView.setOnScrollListener(this);
 
 		// listView.setOnItemClickListener(new OnItemClickListener() {
 		//
@@ -155,7 +156,7 @@ public class TaskListFragment extends ScrollTabHolderFragment implements
 
 	public class LandingAdapter extends BaseAdapter {
 
-		Context context;
+		/*Context context;
 		int posit;
 		List<Todos> listToShow;
 
@@ -173,6 +174,14 @@ public class TaskListFragment extends ScrollTabHolderFragment implements
 				tx.setVisibility(View.VISIBLE);
 			}
 
+		}*/
+		
+		Context context;
+		List<ToDo> listToShow;
+
+		public LandingAdapter(Context context, List<ToDo> whichList) {
+			this.context = context;
+			this.listToShow = whichList;
 		}
 
 		@Override
@@ -210,60 +219,34 @@ public class TaskListFragment extends ScrollTabHolderFragment implements
 			} else {
 				holder = (Holder) view.getTag();
 			}
-			// Iconify.setIcon(holder.icon, IconValue.fa_exclamation);
-			// holder.type.setText(ToDoName[Integer.parseInt(TaskData.getInstance().todos.get(position).todo_type_id)-1]);
-			// holder.icon.setTextSize(16);
-			holder.title.setText(listToShow.get(position).title);
+
+			if(listToShow.get(position).getTodo_type_id()==1)
+				holder.type.setText("TASK");
+			else if(listToShow.get(position).getTodo_type_id()==2)
+				holder.type.setText("EVENT");
+			else if(listToShow.get(position).getTodo_type_id()==3)
+				holder.type.setText("SCHEDULE");
+			else if(listToShow.get(position).getTodo_type_id()==4)
+				holder.type.setText("APPOINMENT");
+			else if(listToShow.get(position).getTodo_type_id()==5)
+				holder.type.setText("PROJECT");
+			
+			holder.title.setText(listToShow.get(position).getTitle());
 			SimpleDateFormat formatter = new SimpleDateFormat(
 					"dd-MM-yyyy hh:mm");
-			Calendar calendar = Calendar.getInstance();
-			// calendar.setTimeInMillis(listToShow.get(position).getStart_date());
-			// holder.time.setText(formatter.format(calendar.getTime()));
-
-			/*
-			 * holder.time.setText(calendar.getDisplayName(Calendar.DAY_OF_WEEK,
-			 * Calendar.SHORT,
-			 * Locale.US)+" "+calendar.get(Calendar.DAY_OF_MONTH)
-			 * +" "+calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT,
-			 * Locale.US)+" "+calendar.get(Calendar.YEAR));
-			 * holder.time1.setText(
-			 * String.format("%02d",calendar.get(Calendar.HOUR))+":"+
-			 * String.format("%02d",calendar.get(Calendar.MINUTE))+" "+
-			 * calendar.getDisplayName(Calendar.AM_PM, Calendar.SHORT,
-			 * Locale.US));
-			 */
-			String strDate = listToShow.get(position).start_date;
-			SimpleDateFormat dateFormat = new SimpleDateFormat(
-					"yyyy-MM-dd HH:mm:ss");
-			Date date = null;
-			try {
-				date = dateFormat.parse(strDate);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			calendar.setTime(date);
-			if (posit == 2) {
-				holder.time.setText(calendar.getDisplayName(
-						Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.US)
-						+ " "
-						+ calendar.get(Calendar.DAY_OF_MONTH)
-						+ " "
-						+ calendar.getDisplayName(Calendar.MONTH,
-								Calendar.SHORT, Locale.US)
-						+ " "
-						+ calendar.get(Calendar.YEAR));
-			}
-			holder.time1.setText(String.format("%02d",
-					calendar.get(Calendar.HOUR))
-					+ ":"
-					+ String.format("%02d", calendar.get(Calendar.MINUTE))
-					+ " "
-					+ calendar.getDisplayName(Calendar.AM_PM, Calendar.SHORT,
-							Locale.US));
-			if (listToShow.get(position).todo_attachment != null) {
-				holder.location.setText(listToShow.get(position).location);
-			}
+			Calendar calendar = Calendar.getInstance();/*
+			calendar.setTimeInMillis(listToShow.get(position).getStart_date());*/
+			//holder.time.setText(formatter.format(calendar.getTime()));
+			
+			holder.time.setText(calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT,
+					Locale.US)+" "+calendar.get(Calendar.DAY_OF_MONTH)+" "+calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT,
+									Locale.US)+" "+calendar.get(Calendar.YEAR));
+			holder.time1.setText(String.format("%02d",calendar.get(Calendar.HOUR))+":"+
+					String.format("%02d",calendar.get(Calendar.MINUTE))+" "+
+									calendar.getDisplayName(Calendar.AM_PM, Calendar.SHORT,
+											Locale.US));
+			holder.location.setText(listToShow.get(position).getLocation());
+			
 			return view;
 		}
 
@@ -317,37 +300,25 @@ public class TaskListFragment extends ScrollTabHolderFragment implements
 
 		switch (position) {
 		case 0:
-
-			/*
-			 * //todayQuery(); All=MainActivity.Today;
-			 */
-
-			todayAdapter = new LandingAdapter(getActivity(),
-					MainActivity.Today, 0);
-			todayAdapter.notifyDataSetInvalidated();
+			todayQuery();
+			todayAdapter = new LandingAdapter(getActivity(), todayQuery.list());
 			listView.setAdapter(todayAdapter);
-
 			break;
 		case 1:
-			// tomorrowQuery();
-
+			tomorrowQuery();
 			tomorrowAdapter = new LandingAdapter(getActivity(),
-					MainActivity.Tomorrow, 1);
-			tomorrowAdapter.notifyDataSetInvalidated();
+					tomorrowQuery.list());
 			listView.setAdapter(tomorrowAdapter);
 			break;
 		case 2:
-			// upComingQuery();
-
+			upComingQuery();
 			upComingAdapter = new LandingAdapter(getActivity(),
-					MainActivity.Upcoming, 2);
-			upComingAdapter.notifyDataSetInvalidated();
+					upcommingQuery.list());
 			listView.setAdapter(upComingAdapter);
 			break;
 		default:
 			// nothing
 			break;
 		}
-
 	}
 }
