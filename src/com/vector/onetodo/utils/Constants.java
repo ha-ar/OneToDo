@@ -1,8 +1,6 @@
 package com.vector.onetodo.utils;
 
 import java.util.List;
-
-import android.widget.RelativeLayout;
 /*
 import com.vector.onetodo.db.gen.LabelName;*/
 

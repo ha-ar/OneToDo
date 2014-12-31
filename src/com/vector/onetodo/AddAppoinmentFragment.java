@@ -88,7 +88,7 @@ public class AddAppoinmentFragment extends Fragment {
 	int itempos = -1;
 	int MaxId = -1;
 	private int lastCheckedId = -1;
-	EditText taskTitle;
+	public static EditText taskTitle;
 
 	Editor editor;
 	View label_view, viewl;
@@ -122,12 +122,7 @@ public class AddAppoinmentFragment extends Fragment {
 			"Work", "New", "New", "New", "New", "New", "New" };
 
 	EditText label_field = null;
-	String[] itemsForLables = { "Edit", "Delete" };
-	CustomDialog.Builder dialogbuilder;
-	CustomListDialog.Builder listbuilder;
-	CustomListDialog label_edit;
-	CustomDialog location_del;
-	AlertDialog date_time_alert, add_new_label_alert;
+	AlertDialog date_time_alert, add_new_label_alert,location_del,label_edit;
 
 	protected static final int RESULT_CODE = 123;
 
@@ -218,7 +213,21 @@ public class AddAppoinmentFragment extends Fragment {
 	}
 
 	void main() {
+		LayoutInflater inflater5 = getActivity().getLayoutInflater();
 
+		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
+				false);
+		aq_edit = new AQuery(dialoglayout6);
+		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
+		builder6.setView(dialoglayout6);
+		label_edit = builder6.create();
+
+		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
+				null, false);
+		aq_del = new AQuery(dialoglayout7);
+		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
+		builder7.setView(dialoglayout7);
+		location_del = builder7.create();
 		// ****************Title
 		aq.id(R.id.appoinment_title)
 				.typeface(
@@ -473,6 +482,53 @@ public class AddAppoinmentFragment extends Fragment {
 
 		aq.id(R.id.label_grid_view).getGridView()
 				.setOnItemLongClickListener(new LabelEditClickListener());
+		aq_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				location_del.dismiss();
+			}
+		});
+
+		aq_del.id(R.id.edit_del).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Remove(viewl.getId() + "" + itempos);
+				((TextView) viewl).setText("New");
+				GradientDrawable mDrawable = (GradientDrawable) getResources()
+						.getDrawable(R.drawable.label_simple);
+				((TextView) viewl).setBackground(mDrawable);
+				((TextView) viewl).setTextColor(R.color.mountain_mist);
+
+				location_del.dismiss();
+			}
+		});
+
+		aq_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				label_edit.dismiss();
+				location_del.show();
+			}
+		});
+
+		aq_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method
+				aqd.id(R.id.label_title).text("Edit");
+				aqd.id(R.id.save).text("Save");
+				label_view = viewl;
+				label_edit.dismiss();
+				add_new_label_alert.show();
+			}
+		});
 
 		aq.id(R.id.spinner_label_layout).clicked(new GeneralOnClickListner());
 
@@ -834,89 +890,16 @@ public class AddAppoinmentFragment extends Fragment {
 					|| position < 3) {
 
 			} else {
+				aqd.id(R.id.add_label_text).text(
+						((TextView) arg1).getText().toString());
+				aq_del.id(R.id.body).text(
+						"Label " + ((TextView) arg1).getText().toString()
+								+ " will be deleted");
+				aq_edit.id(R.id.add_task_edit_title).text(
+						"Label: " + ((TextView) arg1).getText().toString());
 				viewl = arg1;
 				itempos = position;
-				listbuilder = new CustomListDialog.Builder(getActivity(),
-						"Label: " + ((TextView) arg1).getText().toString(),
-						itemsForLables);
-				listbuilder.darkTheme(false);
-				listbuilder.titleAlignment(Alignment.LEFT);
-				listbuilder.itemAlignment(Alignment.LEFT);
-				listbuilder.titleColor(getResources().getColor(
-						android.R.color.holo_blue_dark));
-				listbuilder.itemColor(Color.BLACK);
-				listbuilder.titleTextSize(22);
-				listbuilder.itemTextSize(18);
-				label_edit = listbuilder.build();
 				label_edit.show();
-				label_edit.setListClickListener(new ListClickListener() {
-
-					@Override
-					public void onListItemSelected(int position,
-							String[] items, String item) {
-						// TODO Auto-generated method stub
-						if (position == 0) {
-							viewl = arg1;
-							itempos = position;
-							label_edit.dismiss();
-
-							add_new_label_alert
-									.getWindow()
-									.setBackgroundDrawable(
-											new ColorDrawable(
-													android.graphics.Color.TRANSPARENT));
-							add_new_label_alert.show();
-						}
-						if (position == 1) {
-							label_edit.dismiss();
-							dialogbuilder = new CustomDialog.Builder(
-									getActivity(), "Delete", "Ok");
-
-							// Now we can any of the following methods.
-							dialogbuilder.content("Label "
-									+ ((TextView) arg1).getText().toString()
-									+ " will be deleted");
-							dialogbuilder.negativeText("Cancel");
-							dialogbuilder.darkTheme(false);
-							dialogbuilder.rightToLeft(true);
-							dialogbuilder.titleTextSize(22);
-							dialogbuilder.contentTextSize(18);
-							dialogbuilder.buttonTextSize(14);
-							dialogbuilder.titleAlignment(Alignment.LEFT);
-							dialogbuilder.buttonAlignment(Alignment.RIGHT);
-							dialogbuilder.titleColor(getResources().getColor(
-									android.R.color.holo_blue_light));
-							dialogbuilder.contentColor(Color.BLACK);
-							dialogbuilder.positiveColor(getResources()
-									.getColor(android.R.color.holo_blue_light));
-							location_del = dialogbuilder.build();
-							location_del.show();
-							location_del.setClickListener(new ClickListener() {
-
-								@Override
-								public void onConfirmClick() {
-									// TODO Auto-generated method stub
-									Remove(viewl.getId() + "" + itempos);
-									((TextView) viewl).setText("New");
-									GradientDrawable mDrawable = (GradientDrawable) getResources()
-											.getDrawable(
-													R.drawable.label_simple);
-									((TextView) viewl).setBackground(mDrawable);
-									((TextView) viewl)
-											.setTextColor(R.color.mountain_mist);
-
-									location_del.dismiss();
-								}
-
-								@Override
-								public void onCancelClick() {
-									// TODO Auto-generated method stub
-									location_del.dismiss();
-								}
-							});
-						}
-					}
-				});
 			}
 			return false;
 		}

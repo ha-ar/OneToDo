@@ -10,9 +10,6 @@ import java.util.Locale;
 
 import net.simonvt.datepicker.DatePicker;
 import net.simonvt.datepicker.DatePicker.OnDateChangedListener;
-
-import org.json.JSONObject;
-
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -60,10 +57,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxCallback;
-import com.androidquery.callback.AjaxStatus;
 import com.astuetz.PagerSlidingTabStrip;
-import com.google.gson.Gson;
 import com.vector.model.TaskData;
 import com.vector.model.TaskData.Todos;
 import com.vector.onetodo.db.gen.DaoMaster;
@@ -112,10 +106,7 @@ public class MainActivity extends BaseActivity implements
 	private ActionBarDrawerToggle actionBarDrawerToggle;
 	private DrawerLayout drawerLayout;
 
-	// ************** Phone COntacts
-
-	String phoneNumber = null;
-	Cursor cursor;
+	
 	
 
 	@Override
@@ -133,10 +124,7 @@ public class MainActivity extends BaseActivity implements
 				toolbar, R.string.close_drawer, R.string.open_drawer);
 		drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
-		// ******* Phone contact , name list
-		Constants.Name = new ArrayList<String>();
-		Constants.Contact = new ArrayList<String>();
-		new Phone_contact().execute();
+		
 
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -156,9 +144,7 @@ public class MainActivity extends BaseActivity implements
 		// ***** Initializinf Registration shared prefrences**********//
 		SharedPreferences pref = this.getSharedPreferences("registration", 0);
 		Constants.user_id = pref.getInt("userid", -1);
- 
 		init();
-
 	}
 
 	Menu menu;
@@ -872,64 +858,7 @@ public class MainActivity extends BaseActivity implements
 				.show();
 	}
 
-	public class Phone_contact extends AsyncTask<Void, Void, Void> {
-
-		@Override
-		protected void onPostExecute(Void result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-		}
-
-		@Override
-		protected void onPreExecute() {
-			// TODO Auto-generated method stub
-			super.onPreExecute();
-			cursor = getContentResolver()
-					.query(ContactsContract.Contacts.CONTENT_URI,
-							null,
-							ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1",
-							null,
-							"UPPER(" + ContactsContract.Contacts.DISPLAY_NAME
-									+ ") ASC");
-		}
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			// TODO Auto-generated method stub
-
-			if (cursor.getCount() > 0) {
-				while (cursor.moveToNext()) {
-					int hasPhoneNumber = Integer
-							.parseInt(cursor.getString(cursor
-									.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
-					if (hasPhoneNumber > 0) {
-						Constants.Name
-								.add(cursor.getString(cursor
-										.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
-						// Query and loop for every phone number of the contact
-						Cursor phoneCursor = getContentResolver()
-								.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-										null,
-										ContactsContract.CommonDataKinds.Phone.CONTACT_ID
-												+ " = ?",
-										new String[] { cursor.getString(cursor
-												.getColumnIndex(ContactsContract.Contacts._ID)) },
-										null); 
-						phoneCursor.moveToNext();
-						phoneNumber = phoneCursor
-								.getString(phoneCursor
-										.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-						Constants.Contact.add(phoneNumber);
-				 
-						phoneCursor.close();
-					}
-				}
-			}
-
-			return null;
-		}
-
-	}
+	
 	
 
 }

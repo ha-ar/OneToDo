@@ -106,13 +106,7 @@ import com.vector.onetodo.utils.Utils;
 public class AddEventFragment extends Fragment {
 
 	
-	@Override
-	public void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		SharedPreferences sprefrences = getActivity().getSharedPreferences("Comment", 0);
-		sprefrences.edit().clear().commit();
-	}
+	
 	public AQuery aq, AQlabel, AQlabel_edit, AQlabel_del, aq_attach,aq_menu;
 
 	// HttpClient client;
@@ -126,7 +120,7 @@ public class AddEventFragment extends Fragment {
 	private PopupWindow popupWindowAttach;
 	static LinearLayout ll_iner;
 	private static View previousSelected;
-	static String checkedId2 = null, setmon1,title=null;
+	static String checkedId2 = null, setmon1;
 	View label_view, viewl;;
 	GradientDrawable label_color;
 	int Label_postion = -1;
@@ -142,13 +136,7 @@ public class AddEventFragment extends Fragment {
 	Editor editor, editorattach;
 
 
-	AlertDialog add_new_label_alert, date_time_alert;
-	String[] itemsForLables = {"Edit","Delete"};
-	CustomDialog.Builder dialogbuilder;
-			CustomListDialog label_edit;CustomDialog location_del;
-	String[] items = {"From Camera","From Gallery","From DropBox","From GoogleDrive"};
-	CustomListDialog.Builder listbuilder;
-			CustomListDialog attach_alert;
+	AlertDialog add_new_label_alert, date_time_alert,label_edit, location_del,attach_alert;
 	static int currentHours, currentMin, currentDayDigit, currentYear,
 			currentMonDigit;
 
@@ -809,7 +797,70 @@ public class AddEventFragment extends Fragment {
 
 		aq.id(R.id.label_event_grid_view).getGridView()
 				.setOnItemLongClickListener(new LabelEditClickListener());
+		LayoutInflater inflater5 = getActivity().getLayoutInflater();
 
+		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
+				false);
+		AQlabel_edit = new AQuery(dialoglayout6);
+		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
+		builder6.setView(dialoglayout6);
+		label_edit = builder6.create();
+
+		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
+				null, false);
+		AQlabel_del = new AQuery(dialoglayout7);
+		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
+		builder7.setView(dialoglayout7);
+		location_del = builder7.create();
+		AQlabel_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				location_del.dismiss();
+			}
+		});
+
+		AQlabel_del.id(R.id.edit_del).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Remove(viewl.getId() + "" + itempos);
+				((TextView) viewl).setText("New");
+				GradientDrawable mDrawable = (GradientDrawable) getResources()
+						.getDrawable(R.drawable.label_simple);
+				((TextView) viewl).setBackground(mDrawable);
+				((TextView) viewl).setTextColor(R.color.mountain_mist);
+
+				location_del.dismiss();
+			}
+		});
+
+		AQlabel_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				label_edit.dismiss();
+				location_del.show();
+			}
+		});
+
+		AQlabel_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub=
+				// aqd.id(R.id.add_label_text).text(((TextView)
+				// viewl).getText().)
+				AQlabel.id(R.id.label_title_event).text("Edit");
+				AQlabel.id(R.id.save).text("Save");
+				label_view = viewl;
+				label_edit.dismiss();
+				add_new_label_alert.show();
+			}
+		});
 		aq.id(R.id.spinner_label_layout).clicked(new GeneralOnClickListner());
 
 		// ********************************* Label END
@@ -834,7 +885,60 @@ public class AddEventFragment extends Fragment {
 
 			
 		});
-		
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+
+		View attachment = inflater
+				.inflate(R.layout.add_attachment, null, false);
+		aq_attach = new AQuery(attachment);
+
+		// Gallery and Camera intent
+		aq_attach
+				.id(R.id.gallery1)
+				.typeface(
+						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
+				.clicked(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						attach_alert.dismiss();
+						Intent galleryIntent = new Intent(
+								Intent.ACTION_PICK,
+								android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+						startActivityForResult(galleryIntent, RESULT_GALLERY);
+					}
+				});
+		aq_attach
+				.id(R.id.camera1)
+				.typeface(
+						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
+				.clicked(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						attach_alert.dismiss();
+						Intent intent = new Intent(
+								"android.media.action.IMAGE_CAPTURE");
+
+						String path = Environment.getExternalStorageDirectory()
+								.toString();
+						File makeDirectory = new File(path + File.separator
+								+ "OneTodo");
+						makeDirectory.mkdir();
+						File photo = new File(Environment
+								.getExternalStorageDirectory()
+								+ File.separator
+								+ "OneToDo" + File.separator, "OneToDo_"
+								+ System.currentTimeMillis() + ".JPG");
+						intent.putExtra(MediaStore.EXTRA_OUTPUT,
+								Uri.fromFile(photo));
+						imageUri = Uri.fromFile(photo);
+						startActivityForResult(intent, TAKE_PICTURE);
+					}
+				});
+		AlertDialog.Builder attach_builder = new AlertDialog.Builder(
+				getActivity());
+		attach_builder.setView(attachment);
+		attach_alert = attach_builder.create();
 		// Show image choose options
 		
 
@@ -843,53 +947,7 @@ public class AddEventFragment extends Fragment {
 			
 			@Override
 			public void onClick(View v) {		
-		listbuilder = new CustomListDialog.Builder(getActivity(), "Add Attachment",items);
-			
-				listbuilder.darkTheme(false);		
-				listbuilder.typeface(TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE));
-				listbuilder.titleAlignment(Alignment.LEFT); 
-				listbuilder.itemAlignment(Alignment.LEFT); 
-				listbuilder.titleColor(getResources().getColor(android.R.color.holo_blue_dark)); 
-				listbuilder.itemColor(Color.BLACK);
-				listbuilder.titleTextSize(22);
-				listbuilder.itemTextSize(18);
-				attach_alert = listbuilder.build();
 				attach_alert.show();
-				attach_alert.setListClickListener(new ListClickListener() {
-					
-					@Override
-					public void onListItemSelected(int position, String[] items, String item) {
-						if(position==0)
-						{
-							attach_alert.dismiss();
-							Intent intent = new Intent(
-									"android.media.action.IMAGE_CAPTURE");
-
-							String path = Environment.getExternalStorageDirectory()
-									.toString();
-							File makeDirectory = new File(path + File.separator
-									+ "OneTodo");
-							makeDirectory.mkdir();
-							File photo = new File(Environment
-									.getExternalStorageDirectory()
-									+ File.separator
-									+ "OneToDo" + File.separator, "OneToDo_"
-									+ System.currentTimeMillis() + ".JPG");
-							intent.putExtra(MediaStore.EXTRA_OUTPUT,
-									Uri.fromFile(photo));
-							imageUri = Uri.fromFile(photo);
-							startActivityForResult(intent, TAKE_PICTURE);
-						}
-						if(position==1)
-						{
-							attach_alert.dismiss();
-							Intent galleryIntent = new Intent(
-									Intent.ACTION_PICK,
-									android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-							startActivityForResult(galleryIntent, RESULT_GALLERY);
-						}
-					}
-				});				
 			}
 		});
 
@@ -971,42 +1029,7 @@ public class AddEventFragment extends Fragment {
 				});
 
 		
-		AddTask.aq_menu.id(R.id.menu_item2).clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated m111111ethod stub
-				if (taskTitle.length() > 0) {
-					if (taskTitle.getText().length() > 0) {
-						AddTask.aq_menu.id(R.id.menu_item1).textColor(
-								R.color._4d4d4d);
-						AddTask.aq_menu.id(R.id.menu_item2).textColor(
-								R.color._4d4d4d);
-						if (FragmentCheck == 0) {
-							FragmentCheck = 1;
-							title = aq.id(R.id.event_title).getText()
-									.toString();
-							AddTask.popupWindowAdd.dismiss();
-							Fragment fr = new AddTaskComment();
-							FragmentManager manager = getFragmentManager();
-							FragmentTransaction transaction = manager
-									.beginTransaction();
-							if (Constants.Project_task_check == 1) {
-
-								transaction.replace(R.id.content_task, fr);
-							} else {
-
-								transaction.replace(R.id.main_container, fr);
-							}
-							transaction.setCustomAnimations(R.anim.slide_in1,
-									R.anim.slide_out1);
-							transaction.addToBackStack(null);
-							transaction.commit();
-						}
-					}
-				}
-			}
-		});
+		
 		View switchView = aq.id(R.id.add_sub_event).getView();
 		toggleCheckList(switchView);
 
@@ -1527,80 +1550,16 @@ public class AddEventFragment extends Fragment {
 					|| position < 3) {
 
 			} else {
+				AQlabel.id(R.id.add_label_text_event).text(
+						((TextView) arg1).getText().toString());
+				AQlabel_del.id(R.id.body).text(
+						"Label " + ((TextView) arg1).getText().toString()
+								+ " will be deleted");
+				AQlabel_edit.id(R.id.add_task_edit_title).text(
+						"Label: " + ((TextView) arg1).getText().toString());
 				viewl = arg1;
 				itempos = position;
-				listbuilder = new CustomListDialog.Builder(getActivity(), "Label: " + ((TextView) arg1).getText().toString(),itemsForLables);
-						listbuilder.darkTheme(false);				
-						listbuilder.titleAlignment(Alignment.LEFT); 
-						listbuilder.itemAlignment(Alignment.LEFT); 
-						listbuilder.titleColor(getResources().getColor(android.R.color.holo_blue_dark)); 
-						listbuilder.itemColor(Color.BLACK);
-						listbuilder.titleTextSize(22);
-						listbuilder.itemTextSize(18);
-						label_edit = listbuilder.build();
-						label_edit.show();
-				label_edit.setListClickListener(new ListClickListener() {
-					
-					@Override
-					public void onListItemSelected(int position, String[] items, String item) {
-						// TODO Auto-generated method stub
-						if(position == 0)
-		            	{
-							AQlabel.id(R.id.add_label_text_event).text(
-									((TextView) arg1).getText().toString());
-							viewl = arg1;
-							itempos = position;
-							label_edit.dismiss();
-
-							add_new_label_alert.getWindow().setBackgroundDrawable(
-									new ColorDrawable(android.graphics.Color.TRANSPARENT));
-							add_new_label_alert.show();
-		            	}
-						if(position==1)
-						{
-							label_edit.dismiss();
-							dialogbuilder = new CustomDialog.Builder(getActivity(), "Delete", "Ok");
-
-		            		// Now we can any of the following methods.
-		            		dialogbuilder.content("Label " + ((TextView) arg1).getText().toString()
-									+ " will be deleted");
-		            		dialogbuilder.negativeText("Cancel");
-		            		dialogbuilder.darkTheme(false);
-		            		dialogbuilder.rightToLeft(true);
-		            		dialogbuilder.titleTextSize(22);
-		            		dialogbuilder.contentTextSize(18);
-		            		dialogbuilder.buttonTextSize(14);
-		            		dialogbuilder.titleAlignment(Alignment.LEFT); 
-		            		dialogbuilder.buttonAlignment(Alignment.RIGHT);
-		            		dialogbuilder.titleColor(getResources().getColor(android.R.color.holo_blue_light)); 
-		            		dialogbuilder.contentColor(Color.BLACK); 
-		            		dialogbuilder.positiveColor(getResources().getColor(android.R.color.holo_blue_light)); 
-		            		location_del = dialogbuilder.build();
-		            		location_del.show();
-							location_del.setClickListener(new ClickListener() {
-								
-								@Override
-								public void onConfirmClick() {
-									// TODO Auto-generated method stub
-									Remove(viewl.getId() + "" + itempos);
-									((TextView) viewl).setText("New");
-									GradientDrawable mDrawable = (GradientDrawable) getResources()
-											.getDrawable(R.drawable.label_simple);
-									((TextView) viewl).setBackground(mDrawable);
-									((TextView) viewl).setTextColor(R.color.mountain_mist);
-
-									location_del.dismiss();
-								}
-								
-								@Override
-								public void onCancelClick() {
-									// TODO Auto-generated method stub
-									location_del.dismiss();
-								}
-							});
-						}
-					}
-				});
+				label_edit.show();
 			}
 			return false;
 		}

@@ -1,9 +1,5 @@
 package com.vector.onetodo;
 
-import uk.me.lewisdeane.ldialogs.CustomDialog;
-import uk.me.lewisdeane.ldialogs.CustomListDialog;
-import uk.me.lewisdeane.ldialogs.BaseDialog.Alignment;
-import uk.me.lewisdeane.ldialogs.CustomDialog.ClickListener;
 import net.simonvt.numberpicker.NumberPicker;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -12,7 +8,6 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,7 +18,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -37,10 +31,7 @@ public class AddAppoinmentBeforeFragment extends Fragment {
 	AQuery aq, aqd, aq_edit, aq_del;
 	TextView before;
 	Editor editor;
-	String[] items = {"Edit","Delete"};
-	CustomListDialog.Builder listbuilder;CustomDialog.Builder dialogbuilder;
-	CustomListDialog location_edit;CustomDialog location_del;
-	AlertDialog alert, location, label;
+	AlertDialog alert, location, label,location_edit ,location_del;
 	static final String[] beforeArray = new String[] { "On Time", "15 Mins",
 			"30 Mins", "2 Hours", "Custom" };
 	static final String[] values = { "Mins", "Hours", "Days", "Weeks",
@@ -81,7 +72,21 @@ public class AddAppoinmentBeforeFragment extends Fragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		setRetainInstance(true);
+		LayoutInflater inflater5 = getActivity().getLayoutInflater();
 
+		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
+				false);
+		aq_edit = new AQuery(dialoglayout6);
+		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
+		builder6.setView(dialoglayout6);
+		location_edit = builder6.create();
+
+		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
+				null, false);
+		aq_del = new AQuery(dialoglayout7);
+		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
+		builder7.setView(dialoglayout7);
+		location_del = builder7.create();
 
 		if (position == 0) {
 
@@ -330,6 +335,53 @@ public class AddAppoinmentBeforeFragment extends Fragment {
 			aq.id(R.id.pre_defined_3).clicked(new LocationTagClickListener());
 			aq.id(R.id.pre_defined_4).clicked(new LocationTagClickListener());
 
+			aq_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					location_del.dismiss();
+				}
+			});
+
+			aq_del.id(R.id.edit_del).clicked(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					((TextView) viewl).setText("New");
+					((TextView) viewl).setTextColor(R.color.grey);
+					((TextView) viewl)
+							.setBackgroundResource(R.color.light_grey_color);
+					remove(viewl.getId());
+					aq.id(R.id.location_before).text("");
+					location_del.dismiss();
+				}
+			});
+
+			aq_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					aqd.id(R.id.adress).text("");
+					aqd.id(R.id.home).text("");
+					location_edit.dismiss();
+					location_del.show();
+				}
+			});
+
+			aq_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub=
+					aqd.id(R.id.add_location_title).text("Edit");
+					aqd.id(R.id.save).text("Save");
+					location_edit.dismiss();
+					location.show();
+				}
+			});
 
 			aq.id(R.id.arrive_leave_checkbox_layout).visible();
 			AutoCompleteTextView locationTextView = (AutoCompleteTextView) aq
@@ -400,80 +452,15 @@ public class AddAppoinmentBeforeFragment extends Fragment {
 				load(view.getId());
 				aqd.id(R.id.adress).text(padress);
 				aqd.id(R.id.home).text(((TextView) view).getText().toString());
+				aq_del.id(R.id.body).text(
+						"Location tag "
+								+ ((TextView) view).getText().toString()
+								+ " will be deleted");
+				aq_edit.id(R.id.add_task_edit_title).text(
+						"Location tag:"
+								+ ((TextView) view).getText().toString());
 				viewl = view;
-				listbuilder = new CustomListDialog.Builder(getActivity(), "Location tag:"
-				+ ((TextView) view).getText().toString(),items);
-				Log.e("ok", "Location tag:"
-						+ ((TextView) view).getText().toString());
-				listbuilder.darkTheme(false);				
-				listbuilder.titleAlignment(Alignment.LEFT); 
-				listbuilder.itemAlignment(Alignment.LEFT); 
-				listbuilder.titleColor(getResources().getColor(android.R.color.holo_blue_dark)); 
-				listbuilder.itemColor(Color.BLACK);
-				listbuilder.titleTextSize(22);
-				listbuilder.itemTextSize(18);
-				location_edit = listbuilder.build();
 				location_edit.show();
-				location_edit.setListClickListener(new CustomListDialog.ListClickListener() {
-		            @Override
-		            public void onListItemSelected(int pos, String[] strings, String s) {
-		                // i is the position clicked.
-		                // strings is the array of items in the list.
-		                // s is the item selected.
-		            	if(pos == 0)
-		            	{
-		            		aqd.id(R.id.add_location_title).text("Edit");
-							aqd.id(R.id.save).text("SAVE");
-							location_edit.dismiss();
-							location.show();
-		            	}
-		            	if(pos == 1)
-		            	{
-		            		aqd.id(R.id.adress).text("");
-							aqd.id(R.id.home).text("");
-							location_edit.dismiss();
-		            		dialogbuilder = new CustomDialog.Builder(getActivity(), "Delete", "Ok");
-
-		            		// Now we can any of the following methods.
-		            		dialogbuilder.content("Location tag "
-									+ ((TextView) view).getText().toString()
-									+ " will be deleted");
-		            		dialogbuilder.negativeText("Cancel");
-		            		dialogbuilder.darkTheme(false);
-		            		dialogbuilder.rightToLeft(true);
-		            		dialogbuilder.titleTextSize(22);
-		            		dialogbuilder.contentTextSize(18);
-		            		dialogbuilder.buttonTextSize(14);
-		            		dialogbuilder.titleAlignment(Alignment.LEFT); 
-		            		dialogbuilder.buttonAlignment(Alignment.RIGHT);
-		            		dialogbuilder.titleColor(getResources().getColor(android.R.color.holo_blue_light)); 
-		            		dialogbuilder.contentColor(Color.BLACK); 
-		            		dialogbuilder.positiveColor(getResources().getColor(android.R.color.holo_blue_light)); 
-		            		location_del = dialogbuilder.build();
-		            		location_del.show();
-		            		location_del.setClickListener(new ClickListener() {
-								
-								@Override
-								public void onConfirmClick() {
-									// TODO Auto-generated method stub
-									((TextView) viewl).setText("New");
-									((TextView) viewl).setTextColor(Color.GRAY);
-									((TextView) viewl)
-											.setBackgroundColor(Color.parseColor("#eeeeee"));
-									remove(viewl.getId());
-									aq.id(R.id.location_before).text("");
-									location_del.dismiss();
-								}
-								
-								@Override
-								public void onCancelClick() {
-									// TODO Auto-generated method stub
-									location_del.dismiss();
-								}
-							});
-		            	}
-		            }
-		        });
 			}
 			return false;
 		}

@@ -29,6 +29,8 @@ import com.vector.onetodo.utils.Constants;
 import com.vector.onetodo.utils.TypeFaces;
 import com.vector.onetodo.utils.Utils;
 
+import eu.inmite.android.lib.dialogs.SimpleDialogFragment;
+
 public class Accounts extends Fragment {
 
 	AQuery aq;private Uri imageUri;
@@ -122,6 +124,7 @@ public class Accounts extends Fragment {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+			
 				dialogbuilder = new CustomDialog.Builder(getActivity(), "ONEtodo", "buy pro");
         		dialogbuilder.content("You are using the trial version with all the pro-feature.You can carry on basic features free of cost when trial ends.You can buy pro version anytime.");
         		dialogbuilder.negativeText("OK");

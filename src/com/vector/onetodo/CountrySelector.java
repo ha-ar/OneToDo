@@ -17,10 +17,12 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Intent;
+import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.Settings.Secure;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -42,6 +44,11 @@ import com.vector.onetodo.utils.Utils;
 
 public class CountrySelector extends Fragment {
 
+	// http://api.heuristix.net/one_todo/v1/user/addContacts
+	/* $data = array(
+    'user_id' => '6',  
+    'contacts' => array('+447589567876', '+447589567897', '+447589517897')
+    );*/
 	// private Button loginButton;
 	AQuery aq;
 	TextView skip;
@@ -49,13 +56,19 @@ public class CountrySelector extends Fragment {
 	HttpPost post;
 	List<NameValuePair> pairs;
 	HttpResponse response = null;
-	Boolean message; 
+	Boolean message;
 	AlertDialog alert;
 	TextView confirm, save;
 	int position = 0;
 	public static View view;
 	InputMethodManager imm;
 
+	
+	// ************** Phone COntacts
+
+		String phoneNumber = null;
+		Cursor cursor;
+		
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
@@ -68,7 +81,8 @@ public class CountrySelector extends Fragment {
 			aq.id(R.id.country).getEditText().setEnabled(true);
 			aq.id(R.id.country).getEditText().requestFocus();
 			if (imm != null) {
-				imm.showSoftInput(aq.id(R.id.country).getEditText(), InputMethodManager.SHOW_IMPLICIT);
+				imm.showSoftInput(aq.id(R.id.country).getEditText(),
+						InputMethodManager.SHOW_IMPLICIT);
 			}
 			position = 1;
 		}
@@ -80,8 +94,8 @@ public class CountrySelector extends Fragment {
 		// TODO Auto-generated method stub
 		view = inflater.inflate(R.layout.about, container, false);
 		aq = new AQuery(getActivity(), view);
-		imm = (InputMethodManager) getActivity()
-				.getSystemService(getActivity().INPUT_METHOD_SERVICE);
+		imm = (InputMethodManager) getActivity().getSystemService(
+				getActivity().INPUT_METHOD_SERVICE);
 		return view;
 
 	}
@@ -91,12 +105,14 @@ public class CountrySelector extends Fragment {
 		// TODO Auto-generated method stub
 		super.onViewCreated(view, savedInstanceState);
 
-	 
+		// ******* Phone contact , name list
+		Constants.Name = new ArrayList<String>();
+		Constants.Contact = new ArrayList<String>();
+		new Phone_contact().execute();
 
 		String html = "ONE" + "<br />" + "todo";
 		aq.id(R.id.title).text(Html.fromHtml(html));
 
-	 
 		skip = (TextView) getActivity().findViewById(R.id.loginSkip);
 
 		View vie = getActivity().getLayoutInflater().inflate(R.layout.skip,
@@ -112,7 +128,7 @@ public class CountrySelector extends Fragment {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub 
+				// TODO Auto-generated method stub
 				Fragment fr = new Country();
 				FragmentTransaction trans = getFragmentManager()
 						.beginTransaction();
@@ -126,10 +142,10 @@ public class CountrySelector extends Fragment {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub 
+				// TODO Auto-generated method stub
 				if (!(aq.id(R.id.country).getText().length() < 4
 						|| aq.id(R.id.country).getText().equals("") || position == 0)) {
-				 
+
 					if (Constants.RegId != null) {
 
 						AddRegister();
@@ -171,10 +187,8 @@ public class CountrySelector extends Fragment {
 				showUserDetailsActivity();
 			}
 		});
-		 
-	}
 
-	 
+	}
 
 	private void showUserDetailsActivity() {
 		InputMethodManager imm = (InputMethodManager) getActivity()
@@ -190,7 +204,6 @@ public class CountrySelector extends Fragment {
 				.overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
 	}
 
-	 
 	public void AddRegister() {
 		pairs = new ArrayList<NameValuePair>();
 		Random r = new Random();
@@ -220,9 +233,9 @@ public class CountrySelector extends Fragment {
 				+ ":" + Utils.getCurrentMins() + ":00"));
 
 		HttpEntity entity = null;
- 
+
 		try {
-			entity = new UrlEncodedFormEntity(pairs, "UTF-8"); 
+			entity = new UrlEncodedFormEntity(pairs, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO
 			// Auto-generated
@@ -261,7 +274,70 @@ public class CountrySelector extends Fragment {
 					}
 				});
 
-		 
 	}
-	 
+
+	public class Phone_contact extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			if (Constants.Name.size() > 0)
+				Toast.makeText(getActivity(), Constants.Name.get(0),
+						Toast.LENGTH_LONG);
+			else
+				Toast.makeText(getActivity(), "Not", Toast.LENGTH_LONG);
+		}
+
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			super.onPreExecute();
+			cursor = getActivity().getContentResolver()
+					.query(ContactsContract.Contacts.CONTENT_URI,
+							null,
+							ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1",
+							null,
+							"UPPER(" + ContactsContract.Contacts.DISPLAY_NAME
+									+ ") ASC");
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			// TODO Auto-generated method stub
+
+			if (cursor.getCount() > 0) {
+				while (cursor.moveToNext()) {
+					int hasPhoneNumber = Integer
+							.parseInt(cursor.getString(cursor
+									.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
+					if (hasPhoneNumber > 0) {
+						Constants.Name
+								.add(cursor.getString(cursor
+										.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
+						// Query and loop for every phone number of the contact
+						Cursor phoneCursor = getActivity().getContentResolver()
+								.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+										null,
+										ContactsContract.CommonDataKinds.Phone.CONTACT_ID
+												+ " = ?",
+										new String[] { cursor.getString(cursor
+												.getColumnIndex(ContactsContract.Contacts._ID)) },
+										null);
+						phoneCursor.moveToNext();
+						phoneNumber = phoneCursor
+								.getString(phoneCursor
+										.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+						Constants.Contact.add(phoneNumber);
+
+						phoneCursor.close();
+					}
+				}
+			}
+
+			return null;
+		}
+
+	}
+
 }

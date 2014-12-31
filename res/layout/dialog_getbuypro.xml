@@ -25,11 +25,12 @@
                 android:padding="10dp" >
 
                 <LinearLayout
-                    android:id="@+id/timeformat_lay"
+                    android:id="@+id/onetodopro"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp" >
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp" >
 
                     <TextView
                         android:id="@+id/onetodo"
@@ -39,18 +40,74 @@
                         android:textColor="#4d4d4d"
                         android:textSize="17.78sp"
                         android:textStyle="bold" />
+                </LinearLayout>
+                
+                 <LinearLayout
+                    android:id="@+id/onetodobuy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:weightSum="2">
+                <LinearLayout
+                    android:id="@+id/onemonth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/buypro_background"
+                    android:padding="3dp"
+                    android:layout_marginLeft="15dp"                    
+                    android:layout_marginRight="15dp"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="€ 0.99"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="#ffffff"
+                        android:textSize="17.78sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/onetodo1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:paddingTop="2dp"
-                        android:text="Unlimited projects, files, colleboration..."
-                        android:textColor="#777777"
+                        android:text="One Month"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="#c0c0c0"
                         android:textSize="15.33sp" />
                 </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/oneyear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="3dp"
+                    android:background="@drawable/buypro_background"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:orientation="vertical" >
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="€ 4.99"
+                        android:textColor="#ffffff"
+                        android:textSize="17.78sp"
+                        android:layout_gravity="center_horizontal"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/onetodo1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="One Year"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="#c0c0c0"
+                        android:textSize="15.33sp" />
+                </LinearLayout>
+</LinearLayout>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
@@ -61,158 +118,127 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@drawable/border_bottom_grey"
                     android:padding="10dp" >
 
                     <TextView
-                        android:id="@+id/mynumber"
+                        android:id="@+id/feature"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Phone number"
-                        android:textColor="#4d4d4d"
+                        android:text="FEATURES"
                         android:textSize="17.78sp" />
-
-                    <TextView
-                        android:id="@+id/mynumber1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="2dp"
-                        android:text="+49 1781237132123"
-                        android:textColor="#777777"
-                        android:textSize="13.33sp" />
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="#80e6e6e6" />
+                    android:background="#c0c0c0" />
 
                 <LinearLayout
-                    android:id="@+id/dateformat_lay"
+                    android:id="@+id/feature_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="10dp" >
 
                     <TextView
-                        android:id="@+id/email"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Email"
+                        android:text="Unlimited projects"
                         android:textColor="#4d4d4d"
-                        android:textSize="17.78sp" />
-
-                    <TextView
-                        android:id="@+id/email1"
+                        android:textSize="16.78sp" />
+                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="2dp"
-                        android:text="Set email account"
-                        android:textColor="#777777"
-                        android:textSize="13.33sp" />
+                        android:text="Unlimited collaboration"
+                        android:textColor="#4d4d4d"
+                        android:layout_marginTop="5dp"
+                        android:textSize="16.78sp" />
+                      <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Unlimited file attachments"
+                        android:textColor="#4d4d4d"
+                         android:layout_marginTop="5dp"
+                        android:textSize="16.78sp" />
+                       <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="File from DropBox and GoogleDrive"
+                        android:textColor="#4d4d4d"
+                         android:layout_marginTop="5dp"
+                        android:textSize="16.78sp" />
+                        <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="App Customization"
+                        android:textColor="#4d4d4d"
+                         android:layout_marginTop="5dp"
+                        android:textSize="16.78sp" />
+                         <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="View complete list of Pro features at"
+                        android:textColor="#4d4d4d"
+                         android:layout_marginTop="5dp"
+                        android:textSize="16.78sp" />
+                        <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="www.onetodo.co"
+                        android:textColor="#0020ef"
+                        android:layout_marginTop="10dp"
+                        android:textSize="13.78sp" />
+                        <RelativeLayout 
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                        <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="By going pro,you agreewith our"
+                        android:textColor="#4d4d4d"
+                        android:id="@+id/text1"
+                        android:layout_marginTop="15dp"
+                        android:textSize="11.78sp" />
+                        <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" Terms "
+                        android:id="@+id/text2"
+                        android:layout_toRightOf="@+id/text1"
+                        android:textColor="#0020ef"
+                        android:layout_marginTop="15dp"
+                        android:textSize="11.78sp" />
+                        <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="and "
+                        android:textColor="#4d4d4d"
+                        android:id="@+id/text3"
+                        android:layout_toRightOf="@+id/text2"
+                        android:layout_marginTop="15dp"
+                        android:textSize="11.78sp" />
+                         <TextView
+                             android:id="@+id/text4"
+                             android:layout_toRightOf="@+id/text3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Privacy"
+                        android:textColor="#0020ef"
+                        android:layout_marginTop="15dp"
+                        android:textSize="11.78sp" />
+                        <TextView
+                        android:id="@+id/text5"
+                        android:layout_below="@+id/text1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" policy."
+                        android:textColor="#0020ef"
+                        android:textSize="11.78sp" />
+                        </RelativeLayout>
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/personal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/underline_textview"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
-                    android:text="PERSONAL DETAILS"
-                    android:textColor="@color/active"
-                    android:textSize="17.78sp" />
-
-                <LinearLayout
-                    android:id="@+id/sound_lay"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="10dp" >
-
-                    <TextView
-                        android:id="@+id/name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Name"
-                        android:textColor="#4d4d4d"
-                        android:textSize="17.78sp" />
-
-                    <TextView
-                        android:id="@+id/name1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="2dp"
-                        android:text="Usman Ameer"
-                        android:textColor="#767676"
-                        android:textSize="13.33sp" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="#80e6e6e6" />
-
-                <RelativeLayout
-                    android:id="@+id/image_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true"
-                    android:background="@drawable/input_fields_gray"
-                    android:padding="10dp" >
-
-                    <LinearLayout
-                        android:id="@+id/review"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" >
-
-                        <TextView
-                            android:id="@+id/display"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@android:color/transparent"
-                            android:paddingRight="5dp"
-                            android:singleLine="true"
-                            android:text="Display Picture"
-                            android:textColor="#4d4d4d"
-                            android:textSize="17.78sp" />
-
-                        <TextView
-                            android:id="@+id/display1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@android:color/transparent"
-                            android:paddingRight="5dp"
-                            android:paddingTop="2dp"
-                            android:singleLine="true"
-                            android:text="This picture is used in your shared projects."
-                            android:textColor="#4d4d4d"
-                            android:textSize="13.33sp" />
-                    </LinearLayout>
-
-                    <com.mikhaellopez.circularimageview.CircularImageView
-                        android:id="@+id/image_event"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="2dp"
-                        android:layout_toLeftOf="@id/review"
-                        android:adjustViewBounds="true"
-                        android:background="@drawable/round_photobutton"
-                        android:gravity="center"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/button_login"
-                        app:border_color="#EEEEEE"
-                        app:border_width="1dp"
-                        app:shadow="true" />
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="#80e6e6e6" />
+        
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

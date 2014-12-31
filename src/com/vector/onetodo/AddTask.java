@@ -36,6 +36,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
@@ -85,9 +86,9 @@ import com.vector.onetodo.utils.Utils;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
 
- 
-
 public class AddTask extends FragmentActivity {
+
+	SharedPreferences comment_pref;
 
 	public static View dialoglayout5;
 	public static AQuery aq, aq_menu;
@@ -95,7 +96,7 @@ public class AddTask extends FragmentActivity {
 	int dayPosition;
 	static Long f2 = null;
 	DaoMaster daoMaster;
-	DaoSession daoSession; 
+	DaoSession daoSession;
 	ToDoDao tododao;
 	AssignDao assigndao;
 	CheckListDao checklistdao;
@@ -181,7 +182,7 @@ public class AddTask extends FragmentActivity {
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.add_task);
-
+		comment_pref = getSharedPreferences("Comment", 0);
 		dialog = new ProgressDialog(this, ProgressDialog.THEME_HOLO_DARK);
 		dialog.setMessage("Saving...");
 		dialog.setCancelable(true);
@@ -235,25 +236,31 @@ public class AddTask extends FragmentActivity {
 				if (position == 0) {
 					aq.id(R.id.page_title_header).text("Task");
 					btn.setAlpha((float) 0.3);
+					comment_pref.edit().clear().commit();
 				}
 
 				else if (position == 1) {
 					aq.id(R.id.page_title_header).text("Event");
 					btn.setAlpha((float) 0.3);
+					comment_pref.edit().clear().commit();
 				}
 
 				else if (position == 2) {
 					aq.id(R.id.page_title_header).text("Schedule");
 					btn.setAlpha((float) 0.3);
+					comment_pref.edit().clear().commit();
 
 				} else if (position == 3) {
 					aq.id(R.id.page_title_header).text("Appoinment");
 					btn.setAlpha((float) 0.3);
+					comment_pref.edit().clear().commit();
 				}
 
 				else if (position == 4) {
 					aq.id(R.id.page_title_header).text("Project");
 					btn.setAlpha((float) 0.3);
+
+					comment_pref.edit().clear().commit();
 				}
 
 			}
@@ -368,6 +375,27 @@ public class AddTask extends FragmentActivity {
 					}
 				} else if (Position == 1) {
 					if (AddEventFragment.taskTitle.length() > 0) {
+						aq_menu.id(R.id.menu_item1)
+								.textColorId(R.color._4d4d4d);
+						aq_menu.id(R.id.menu_item2)
+								.textColorId(R.color._4d4d4d);
+					}
+				}else if (Position == 2) {
+					if (AddScheduleFragment.taskTitle.length() > 0) {
+						aq_menu.id(R.id.menu_item1)
+								.textColorId(R.color._4d4d4d);
+						aq_menu.id(R.id.menu_item2)
+								.textColorId(R.color._4d4d4d);
+					}
+				}else if (Position == 3) {
+					if (AddAppoinmentFragment.taskTitle.length() > 0) {
+						aq_menu.id(R.id.menu_item1)
+								.textColorId(R.color._4d4d4d);
+						aq_menu.id(R.id.menu_item2)
+								.textColorId(R.color._4d4d4d);
+					}
+				}else if (Position == 4) {
+					if (AddProjectFragment.taskTitle.length() > 0) {
 						aq_menu.id(R.id.menu_item1)
 								.textColorId(R.color._4d4d4d);
 						aq_menu.id(R.id.menu_item2)
@@ -581,6 +609,103 @@ public class AddTask extends FragmentActivity {
 
 		// DONOT Show location at the moment
 		aq.id(R.layout.add_task_location1).gone();
+
+		/*
+		 * AddTask.aq_menu.id(R.id.menu_item2).clicked(new OnClickListener() {
+		 * 
+		 * @Override public void onClick(View arg0) { // TODO Auto-generated
+		 * m111111ethod stub
+		 * 
+		 * 
+		 * title = aq.id(R.id.event_title).getText() .toString();
+		 * AddTask.popupWindowAdd.dismiss(); Fragment fr = new AddTaskComment();
+		 * FragmentManager manager = getSupportFragmentManager();
+		 * FragmentTransaction transaction = manager .beginTransaction(); if
+		 * (Constants.Project_task_check == 1) {
+		 * 
+		 * transaction.replace(R.id.content_task, fr); } else {
+		 * 
+		 * transaction.replace(R.id.main_container, fr); }
+		 * transaction.setCustomAnimations(R.anim.slide_in1, R.anim.slide_out1);
+		 * transaction.addToBackStack(null); transaction.commit();
+		 * 
+		 * } });
+		 */
+
+		aq_menu.id(R.id.menu_item2).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated m111111ethod stub
+				String title = null;
+				if (Position == 0) {
+					if (AddTaskFragment.taskTitle.length() > 0) {
+						title = AddTaskFragment.taskTitle.getText().toString();
+						aq_menu.id(R.id.menu_item1)
+								.textColorId(R.color._4d4d4d);
+						aq_menu.id(R.id.menu_item2)
+								.textColorId(R.color._4d4d4d);
+					}
+				} else if (Position == 1) {
+					if (AddEventFragment.taskTitle.length() > 0) {
+						title = AddEventFragment.taskTitle.getText().toString();
+						aq_menu.id(R.id.menu_item1)
+								.textColorId(R.color._4d4d4d);
+						aq_menu.id(R.id.menu_item2)
+								.textColorId(R.color._4d4d4d);
+					}
+				} else if (Position == 2) {
+					if (AddScheduleFragment.taskTitle.length() > 0) {
+						title = AddScheduleFragment.taskTitle.getText()
+								.toString();
+						aq_menu.id(R.id.menu_item1)
+								.textColorId(R.color._4d4d4d);
+						aq_menu.id(R.id.menu_item2)
+								.textColorId(R.color._4d4d4d);
+					}
+				}else if (Position == 3) {
+					if (AddAppoinmentFragment.taskTitle.length() > 0) {
+						title = AddAppoinmentFragment.taskTitle.getText()
+								.toString();
+						aq_menu.id(R.id.menu_item1)
+								.textColorId(R.color._4d4d4d);
+						aq_menu.id(R.id.menu_item2)
+								.textColorId(R.color._4d4d4d);
+					}
+				}else if (Position == 4) {
+					if (AddProjectFragment.taskTitle.length() > 0) {
+						title = AddProjectFragment.taskTitle.getText()
+								.toString();
+						aq_menu.id(R.id.menu_item1)
+								.textColorId(R.color._4d4d4d);
+						aq_menu.id(R.id.menu_item2)
+								.textColorId(R.color._4d4d4d);
+					}
+				}
+
+				if (title != null && title.length() > 0) {
+					popupWindowAdd.dismiss();
+					Fragment fr = new AddTaskComment();
+					FragmentManager manager = getSupportFragmentManager();
+					FragmentTransaction transaction = manager
+							.beginTransaction();
+					if (Constants.Project_task_check == 1
+							) {
+
+						transaction.replace(R.id.content_task, fr);
+					} else {
+
+						transaction.replace(R.id.main_container, fr);
+					}
+					transaction.setCustomAnimations(R.anim.slide_in1,
+							R.anim.slide_out1);
+					transaction.addToBackStack(null);
+					transaction.commit();
+
+				}
+			}
+		});
+
 	}
 
 	public void inflateLayoutsTasks() {
@@ -776,8 +901,6 @@ public class AddTask extends FragmentActivity {
 
 	public void AddData() {
 
-	 
-
 		if (Position == 0) {
 			if (!(aq.id(R.id.task_title1).getText().toString().equals(""))) {
 
@@ -803,7 +926,7 @@ public class AddTask extends FragmentActivity {
 					r_location = aq.id(R.id.location_before).getText()
 							.toString();
 					location_tag = ((TextView) AddTaskBeforeFragment.viewP)
-							.getText().toString()+"";
+							.getText().toString() + "";
 				}
 
 				if (!(aq.id(R.id.before).getText().toString().equals("") || aq
@@ -820,7 +943,7 @@ public class AddTask extends FragmentActivity {
 
 				label_name = aq.id(R.id.spinner_labels_task).getText()
 						.toString();
-			 
+
 				toggleCheckList(aq.id(R.id.add_sub_task).getView());
 				checklist_data = aq.id(R.id.add_sub_task).getEditText()
 						.getText().toString();
@@ -856,7 +979,7 @@ public class AddTask extends FragmentActivity {
 							.toString();
 
 					location_tag = ((TextView) AddEventBeforeFragment.viewP)
-							.getText().toString()+"";
+							.getText().toString() + "";
 				}
 
 				if (!(aq.id(R.id.before_event).getText().toString().equals("") || aq
@@ -873,7 +996,6 @@ public class AddTask extends FragmentActivity {
 
 				label_name = aq.id(R.id.spinner_labels_event).getText()
 						.toString();
-				 
 
 				toggleCheckList(aq.id(R.id.add_sub_event).getView());
 				checklist_data = aq.id(R.id.add_sub_event).getEditText()
@@ -911,7 +1033,7 @@ public class AddTask extends FragmentActivity {
 							.toString();
 
 					location_tag = ((TextView) AddScheduleBeforeFragment.viewP)
-							.getText().toString()+"";
+							.getText().toString() + "";
 				}
 
 				if (!(aq.id(R.id.before_schedule).getText().toString()
@@ -928,7 +1050,6 @@ public class AddTask extends FragmentActivity {
 				repeatdate = AddScheduleFragment.repeatdate;
 
 				label_name = aq.id(R.id.sch_label_txt).getText().toString();
-		 
 
 				toggleCheckList(aq.id(R.id.add_sub_sch).getView());
 				checklist_data = aq.id(R.id.add_sub_sch).getEditText()
@@ -945,7 +1066,6 @@ public class AddTask extends FragmentActivity {
 
 				title = aq.id(R.id.appoinment_title).getText().toString();
 
-			 
 				is_allday = false;
 
 				start_date = AddAppoinmentFragment.currentYear + "-"
@@ -955,7 +1075,7 @@ public class AddTask extends FragmentActivity {
 						+ AddAppoinmentFragment.currentMin + ":00";
 				end_date = null;
 
-				location = null; 
+				location = null;
 
 				before = aq.id(R.id.before_appoinment).getText().toString();
 				if (before.contains("On Arrive") || before.contains("On Leave")) {
@@ -965,7 +1085,7 @@ public class AddTask extends FragmentActivity {
 							.toString();
 
 					location_tag = ((TextView) AddAppoinmentBeforeFragment.viewP)
-							.getText().toString()+"";
+							.getText().toString() + "";
 				}
 
 				if (!(aq.id(R.id.before_appoinment).getText().toString()
@@ -977,13 +1097,12 @@ public class AddTask extends FragmentActivity {
 							.id(R.id.notification_radio_appoin).getCheckBox()
 							.isChecked();
 				}
-				repeat = null; 
+				repeat = null;
 
 				repeatdate = null;
 
 				label_name = aq.id(R.id.spinner_labels_appoin).getText()
 						.toString();
-		 
 
 				toggleCheckList(aq.id(R.id.add_sub_appoinment).getView());
 				checklist_data = aq.id(R.id.add_sub_appoinment).getEditText()
@@ -999,7 +1118,7 @@ public class AddTask extends FragmentActivity {
 				titlecheck = 5;
 
 				title = aq.id(R.id.project_title).getText().toString();
- 
+
 				is_allday = false;
 
 				start_date = AddProjectFragment.currentYear + "-"
@@ -1009,9 +1128,9 @@ public class AddTask extends FragmentActivity {
 						+ AddProjectFragment.currentMin + ":00";
 				end_date = null;
 
-				location = null;  
+				location = null;
 
-				before = null;  
+				before = null;
 				is_time = false;
 				is_location = false;
 				r_location = null;
@@ -1021,17 +1140,16 @@ public class AddTask extends FragmentActivity {
 				is_alertEmail = false;
 				is_alertNotification = false;
 
-				repeat = null; 
+				repeat = null;
 
 				repeatdate = null;
-				
+
 				label_name = aq.id(R.id.spinner_labels_project).getText()
 						.toString();
-			 
 
-				checklist_data = null; 
+				checklist_data = null;
 
-				notes = null; 
+				notes = null;
 
 			}
 		}
@@ -1126,12 +1244,12 @@ public class AddTask extends FragmentActivity {
 			todoset.setTitle(title);
 			todoset.setStart_date(dateInMilliseconds);
 			todoset.setEnd_date(dateInMilliseconds);
-			todoset.setIs_allday(is_allday); 
+			todoset.setIs_allday(is_allday);
 			todoset.setLocation(location);
 			todoset.setNotes(notes);
 
 			Label label = new Label();
-			label.setLabel_name(label_name); 
+			label.setLabel_name(label_name);
 			label.setId(f2);
 			labeldao.insert(label);
 			todoset.setLabel(label);
@@ -1143,7 +1261,7 @@ public class AddTask extends FragmentActivity {
 			reminderr.setIs_time_location(is_location);
 			reminderr.setLocation(r_location);
 			reminderr.setLocation_type(is_locationtype);
-			if ((!location_tag.equals("New"))&&location_tag!=null) {
+			if ((!location_tag.equals("New")) && location_tag != null) {
 				reminderr.setLocation_tag(location_tag);
 			}
 
@@ -1165,7 +1283,7 @@ public class AddTask extends FragmentActivity {
 			checklistdao.insert(checklist);
 			todoset.setCheckList(checklist);
 
-			for (int i = 1; i <= MaxId; i++) { 
+			for (int i = 1; i <= MaxId; i++) {
 				pairs.add(new BasicNameValuePair("todo_attachment[" + (i - 1)
 						+ "][attachment_path]", AddTask.attach.getString(
 						titlecheck + "path" + i, null)));
@@ -1184,8 +1302,6 @@ public class AddTask extends FragmentActivity {
 
 				}
 			}
-
-		 
 
 			Friends friend = new Friends();
 			friend.setId(f2);
@@ -1226,7 +1342,7 @@ public class AddTask extends FragmentActivity {
 		tododao = daoSession.getToDoDao();
 		commentdao = daoSession.getCommentDao();
 		repeatdao = daoSession.getRepeatDao();
- 
+
 		reminderdao = daoSession.getReminderDao();
 
 	}
@@ -1306,7 +1422,6 @@ public class AddTask extends FragmentActivity {
 			}
 
 			finish();
-		 
 
 		}
 
@@ -1337,8 +1452,6 @@ public class AddTask extends FragmentActivity {
 						"2014-11-02 04:05:05"));
 			}
 
-		 
-
 			if (notes != null)
 				pairs.add(new BasicNameValuePair("todo[notes]", notes));
 
@@ -1366,7 +1479,7 @@ public class AddTask extends FragmentActivity {
 					pairs.add(new BasicNameValuePair(
 							"todo_repeat[repeat_until]", repeatdate));
 			}
-			for (int i = 1; i <= MaxId; i++) { 
+			for (int i = 1; i <= MaxId; i++) {
 				pairs.add(new BasicNameValuePair("todo_attachment[" + (i - 1)
 						+ "][attachment_path]", AddTask.attach.getString(
 						titlecheck + "path" + i, null)));
@@ -1450,6 +1563,13 @@ public class AddTask extends FragmentActivity {
 			// not supported
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		comment_pref.edit().clear().commit();
 	}
 
 }
