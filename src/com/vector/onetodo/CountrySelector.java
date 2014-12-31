@@ -1,5 +1,6 @@
 package com.vector.onetodo;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,17 +11,23 @@ import java.util.Random;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.Settings.Secure;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -47,7 +54,7 @@ public class CountrySelector extends Fragment {
 	TextView skip;
 	HttpClient client;
 	HttpPost post;
-	List<NameValuePair> pairs;
+	List<NameValuePair> pairs,pair;
 	HttpResponse response = null;
 	Boolean message; 
 	AlertDialog alert;
@@ -56,6 +63,11 @@ public class CountrySelector extends Fragment {
 	public static View view;
 	InputMethodManager imm;
 
+	// ************** Phone COntacts
+
+		String phoneNumber = null;
+		Cursor cursor;
+		
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
@@ -91,7 +103,10 @@ public class CountrySelector extends Fragment {
 		// TODO Auto-generated method stub
 		super.onViewCreated(view, savedInstanceState);
 
-	 
+		// ******* Phone contact , name list
+				Constants.Name = new ArrayList<String>();
+				Constants.Contact = new ArrayList<String>();
+				new Phone_contact().execute();
 
 		String html = "ONE" + "<br />" + "todo";
 		aq.id(R.id.title).text(Html.fromHtml(html));
@@ -261,7 +276,107 @@ public class CountrySelector extends Fragment {
 					}
 				});
 
+		client = new DefaultHttpClient();
+		post = new HttpPost(
+				"http://api.heuristix.net/one_todo/v1/user/addContacts");
+		pair = new ArrayList<NameValuePair>();
+		pair.add(new BasicNameValuePair("user_id", "3223"));
+		for(int i=0;i<Constants.Contact.size();i++){
+		pair.add(new BasicNameValuePair("contacts["+i+"]", Constants.Contact.get(i)));
+		}
+
+		try {
+			post.setEntity(new UrlEncodedFormEntity(pair));
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		try {
+			response = client.execute(post);
+		} catch (ClientProtocolException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		String temp = null;
+		try {
+			temp = EntityUtils.toString(response.getEntity());
+		} catch (org.apache.http.ParseException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Log.v("Response post ", temp + " new");
 		 
+	}
+	
+	
+	public class Phone_contact extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected void onPostExecute(Void result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			Toast.makeText(getActivity(), " post", Toast.LENGTH_LONG).show();
+		}
+
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			super.onPreExecute();
+			cursor = getActivity()
+					.getContentResolver()
+					.query(ContactsContract.Contacts.CONTENT_URI,
+							null,
+							ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1",
+							null,
+							"UPPER(" + ContactsContract.Contacts.DISPLAY_NAME
+									+ ") ASC");
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			// TODO Auto-generated method stub
+
+			
+
+			if (cursor.getCount() > 0) {
+				while (cursor.moveToNext()) {
+					int hasPhoneNumber = Integer
+							.parseInt(cursor.getString(cursor
+									.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
+					if (hasPhoneNumber > 0) {
+						Constants.Name
+								.add(cursor.getString(cursor
+										.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
+						// Query and loop for every phone number of the contact
+						Cursor phoneCursor = getActivity()
+								.getContentResolver()
+								.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+										null,
+										ContactsContract.CommonDataKinds.Phone.CONTACT_ID
+												+ " = ?",
+										new String[] { cursor.getString(cursor
+												.getColumnIndex(ContactsContract.Contacts._ID)) },
+										null);
+						// while (phoneCursor.moveToNext()) {
+						phoneCursor.moveToNext();
+						phoneNumber = phoneCursor
+								.getString(phoneCursor
+										.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+						Constants.Contact.add(phoneNumber);
+						// }
+						phoneCursor.close();
+					}
+				}
+			}
+
+			
+			return null;
+		}
 	}
 	 
 }
