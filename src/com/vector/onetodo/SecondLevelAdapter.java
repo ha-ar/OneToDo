@@ -68,63 +68,13 @@ public class SecondLevelAdapter extends BaseExpandableListAdapter {
 
 		if (Arrays.asList(thirdLevelFormat).contains(item.title)) {
 			holder.checkBox.setVisibility(View.VISIBLE);
-//			holder.checkBox.setOnClickListener(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View v) {
-//					if (holder.checkBox.getTag().toString().equals("DD/MM/YY")) {
-//						((CheckBox) v.getRootView().findViewWithTag("MM/DD/YY"))
-//								.setChecked(false);
-//						((CheckBox) v.getRootView().findViewWithTag("DD/MM/YY"))
-//								.setChecked(true);
-//					} else if(holder.checkBox.getTag().toString().equals("MM/DD/YY")) {
-//						((CheckBox) v.getRootView().findViewWithTag("DD/MM/YY"))
-//								.setChecked(false);
-//						((CheckBox) v.getRootView().findViewWithTag("MM/DD/YY"))
-//								.setChecked(true);
-//					}
-//
-//				}
-//			});
+ 
 		} else if (Arrays.asList(timeFormat).contains(item.title)) {
 			holder.checkBox.setVisibility(View.VISIBLE);
-//			holder.checkBox.setOnClickListener(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View v) {
-//					if (holder.checkBox.getTag().toString().equals("12H")) {
-//						((CheckBox) v.getRootView().findViewWithTag("24H"))
-//								.setChecked(false);
-//						((CheckBox) v.getRootView().findViewWithTag("12H"))
-//								.setChecked(true);
-//					} else if(holder.checkBox.getTag().toString().equals("24H")){
-//						((CheckBox) v.getRootView().findViewWithTag("12H"))
-//								.setChecked(false);
-//						((CheckBox) v.getRootView().findViewWithTag("24H"))
-//								.setChecked(true);
-//					}
-//
-//				}
-//			});
+ 
 		} else if (Arrays.asList(weekStart).contains(item.title)) {
 			holder.checkBox.setVisibility(View.VISIBLE);
-//			holder.checkBox.setOnClickListener(new OnClickListener() {
-//
-//				@Override
-//				public void onClick(View v) {
-//					if (holder.checkBox.getTag().toString().equals("Monday")) {
-//						((CheckBox) v.getRootView().findViewWithTag("Sunday"))
-//								.setChecked(false);
-//						((CheckBox) v.getRootView().findViewWithTag("Monday"))
-//								.setChecked(true);
-//					} else if(holder.checkBox.getTag().toString().equals("Sunday")) {
-//						((CheckBox) v.getRootView().findViewWithTag("Sunday"))
-//								.setChecked(true);
-//						((CheckBox) v.getRootView().findViewWithTag("Monday"))
-//								.setChecked(false);
-//					}
-//				}
-//			});
+ 
 		}
 
 		return layout;
@@ -177,10 +127,7 @@ public class SecondLevelAdapter extends BaseExpandableListAdapter {
 			holder.checkBox.setOnClickListener(new OnClickListener() {
 
 				@Override
-				public void onClick(View v) {
-					// Toast.makeText(mContext,
-					// holder.checkBox.getTag().toString(),
-					// Toast.LENGTH_SHORT).show();
+				public void onClick(View v) { 
 
 				}
 			});

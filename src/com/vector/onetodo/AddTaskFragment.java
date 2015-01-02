@@ -3,7 +3,6 @@ package com.vector.onetodo;
 import it.feio.android.checklistview.ChecklistManager;
 import it.feio.android.checklistview.exceptions.ViewNotSupportedException;
 import it.feio.android.checklistview.interfaces.CheckListChangedListener;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,12 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
 import net.simonvt.datepicker.DatePicker;
 import net.simonvt.datepicker.DatePicker.OnDateChangedListener;
 import net.simonvt.timepicker.TimePicker;
 import net.simonvt.timepicker.TimePicker.OnTimeChangedListener;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -29,11 +26,10 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
-
-import uk.me.lewisdeane.ldialogs.BaseDialog.Alignment;
 import uk.me.lewisdeane.ldialogs.CustomDialog;
 import uk.me.lewisdeane.ldialogs.CustomDialog.ClickListener;
 import uk.me.lewisdeane.ldialogs.CustomListDialog;
+import uk.me.lewisdeane.ldialogs.BaseDialog.Alignment;
 import uk.me.lewisdeane.ldialogs.CustomListDialog.ListClickListener;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -98,7 +94,6 @@ import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 import com.astuetz.PagerSlidingTabStrip;
 import com.devspark.appmsg.AppMsg;
-import com.vector.onetodo.db.gen.LabelName;
 import com.vector.onetodo.utils.Constants;
 import com.vector.onetodo.utils.ScaleAnimToHide;
 import com.vector.onetodo.utils.ScaleAnimToShow;
@@ -106,20 +101,20 @@ import com.vector.onetodo.utils.TypeFaces;
 import com.vector.onetodo.utils.Utils;
 
 public class AddTaskFragment extends Fragment {
-
+ 
 
 	@Override
 	public void onDestroy() {
+		// TODO Auto-generated method stub
 		super.onDestroy();
 		Constants.Project_task_check = 0;
 		aq.id(R.id.addtask_header).getView().setVisibility(View.GONE);
 	}
 
-	// HttpClient client;
+ 
 	HttpPost post;
 	List<NameValuePair> pairs;
 	HttpResponse response = null;
-	// add asyn;
 	Uri filename;
 	Editor editor, editorattach;
 	String plabel = null;
@@ -128,29 +123,19 @@ public class AddTaskFragment extends Fragment {
 	int MaxId = -1;
 	private static int Tag = 0;
 	private PopupWindow popupWindowAttach;
-
-	// public PopupWindow popupImage;
 	public static AQuery aq, popupAQ, aq_edit, aqd, aq_del, att, aqa, aq_menu;
-
 	static List<java.lang.Object> names;
 	int Label_postion = -1;
 	ImageView last;
-
 	static LinearLayout ll_iner;
 
 	
-	String[] items = {"From Camera","From Gallery","From DropBox","From GoogleDrive"};
 
 	static int FragmentCheck = 0;
 	static String repeatdate = "";
 	static String checkedId2 = null, title = null;
 	View label_view = null, viewl;
-	CustomListDialog.Builder listbuilder;
-	static CustomListDialog attach;
-	Dialog add_new_label_alert, assig_alert, share_alert, date_time_alert;
-	String[] itemsForLables = {"Edit","Delete"};
-	CustomDialog.Builder dialogbuilder;
-			CustomListDialog label_edit;CustomDialog location_del;
+	static Dialog add_new_label_alert, assig_alert, share_alert, date_time_alert,attach,location_del,label_edit;
 
 	static int currentHours, currentMin, currentDayDigit, currentYear,
 			currentMonDigit;
@@ -330,46 +315,23 @@ public class AddTaskFragment extends Fragment {
 
 		// *****************Title
 
-//		LayoutInflater inflater5 = getActivity().getLayoutInflater();
-//
-//		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
-//				false);
-//		aq_edit = new AQuery(dialoglayout6);
-//		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
-//		builder6.setView(dialoglayout6);
-//		label_edit = builder6.create();
-//
-//		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
-//				null, false);
-//		aq_del = new AQuery(dialoglayout7);
-//		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
-//		builder7.setView(dialoglayout7);
-//		location_del = builder7.create();
+		LayoutInflater inflater5 = getActivity().getLayoutInflater();
 
+		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
+				false);
+		aq_edit = new AQuery(dialoglayout6);
+		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
+		builder6.setView(dialoglayout6);
+		label_edit = builder6.create();
+
+		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
+				null, false);
+		aq_del = new AQuery(dialoglayout7);
+		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
+		builder7.setView(dialoglayout7);
+		location_del = builder7.create();
 		taskTitle = (EditText) aq.id(R.id.task_title1).getView();
-		/*
-		 * final EditText taskassign = (EditText) aq.id(R.id.task_assign)
-		 * .getView(); taskassign.addTextChangedListener(new TextWatcher() {
-		 * 
-		 * @Override public void onTextChanged(CharSequence arg0, int arg1, int
-		 * arg2, int arg3) { // TODO Auto-generated method stub //
-		 * taskassign.setTextColor(R.color.active);
-		 * aq.id(R.id.task_assign).textColorId(R.color.active);
-		 * aq.id(R.id.assign_task_button).background( R.drawable.assign_blue);
-		 * aq.id(R.id.imageView12).background(R.drawable.next_arrow_black);
-		 * 
-		 * }
-		 * 
-		 * @Override public void beforeTextChanged(CharSequence arg0, int arg1,
-		 * int arg2, int arg3) { // TODO Auto-generated method stub
-		 * 
-		 * }
-		 * 
-		 * @Override public void afterTextChanged(Editable arg0) { // TODO
-		 * Auto-generated method stub
-		 * 
-		 * } });
-		 */
+		 
 		taskTitle.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -380,20 +342,7 @@ public class AddTaskFragment extends Fragment {
 					AddTask.btn.setAlpha(1);
 
 				aq.id(R.id.completed_task).textColorId(R.color.active);
-				/*
-				 * for (String words : Constants.CONTACTS_EVOKING_WORDS) {
-				 * String[] typedWords = s.toString().split(" ");
-				 * 
-				 * try { String name = typedWords[typedWords.length - 1];
-				 * 
-				 * if (name.equalsIgnoreCase(words))
-				 * showCurrentView(aq.id(R.id.contacts_layout_include)
-				 * .getView());
-				 * 
-				 * } catch (ArrayIndexOutOfBoundsException aiobe) {
-				 * 
-				 * } }
-				 */
+				 
 			}
 
 			@Override
@@ -488,8 +437,7 @@ public class AddTaskFragment extends Fragment {
 				img.setImageResource(R.drawable.select_white);
 
 				Label_postion = position;
-
-				// buttonColor = (ColorDrawable) view.getBackground();
+ 
 			}
 		});
 
@@ -535,10 +483,7 @@ public class AddTaskFragment extends Fragment {
 								.setBackground(label_view.getBackground());
 						aq.id(R.id.spinner_labels_task).getTextView()
 								.setTextColor(Color.WHITE);
-						/*
-						 * aq.id(R.id.label_image).background(
-						 * R.drawable.label_blue);
-						 */
+						 
 					}
 				}
 			}
@@ -609,10 +554,7 @@ public class AddTaskFragment extends Fragment {
 									.setBackground(view.getBackground());
 							aq.id(R.id.spinner_labels_task).getTextView()
 									.setTextColor(Color.WHITE);
-							/*
-							 * aq.id(R.id.label_image).background(
-							 * R.drawable.label_blue);
-							 */
+						 
 						} else {
 							add_new_label_alert
 									.getWindow()
@@ -630,64 +572,59 @@ public class AddTaskFragment extends Fragment {
 		aq.id(R.id.label_grid_view).getGridView()
 				.setOnItemLongClickListener(new LabelEditClickListener());
 
-//		aq_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//				location_del.dismiss();
-//			}
-//		});
+		aq_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
 
-//		aq_del.id(R.id.edit_del).clicked(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//				Remove(viewl.getId() + "" + itempos);
-//				((TextView) viewl).setText("New");
-//				GradientDrawable mDrawable = (GradientDrawable) getResources()
-//						.getDrawable(R.drawable.label_simple);
-//				((TextView) viewl).setBackground(mDrawable);
-//				((TextView) viewl).setTextColor(R.color.mountain_mist);
-//
-//				location_del.dismiss();
-//			}
-//		});
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				location_del.dismiss();
+			}
+		});
 
-//		aq_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//				label_edit.dismiss();
-//				location_del.show();
-//			}
-//		});
+		aq_del.id(R.id.edit_del).clicked(new OnClickListener() {
 
-//		aq_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub=
-//				// aqd.id(R.id.add_label_text).text(((TextView)
-//				// viewl).getText().)
-//				aqd.id(R.id.label_title).text("Edit");
-//				aqd.id(R.id.save).text("Save");
-//				label_view = viewl;
-//				label_edit.dismiss();
-//
-//				add_new_label_alert.getWindow().setBackgroundDrawable(
-//						new ColorDrawable(android.graphics.Color.TRANSPARENT));
-//				add_new_label_alert.show();
-//
-//			}
-//		});
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Remove(viewl.getId() + "" + itempos);
+				((TextView) viewl).setText("New");
+				GradientDrawable mDrawable = (GradientDrawable) getResources()
+						.getDrawable(R.drawable.label_simple);
+				((TextView) viewl).setBackground(mDrawable);
+				((TextView) viewl).setTextColor(R.color.mountain_mist);
 
-		/*
-		 * aq.id(R.id.image) .typeface( TypeFaces.get(getActivity(),
-		 * Constants.ROMAN_TYPEFACE)) .clicked(new GeneralOnClickListner());
-		 */
+				location_del.dismiss();
+			}
+		});
+
+		aq_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				label_edit.dismiss();
+				location_del.show();
+			}
+		});
+
+		aq_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub=
+				// aqd.id(R.id.add_label_text).text(((TextView)
+				// viewl).getText().)
+				aqd.id(R.id.label_title).text("Edit");
+				aqd.id(R.id.save).text("Save");
+				label_view = viewl;
+				label_edit.dismiss();
+
+				add_new_label_alert.getWindow().setBackgroundDrawable(
+						new ColorDrawable(android.graphics.Color.TRANSPARENT));
+				add_new_label_alert.show();
+
+			}
+		});
 
 		/**
 		 * View pager for before and location
@@ -730,31 +667,17 @@ public class AddTaskFragment extends Fragment {
 
 								TextView textView = (TextView) super.getView(
 										position, convertView, parent);
-								if (/*
-									 * textView.getText().toString()
-									 * .equals("Weekly")
-									 */position == 2) {
+								if ( position == 2) {
 									previousSelected = textView;
 									((TextView) textView)
 											.setBackgroundResource(R.drawable.round_buttons_blue);
 									((TextView) textView)
 											.setTextColor(Color.WHITE);
-
-									/*
-									 * textView.setTextColor(Color.WHITE);
-									 * GradientDrawable mDrawable =
-									 * (GradientDrawable) getResources()
-									 * .getDrawable(
-									 * R.drawable.label_background);
-									 * mDrawable.setColor(Color
-									 * .parseColor(colors[position]));
-									 * textView.setBackground(mDrawable);
-									 */
+ 
 								} else
 									((TextView) textView)
 											.setTextColor(getResources()
-													.getColor(R.color._4d4d4d));
-								// convertView.setSelected(true);
+													.getColor(R.color._4d4d4d)); 
 								return textView;
 							}
 
@@ -792,8 +715,7 @@ public class AddTaskFragment extends Fragment {
 				((TextView) view).setTextColor(Color.WHITE);
 				view.setSelected(true);
 				if (Constants.repeatArray[position] == "Never") {
-					aq.id(R.id.repeat).text(Constants.repeatArray[position])
-					/* .textColorId(R.color.deep_sky_blue) */;
+					aq.id(R.id.repeat).text(Constants.repeatArray[position]);
 				} else {
 					aq.id(R.id.repeat).text(Constants.repeatArray[position]);
 				}
@@ -902,345 +824,82 @@ public class AddTaskFragment extends Fragment {
 				}
 			}
 		});
-
-		/*
-		 * // *************** Location locationTextView = (AutoCompleteTextView)
-		 * aq.id(R.id.location_task) .getView(); locationTextView.setAdapter(new
-		 * PlacesAutoCompleteAdapter( getActivity(),
-		 * android.R.layout.simple_spinner_dropdown_item));
-		 * locationTextView.addTextChangedListener(new TextWatcher() {
-		 * 
-		 * @Override public void onTextChanged(CharSequence s, int start, int
-		 * before, int count) { // TODO Auto-generated method stub
-		 * 
-		 * }
-		 * 
-		 * @Override public void beforeTextChanged(CharSequence s, int start,
-		 * int count, int after) { // TODO Auto-generated method stub
-		 * 
-		 * }
-		 * 
-		 * @Override public void afterTextChanged(Editable s) {
-		 * locationTextView.setTextColor(getResources().getColor(
-		 * R.color.deep_sky_blue));
-		 * aq.id(R.id.location_image).background(R.drawable.location_blue);
-		 * 
-		 * } });
-		 */
-
-		// **************Should be removed -- old
-		// design************************//
-
-		/*
-		 * people = new Person[] { new Person("Usman Ameer",
-		 * "de.uameer@example.com"), new Person("Khurram Nawaaz",
-		 * "khurram@example.com"), new Person("Hasan Ali", "has@example.com"),
-		 * new Person("Umer", "umer@example.com"), new
-		 * Person("Faizan Chaudhary", "amanda@example.com"), new
-		 * Person("Ali Mumtaz", "ali@example.com") };
-		 * 
-		 * LayoutInflater inflater2 = getActivity().getLayoutInflater(); View
-		 * assigDialogLayout = inflater2.inflate(
-		 * R.layout.add_assign_share_dialog, null, false); AlertDialog.Builder
-		 * builder1 = new AlertDialog.Builder(getActivity());
-		 * builder1.setView(assigDialogLayout); assig_alert = builder1.create();
-		 * 
-		 * adapter = new ArrayAdapter<Person>(getActivity(),
-		 * android.R.layout.simple_list_item_1, people);
-		 * 
-		 * completionAssignView = (ContactsCompletionView) assigDialogLayout
-		 * .findViewById(R.id.searchView); completionAssignView.setScroller(new
-		 * Scroller(getActivity())); completionAssignView.setMaxLines(4);
-		 * completionAssignView.setVerticalScrollBarEnabled(true);
-		 * completionAssignView.setMovementMethod(new
-		 * ScrollingMovementMethod()); completionAssignView.setAdapter(adapter);
-		 * 
-		 * TextView assignButton = (TextView) assigDialogLayout
-		 * .findViewById(R.id.assign); assignButton.setOnClickListener(new
-		 * OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) { assig_alert.dismiss(); int
-		 * childCount = ((LinearLayout) aq.id(
-		 * R.id.added_contacts_share_outer).getView()) .getChildCount(); if
-		 * (childCount >= 2) { aq.id(R.id.share_task).gone();
-		 * aq.id(R.id.share_task_replica).visible() .clicked(new
-		 * ShareOnClickListner()); }
-		 * showSlectedContacts(R.id.added_contacts_outer, "Assigned to:",
-		 * completionAssignView); } }); TextView cancelB = (TextView)
-		 * assigDialogLayout .findViewById(R.id.cancel);
-		 * cancelB.setOnClickListener(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) { assig_alert.cancel(); } });
-		 * 
-		 * aq.id(R.id.assign_task) .typeface( TypeFaces.get(getActivity(),
-		 * Constants.ROMAN_TYPEFACE)) .clicked(new AssignOnClickListner());
-		 * 
-		 * LayoutInflater inflater3 = getActivity().getLayoutInflater(); View
-		 * shareDialogLayout = inflater3.inflate(
-		 * R.layout.add_assign_share_dialog, null, false); AlertDialog.Builder
-		 * builder3 = new AlertDialog.Builder(getActivity());
-		 * builder3.setView(shareDialogLayout); share_alert = builder3.create();
-		 * 
-		 * shareAdapter = new ArrayAdapter<Person>(getActivity(),
-		 * android.R.layout.simple_list_item_1, people);
-		 * 
-		 * completionShareView = (ContactsCompletionView) shareDialogLayout
-		 * .findViewById(R.id.searchView); completionShareView.setScroller(new
-		 * Scroller(getActivity())); completionShareView.setMaxLines(4);
-		 * completionShareView.setVerticalScrollBarEnabled(true);
-		 * completionShareView.setMovementMethod(new ScrollingMovementMethod());
-		 * completionShareView.setAdapter(shareAdapter);
-		 * 
-		 * TextView shareButton = (TextView) shareDialogLayout
-		 * .findViewById(R.id.assign); shareButton.setText("Share");
-		 * shareButton.setOnClickListener(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) { share_alert.dismiss(); int
-		 * childCount = ((LinearLayout) aq.id(
-		 * R.id.added_contacts_outer).getView()).getChildCount(); if (childCount
-		 * >= 2) { aq.id(R.id.share_task).gone();
-		 * aq.id(R.id.share_task_replica).visible() .clicked(new
-		 * ShareOnClickListner()); }
-		 * showSlectedContacts(R.id.added_contacts_share_outer, "Shared to:",
-		 * completionShareView);
-		 * 
-		 * } }); TextView cancelShare = (TextView) shareDialogLayout
-		 * .findViewById(R.id.cancel); cancelShare.setOnClickListener(new
-		 * OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) { share_alert.cancel(); } });
-		 * 
-		 * aq.id(R.id.share_task) .typeface( TypeFaces.get(getActivity(),
-		 * Constants.ROMAN_TYPEFACE)) .clicked(new ShareOnClickListner());
-		 * 
-		 * aq.id(R.id.assign_task_button).clicked(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) {
-		 * 
-		 * Fragment fr = new AddTaskAssign(); FragmentManager manager =
-		 * getFragmentManager(); FragmentTransaction transaction =
-		 * manager.beginTransaction(); transaction.replace(R.id.main_container,
-		 * fr); transaction.setCustomAnimations(R.anim.slide_in1,
-		 * R.anim.slide_out1); transaction.addToBackStack(null);
-		 * transaction.commit(); } });
-		 */
-
 		// ***************************** Attachment
-/*<<<<<<< HEAD
-//		LayoutInflater inflater = getActivity().getLayoutInflater();
-//
-//		View attachment = inflater
-//				.inflate(R.layout.add_attachment, null, false);
-//		att = new AQuery(attachment);
-//
-//		LinearLayout ll = (LinearLayout) aq.id(R.id.added_image_outer)
-//				.getView();
-=======
-		LayoutInflater inflater = getActivity().getLayoutInflater();
+				LayoutInflater inflater = getActivity().getLayoutInflater();
 
-		View attachment = inflater
-				.inflate(R.layout.add_attachment, null, false);
-		att = new AQuery(attachment);
+				View attachment = inflater
+						.inflate(R.layout.add_attachment, null, false);
+				att = new AQuery(attachment);
 
-		LinearLayout ll = (LinearLayout) aq.id(R.id.added_image_outer)
-				.getView();
+				LinearLayout ll = (LinearLayout) aq.id(R.id.added_image_outer)
+						.getView();
+				ll.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View arg0) {
+						// TODO Auto-generated method stub
+						LinearLayout lll = (LinearLayout) arg0;
+						Toast.makeText(getActivity(), lll.getChildCount() + "",
+								Toast.LENGTH_LONG).show();
+					}
+				});
+
+				// Gallery and Camera intent
+				att.id(R.id.gallery1)
+						.typeface(
+								TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
+						.clicked(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+
+								attach.dismiss();
+								Intent galleryIntent = new Intent(
+										Intent.ACTION_PICK,
+										android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+								startActivityForResult(galleryIntent, RESULT_GALLERY);
+							}
+						});
+				att.id(R.id.camera1)
+						.typeface(
+								TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
+						.clicked(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								attach.dismiss();
+								Intent intent = new Intent(
+										"android.media.action.IMAGE_CAPTURE");
+
+								String path = Environment.getExternalStorageDirectory()
+										.toString();
+								File makeDirectory = new File(path + File.separator
+										+ "OneTodo");
+								makeDirectory.mkdir();
+								File photo = new File(Environment
+										.getExternalStorageDirectory()
+										+ File.separator
+										+ "OneToDo" + File.separator, "OneToDo_"
+										+ System.currentTimeMillis() + ".JPG");
+								intent.putExtra(MediaStore.EXTRA_OUTPUT,
+										Uri.fromFile(photo));
+								imageUri = Uri.fromFile(photo);
+								startActivityForResult(intent, TAKE_PICTURE);
+							}
+						});
+				AlertDialog.Builder attach_builder = new AlertDialog.Builder(
+						getActivity());
+				attach_builder.setView(attachment);
+				attach = attach_builder.create();
 		
-		 * listbuilder = new CustomListDialog.Builder(getActivity(),
-		 * "Add Attachment",items); Log.e("ok", "Location tag:" + ((TextView)
-		 * view).getText().toString()); listbuilder.darkTheme(false);
-		 * listbuilder.titleAlignment(Alignment.LEFT);
-		 * listbuilder.itemAlignment(Alignment.LEFT);
-		 * listbuilder.titleColor(getResources
-		 * ().getColor(android.R.color.holo_blue_dark));
-		 * listbuilder.itemColor(Color.BLACK); listbuilder.titleTextSize(22);
-		 * listbuilder.itemTextSize(18); attach = listbuilder.build();
-		 * attach.setListClickListener(new ListClickListener() {
-		 * 
-		 * @Override public void onListItemSelected(int position, String[]
-		 * items, String item) { // TODO Auto-generated method stub
-		 * 
-		 * } });
-		 
-		ll.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				LinearLayout lll = (LinearLayout) arg0;
-				Toast.makeText(getActivity(), lll.getChildCount() + "",
-						Toast.LENGTH_LONG).show();
-			}
-		});
-
-		// Gallery and Camera intent
-		att.id(R.id.gallery1)
-				.typeface(
-						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
-				.clicked(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-
-						// attach.dismiss();
-						Intent galleryIntent = new Intent(
-								Intent.ACTION_PICK,
-								android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-						startActivityForResult(galleryIntent, RESULT_GALLERY);
-					}
-				});
-		att.id(R.id.camera1)
-				.typeface(
-						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
-				.clicked(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						// attach.dismiss();
-						Intent intent = new Intent(
-								"android.media.action.IMAGE_CAPTURE");
-
-						String path = Environment.getExternalStorageDirectory()
-								.toString();
-						File makeDirectory = new File(path + File.separator
-								+ "OneTodo");
-						makeDirectory.mkdir();
-						File photo = new File(Environment
-								.getExternalStorageDirectory()
-								+ File.separator
-								+ "OneToDo" + File.separator, "OneToDo_"
-								+ System.currentTimeMillis() + ".JPG");
-						intent.putExtra(MediaStore.EXTRA_OUTPUT,
-								Uri.fromFile(photo));
-						imageUri = Uri.fromFile(photo);
-						startActivityForResult(intent, TAKE_PICTURE);
-					}
-				});
-		AlertDialog.Builder attach_builder = new AlertDialog.Builder(
-				getActivity());
-		attach_builder.setView(attachment);
-		// attach = attach_builder.create();
->>>>>>> e7b31beea00fa091b4bda49ca22abe0e45e23679*/
 		aq.id(R.id.task_attachment).clicked(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {		
-		listbuilder = new CustomListDialog.Builder(getActivity(), "Add Attachment",items);
-			
-				listbuilder.darkTheme(false);		
-				listbuilder.typeface(TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE));
-				listbuilder.titleAlignment(Alignment.LEFT); 
-				listbuilder.itemAlignment(Alignment.LEFT); 
-				listbuilder.titleColor(getResources().getColor(android.R.color.holo_blue_dark)); 
-				listbuilder.itemColor(Color.BLACK);
-				listbuilder.titleTextSize(22);
-				listbuilder.itemTextSize(18);
-				attach = listbuilder.build();
 				attach.show();
-				attach.setListClickListener(new ListClickListener() {
-					
-					@Override
-					public void onListItemSelected(int position, String[] items, String item) {
-						if(position==0)
-						{
-							attach.dismiss();
-							Intent intent = new Intent(
-									"android.media.action.IMAGE_CAPTURE");
-
-							String path = Environment.getExternalStorageDirectory()
-									.toString();
-							File makeDirectory = new File(path + File.separator
-									+ "OneTodo");
-							makeDirectory.mkdir();
-							File photo = new File(Environment
-									.getExternalStorageDirectory()
-									+ File.separator
-									+ "OneToDo" + File.separator, "OneToDo_"
-									+ System.currentTimeMillis() + ".JPG");
-							intent.putExtra(MediaStore.EXTRA_OUTPUT,
-									Uri.fromFile(photo));
-							imageUri = Uri.fromFile(photo);
-							startActivityForResult(intent, TAKE_PICTURE);
-						}
-						if(position==1)
-						{
-							attach.dismiss();
-							Intent galleryIntent = new Intent(
-									Intent.ACTION_PICK,
-									android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-							startActivityForResult(galleryIntent, RESULT_GALLERY);
-						}
-					}
-				});				
-
 			}
 		});
-//		ll.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//				LinearLayout lll = (LinearLayout) arg0;
-//				Toast.makeText(getActivity(), lll.getChildCount() + "",
-//						Toast.LENGTH_LONG).show();
-//			}
-//		});
-//
-//		// Gallery and Camera intent
-//		att.id(R.id.gallery1)
-//				.typeface(
-//						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
-//				.clicked(new OnClickListener() {
-//
-//					@Override
-//					public void onClick(View v) {
-//
-//						attach.dismiss();
-//						Intent galleryIntent = new Intent(
-//								Intent.ACTION_PICK,
-//								android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//						startActivityForResult(galleryIntent, RESULT_GALLERY);
-//					}
-//				});
-//		att.id(R.id.camera1)
-//				.typeface(
-//						TypeFaces.get(getActivity(), Constants.ROMAN_TYPEFACE))
-//				.clicked(new OnClickListener() {
-//
-//					@Override
-//					public void onClick(View v) {
-//						attach.dismiss();
-//						Intent intent = new Intent(
-//								"android.media.action.IMAGE_CAPTURE");
-//
-//						String path = Environment.getExternalStorageDirectory()
-//								.toString();
-//						File makeDirectory = new File(path + File.separator
-//								+ "OneTodo");
-//						makeDirectory.mkdir();
-//						File photo = new File(Environment
-//								.getExternalStorageDirectory()
-//								+ File.separator
-//								+ "OneToDo" + File.separator, "OneToDo_"
-//								+ System.currentTimeMillis() + ".JPG");
-//						intent.putExtra(MediaStore.EXTRA_OUTPUT,
-//								Uri.fromFile(photo));
-//						imageUri = Uri.fromFile(photo);
-//						startActivityForResult(intent, TAKE_PICTURE);
-//					}
-//				});
-//		AlertDialog.Builder attach_builder = new AlertDialog.Builder(
-//				getActivity());
-//		attach_builder.setView(attachment);
-//		attach = attach_builder.create();
-//		aq.id(R.id.task_attachment).clicked(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// slideUpDown(aq.id(R.id.attachement_layout_include).getView());
-//				attach.show();
-//			}
-//		});
-
+ 
 		// ********************** Attachment End
 
 		// ***************************** Priority
@@ -1271,7 +930,7 @@ public class AddTaskFragment extends Fragment {
 					}
 				});
 
-		AddTask.aq_menu.id(R.id.menu_item2).clicked(new OnClickListener() {
+		/*AddTask.aq_menu.id(R.id.menu_item2).clicked(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -1306,7 +965,7 @@ public class AddTaskFragment extends Fragment {
 					}
 				}
 			}
-		});
+		});*/
 		View switchView = aq.id(R.id.add_sub_task).getView();
 		toggleCheckList(switchView);
 
@@ -1320,8 +979,7 @@ public class AddTaskFragment extends Fragment {
 			}
 		});
 	}
-
-	// private ChecklistManager mChecklistManager;
+ 
 
 	private void toggleCheckList(View switchView) {
 		View newView;
@@ -1477,6 +1135,21 @@ public class AddTaskFragment extends Fragment {
 		return view.getVisibility() == View.VISIBLE;
 	}
 
+	private class AssignOnClickListner implements OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+			assig_alert.show();
+		}
+	}
+
+	private class ShareOnClickListner implements OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+			share_alert.show();
+		}
+	}
 
 	private class GeneralOnClickListner implements OnClickListener {
 
@@ -1582,8 +1255,7 @@ public class AddTaskFragment extends Fragment {
 						if (popupWindowAttach.isShowing()) {
 							popupWindowAttach.dismiss();
 
-						} else {
-							// layout_MainMenu.getForeground().setAlpha(150);
+						} else { 
 							popupWindowAttach.showAsDropDown(arg0, 5, 0);
 						}
 					}
@@ -1620,8 +1292,7 @@ public class AddTaskFragment extends Fragment {
 				Calendar cal = Calendar.getInstance();
 				SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy");
 				by.setText("By Usman Ameer on " + sdf.format(cal.getTime()));
-				filename = selectedImage;
-				// AddTask.path.add(filename);
+				filename = selectedImage; 
 				File myFile = new File(selectedImage.toString());
 
 				myFile.getAbsolutePath();
@@ -1642,8 +1313,7 @@ public class AddTaskFragment extends Fragment {
 
 							@Override
 							public void onClick(View v) {
-								item.removeView(child);
-								// child.setVisibility(View.GONE);
+								item.removeView(child); 
 							}
 						});
 
@@ -1825,23 +1495,7 @@ public class AddTaskFragment extends Fragment {
 		}
 	}
 
-	public void label_add(String name) {
-		// AddTask.labelnamedao.notifyAll();
-		List<LabelName> labelname_list1 = AddTask.labelnamedao.loadAll();
-		if (labelname_list1.size() < 6) {
-			int g = 0;
-			for (int i = 0; i < labelname_list1.size(); i++)
-				if (labelname_list1.get(i).getName().toString()
-						.equalsIgnoreCase(name)) {
-					g = 1;
-				}
-			if (g == 0) {
-				LabelName labelname = new LabelName(AddTask.f2, name);
-				AddTask.labelnamedao.insert(labelname);
-
-			}
-		}
-	}
+ 
 
 	private class LabelEditClickListener implements OnItemLongClickListener {
 
@@ -1853,91 +1507,22 @@ public class AddTaskFragment extends Fragment {
 					|| position < 3) {
 
 			} else {
-//				aqd.id(R.id.add_label_text).text(
-//						((TextView) arg1).getText().toString());
-//				aq_del.id(R.id.body).text(
-//						"Label " + ((TextView) arg1).getText().toString()
-//								+ " will be deleted");
-//				aq_edit.id(R.id.add_task_edit_title).text(
-//						"Label: " + ((TextView) arg1).getText().toString());
+				aqd.id(R.id.add_label_text).text(
+						((TextView) arg1).getText().toString());
+				aq_del.id(R.id.body).text(
+						"Label " + ((TextView) arg1).getText().toString()
+								+ " will be deleted");
+				aq_edit.id(R.id.add_task_edit_title).text(
+						"Label: " + ((TextView) arg1).getText().toString());
 				viewl = arg1;
 				itempos = position;
-				listbuilder = new CustomListDialog.Builder(getActivity(), "Label: " + ((TextView) arg1).getText().toString(),itemsForLables);
-						listbuilder.darkTheme(false);				
-						listbuilder.titleAlignment(Alignment.LEFT); 
-						listbuilder.itemAlignment(Alignment.LEFT); 
-						listbuilder.titleColor(getResources().getColor(android.R.color.holo_blue_dark)); 
-						listbuilder.itemColor(Color.BLACK);
-						listbuilder.titleTextSize(22);
-						listbuilder.itemTextSize(18);
-						label_edit = listbuilder.build();
-						label_edit.show();
-				label_edit.setListClickListener(new ListClickListener() {
-					
-					@Override
-					public void onListItemSelected(int position, String[] items, String item) {
-						// TODO Auto-generated method stub
-						if(position == 0)
-		            	{
-							aqd.id(R.id.label_title).text("Edit");
-							aqd.id(R.id.save).text("Save");
-							label_view = viewl;
-							label_edit.dismiss();
-
-							add_new_label_alert.getWindow().setBackgroundDrawable(
-									new ColorDrawable(android.graphics.Color.TRANSPARENT));
-							add_new_label_alert.show();
-		            	}
-						if(position==1)
-						{
-							label_edit.dismiss();
-							dialogbuilder = new CustomDialog.Builder(getActivity(), "Delete", "Ok");
-
-		            		// Now we can any of the following methods.
-		            		dialogbuilder.content("Label " + ((TextView) arg1).getText().toString()
-									+ " will be deleted");
-		            		dialogbuilder.negativeText("Cancel");
-		            		dialogbuilder.darkTheme(false);
-		            		dialogbuilder.rightToLeft(true);
-		            		dialogbuilder.titleTextSize(22);
-		            		dialogbuilder.contentTextSize(18);
-		            		dialogbuilder.buttonTextSize(14);
-		            		dialogbuilder.titleAlignment(Alignment.LEFT); 
-		            		dialogbuilder.buttonAlignment(Alignment.RIGHT);
-		            		dialogbuilder.titleColor(getResources().getColor(android.R.color.holo_blue_light)); 
-		            		dialogbuilder.contentColor(Color.BLACK); 
-		            		dialogbuilder.positiveColor(getResources().getColor(android.R.color.holo_blue_light)); 
-		            		location_del = dialogbuilder.build();
-		            		location_del.show();
-							location_del.setClickListener(new ClickListener() {
-								
-								@Override
-								public void onConfirmClick() {
-									// TODO Auto-generated method stub
-									Remove(viewl.getId() + "" + itempos);
-									((TextView) viewl).setText("New");
-									GradientDrawable mDrawable = (GradientDrawable) getResources()
-											.getDrawable(R.drawable.label_simple);
-									((TextView) viewl).setBackground(mDrawable);
-									((TextView) viewl).setTextColor(R.color.mountain_mist);
-
-									location_del.dismiss();
-								}
-								
-								@Override
-								public void onCancelClick() {
-									// TODO Auto-generated method stub
-									location_del.dismiss();
-								}
-							});
-						}
-					}
-				});
+				label_edit.show();
 			}
 			return false;
 		}
 	}
 
+	 
 
 	public void imageupload() {
 
@@ -1948,8 +1533,10 @@ public class AddTaskFragment extends Fragment {
 			bm = MediaStore.Images.Media.getBitmap(getActivity()
 					.getContentResolver(), filename);
 		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -1960,8 +1547,7 @@ public class AddTaskFragment extends Fragment {
 		pairs.add(new BasicNameValuePair("image", encoded));
 
 		try {
-			entity = new UrlEncodedFormEntity(pairs, "UTF-8");
-			// entity.setContentType("application/json");
+			entity = new UrlEncodedFormEntity(pairs, "UTF-8"); 
 		} catch (UnsupportedEncodingException e) {
 			// TODO
 			// Auto-generated

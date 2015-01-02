@@ -1,18 +1,16 @@
 package com.vector.onetodo.utils;
 
 import java.util.List;
-
-import android.widget.RelativeLayout;
-
-import com.vector.onetodo.db.gen.LabelName;
+/*
+import com.vector.onetodo.db.gen.LabelName;*/
 
 public class Constants {
 
 	public final static String ICON_FONT = "onetodo.ttf";
 
 	public static int user_id=-1;
-	public static boolean date,time,week;
-	public static List<LabelName> label_name;
+	public static boolean date,time,week;/*
+	public static List<LabelName> label_name;*/
 	public final static String MORE = "";
 	public static String SENDER_ID="184279149655";
 	public static String RegId="";

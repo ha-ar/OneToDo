@@ -12,5 +12,4 @@
         <item name="android:spinnerStyle">@style/Spinnerspinner</item>
         <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemspinner</item>
     </style>
-
 </resources>

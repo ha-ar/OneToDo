@@ -24,8 +24,7 @@ public class ProjectsListFragment extends ProjectsTabHolder implements
 	private int position;
 	private static long[] Currentdate;
 
-	// public static ItemLazyListAdapter todaysAdapter, tomorrowsAdapter,
-	// upcomingAdapter;
+ 
 
 	public static ProjectsListFragment newInstance(int position) {
 		ProjectsListFragment myFragment = new ProjectsListFragment();
@@ -76,9 +75,7 @@ public class ProjectsListFragment extends ProjectsTabHolder implements
 
 	}
 
-	/*
-	 * public class Holder { TextView title, location, reminderDate; }
-	 */
+ 
 
 	public class LandingAdapter extends BaseAdapter {
 
@@ -150,9 +147,7 @@ public class ProjectsListFragment extends ProjectsTabHolder implements
 		// nothing
 	}
 
-	private void setadapter(Context context, int position) {
-		// todayQuery();
-		// todayAdapter = new LandingAdapter(getActivity(), todayQuery.list());
+	private void setadapter(Context context, int position) { 
 		LandingAdapter adapter = new LandingAdapter(getActivity());
 		listView.setAdapter(adapter);
 	}

@@ -1,6 +1,7 @@
 package com.vector.onetodo;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -21,6 +22,10 @@ import android.widget.PopupWindow.OnDismissListener;
 
 import com.androidquery.AQuery;
 import com.astuetz.PagerSlidingTabStrip;
+import com.vector.onetodo.R;
+import com.vector.onetodo.R.drawable;
+import com.vector.onetodo.R.id;
+import com.vector.onetodo.R.layout;
 import com.vector.onetodo.utils.Utils;
 
 public class AddTaskAssign extends Fragment {
@@ -32,10 +37,7 @@ public class AddTaskAssign extends Fragment {
 	LinearLayout last = null;
 	private ViewPager pager;
 	private PopupWindow popupWindowTask;
-
-	/*
-	 * List<String> name; contact list_adapter;
-	 */
+ 
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,8 +45,7 @@ public class AddTaskAssign extends Fragment {
 		// TODO Auto-generated method stub
 		setRetainInstance(true);
 		View view = inflater
-				.inflate(R.layout.add_task_assign, container, false);
-		// name = new ArrayList<String>();
+				.inflate(R.layout.add_task_assign, container, false); 
 		aq = new AQuery(getActivity(), view);
 		return view;
 	}
@@ -101,8 +102,7 @@ public class AddTaskAssign extends Fragment {
 
 		popupWindowTask.setBackgroundDrawable(getResources().getDrawable(
 				android.R.drawable.dialog_holo_light_frame));
-		popupWindowTask.setOutsideTouchable(true);
-		// popupWindowTask.setAnimationStyle(R.style.Animation);
+		popupWindowTask.setOutsideTouchable(true); 
 
 		aq.id(R.id.assign_menu).clicked(new OnClickListener() {
 
@@ -113,8 +113,7 @@ public class AddTaskAssign extends Fragment {
 				if (popupWindowTask.isShowing()) {
 					popupWindowTask.dismiss();
 
-				} else {
-					// layout_MainMenu.getForeground().setAlpha(150);
+				} else { 
 					popupWindowTask.showAsDropDown(aq.id(R.id.assign_menu)
 							.getView(), 5, 10);
 					aq.id(R.id.assign_menu).image(R.drawable.ic_show_black);
@@ -194,167 +193,9 @@ public class AddTaskAssign extends Fragment {
 		tabs.setViewPager(pager);
 		tabPagerAdapter.notifyDataSetChanged();
 
-		/*
-		 * // TODO Auto-generated method stub super.onViewCreated(view,
-		 * savedInstanceState);
-		 * 
-		 * list_adapter = new contact(getActivity());
-		 * 
-		 * name.add("Sulman"); name.add("Ali Shujat"); name.add("Qasim sandhu");
-		 * name.add("Markel seni");
-		 * 
-		 * if (check == 0) { aq.id(R.id.contact_layout).visibility(View.GONE);
-		 * aq.id(R.id.imageView1).getImageView()
-		 * .setImageResource(R.drawable.acceptfinal);
-		 * aq.id(R.id.contact_list_layout).visibility(View.VISIBLE);
-		 * aq.id(R.id.imageView1).getImageView().setAlpha((float) 0.3); contact
-		 * adapter = new contact(getActivity());
-		 * aq.id(R.id.listView1).getListView().setAdapter(adapter); }
-		 * 
-		 * adapter = new ArrayAdapter(getActivity(),
-		 * R.layout.add_task_assign_spinner_item, item);
-		 * 
-		 * aq.id(R.id.textView1).text(AddTaskFragment.title);
-		 * 
-		 * LayoutInflater inflater = getActivity().getLayoutInflater(); View
-		 * attachment = inflater.inflate(R.layout.add_task_assign_email, null,
-		 * false);
-		 * 
-		 * if(myEditText.requestFocus()) {
-		 * getActivity().getWindow().setSoftInputMode
-		 * (WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE); }
-		 * 
-		 * 
-		 * aqemail = new AQuery(attachment); AlertDialog.Builder attach_builder
-		 * = new AlertDialog.Builder( getActivity());
-		 * attach_builder.setView(attachment); dialog = attach_builder.create();
-		 * 
-		 * EditText edit = (EditText) aqemail.id(R.id.add_assign_task_email)
-		 * .getView(); InputMethodManager imm = (InputMethodManager)
-		 * getActivity() .getSystemService(Context.INPUT_METHOD_SERVICE);
-		 * imm.showSoftInput(edit, InputMethodManager.SHOW_IMPLICIT);
-		 * aq.id(R.id.add_contact).clicked(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View arg0) { // TODO Auto-generated
-		 * method stub dialog.show(); } }); aq.id(R.id.imageView1).clicked(new
-		 * OnClickListener() {
-		 * 
-		 * @Override public void onClick(View arg0) { // TODO Auto-generated
-		 * method stub float f = View.ALPHA.get(arg0); if (f == 1) {
-		 * 
-		 * LayoutInflater inflate = getActivity().getLayoutInflater(); View vie
-		 * = inflate.inflate(R.layout.add_task_title, null, false);
-		 * AddTaskFragment
-		 * .aqa.id(R.id.assign_task_button_task).getImageView().setImageResource
-		 * (R.drawable.assign_blue); //TextView txt=(TextView)
-		 * vie.findViewById(R.id.task_assign);
-		 * 
-		 * //AddTaskFragment.img.setImageResource(R.drawable.assign_blue);
-		 * AddTaskFragment.aqa.id(R.id.task_assign).text(name.get(position));
-		 * //AddTaskFragment
-		 * .aqa.id(R.id.imageView12).getImageView().setImageResource
-		 * (R.drawable.next_item_blue);
-		 * ///txt.setTextColor(Color.parseColor("#33B5E5"));
-		 * 
-		 * getFragmentManager().popBackStack();
-		 * 
-		 * } else {
-		 * 
-		 * dialog.show(); } } });
-		 * 
-		 * aq.id(R.id.imageView3).clicked(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View arg0) { // TODO Auto-generated
-		 * method stub getFragmentManager().popBackStack(); } });
-		 * 
-		 * aqemail.id(R.id.edit_ok).clicked(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View arg0) { // TODO Auto-generated
-		 * method stub dialog.dismiss();
-		 * aq.id(R.id.contact_layout).visibility(View.GONE);
-		 * aq.id(R.id.imageView1).getImageView()
-		 * .setImageResource(R.drawable.acceptfinal);
-		 * aq.id(R.id.contact_list_layout).visibility(View.VISIBLE);
-		 * aq.id(R.id.imageView1).getImageView().setAlpha((float) 0.3);
-		 * aq.id(R.id.listView1).getListView().setAdapter(list_adapter);
-		 * 
-		 * } }); aqemail.id(R.id.edit_cencel).clicked(new OnClickListener() {
-		 * 
-		 * @Override public void onClick(View arg0) { // TODO Auto-generated
-		 * method stub dialog.dismiss();
-		 * aqemail.id(R.id.add_assign_task_email).text(""); } });
-		 * aq.id(R.id.listView1).getListView() .setOnItemClickListener(new
-		 * OnItemClickListener() {
-		 * 
-		 * @Override public void onItemClick(AdapterView<?> parent, View
-		 * container, int arg2, long arg3) { // TODO Auto-generated method stub
-		 * position = arg2; LinearLayout linearLayoutParent = (LinearLayout)
-		 * container;
-		 * 
-		 * // Getting the inner Linear Layout // LinearLayout linearLayoutChild
-		 * = (LinearLayout ) // linearLayoutParent.getChildAt(1); if (last !=
-		 * null) { // Getting the Country TextView ImageView tvCount1 =
-		 * (ImageView) last.getChildAt(2); tvCount1.setVisibility(View.GONE); }
-		 * 
-		 * last = linearLayoutParent;
-		 * 
-		 * // Getting the Country TextView ImageView tvCountry = (ImageView)
-		 * linearLayoutParent .getChildAt(2);
-		 * 
-		 * // ImageView img=(ImageView) // arg1.findViewById(R.id.assign_image);
-		 * tvCountry.setVisibility(View.VISIBLE);
-		 * 
-		 * aq.id(R.id.imageView1).getImageView() .setAlpha((float) 1); } });
-		 */}
+	}
 
-	/*
-	 * public class contact extends BaseAdapter {
-	 * 
-	 * Context context;
-	 * 
-	 * public contact(Context context) { this.context = context; }
-	 * 
-	 * @Override public int getCount() { // TODO Auto-generated method stub
-	 * return name.size(); }
-	 * 
-	 * @Override public java.lang.Object getItem(int arg0) { // TODO
-	 * Auto-generated method stub return null; }
-	 * 
-	 * @Override public long getItemId(int position) { // TODO Auto-generated
-	 * method stub return position; }
-	 * 
-	 * public class Holder { ImageView image; Spinner icon; TextView text; }
-	 * 
-	 * @Override public View getView(int Position, View arg1, ViewGroup arg2) {
-	 * // TODO Auto-generated method stub View row = arg1; Holder holder = null;
-	 * if (row == null) { LayoutInflater inflater = ((Activity) context)
-	 * .getLayoutInflater(); row =
-	 * inflater.inflate(R.layout.add_task_assign_item, arg2, false); holder =
-	 * new Holder(); holder.image = (ImageView)
-	 * row.findViewById(R.id.assign_image); holder.icon = (Spinner)
-	 * row.findViewById(R.id.item_spinner); holder.text = (TextView)
-	 * row.findViewById(R.id.textView1); row.setTag(holder); } else { holder =
-	 * (Holder) row.getTag(); } //
-	 * holder.image.setBackgroundResource(R.drawable.calendar_blue);
-	 * holder.text.setText(aqemail.id(R.id.add_assign_task_email)
-	 * .getText().toString()); holder.text.setText(name.get(Position));
-	 * holder.icon.setAdapter(adapter); holder.icon.setSelection(1);
-	 * holder.icon.setOnItemSelectedListener(new OnItemSelectedListener() {
-	 * 
-	 * @Override public void onItemSelected(AdapterView<?> arg0, View arg1, int
-	 * arg2, long arg3) {
-	 * 
-	 * // TODO Auto-generated method stub if (((TextView)
-	 * arg1).getText().toString() .equals("Resend invite")) {
-	 * aqemail.id(R.id.add_assign_task_email).text(""); dialog.show(); }
-	 * ((TextView) arg1).setText(""); ((TextView) arg1).setBackgroundColor(Color
-	 * .parseColor("#00000000")); }
-	 * 
-	 * @Override public void onNothingSelected(AdapterView<?> arg0) { // TODO
-	 * Auto-generated method stub
-	 * 
-	 * } }); return row; } }
-	 */
+	 
 
 	public class TabPagerAdapter extends FragmentPagerAdapter {
 

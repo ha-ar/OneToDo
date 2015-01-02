@@ -117,9 +117,7 @@ public class SplashScreen extends BaseActivity {
 		Intent intent = new Intent();
 		intent.setClass(this, MainActivity.class);
 		this.startActivity(intent);
-		this.finish();/*
-		this
-				.overridePendingTransition(R.anim.fade_out, R.anim.fade_in);*/
+		this.finish(); 
 	}
 	
 	 static void registerInBackground(final Context context)  {

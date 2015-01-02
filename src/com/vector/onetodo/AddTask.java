@@ -10,7 +10,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +22,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -38,10 +36,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,28 +58,25 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
 import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxCallback;
-import com.androidquery.callback.AjaxStatus;
-import com.google.gson.Gson;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
-import com.vector.model.TaskData;
-import com.vector.model.TaskData.Todos;
-import com.vector.onetodo.R;
-import com.vector.onetodo.db.gen.Assign;
 import com.vector.onetodo.db.gen.AssignDao;
+import com.vector.onetodo.db.gen.CheckList;
 import com.vector.onetodo.db.gen.CheckListDao;
+import com.vector.onetodo.db.gen.Comment;
+import com.vector.onetodo.db.gen.CommentDao;
 import com.vector.onetodo.db.gen.DaoMaster;
 import com.vector.onetodo.db.gen.DaoSession;
 import com.vector.onetodo.db.gen.Friends;
 import com.vector.onetodo.db.gen.FriendsDao;
 import com.vector.onetodo.db.gen.Label;
 import com.vector.onetodo.db.gen.LabelDao;
-import com.vector.onetodo.db.gen.LabelNameDao;
 import com.vector.onetodo.db.gen.Reminder;
 import com.vector.onetodo.db.gen.ReminderDao;
-import com.vector.onetodo.db.gen.Share;
+import com.vector.onetodo.db.gen.Repeat;
+import com.vector.onetodo.db.gen.RepeatDao;
 import com.vector.onetodo.db.gen.ShareDao;
 import com.vector.onetodo.db.gen.ToDo;
 import com.vector.onetodo.db.gen.ToDoDao;
@@ -93,6 +88,8 @@ import com.viewpagerindicator.PageIndicator;
 
 public class AddTask extends FragmentActivity {
 
+	SharedPreferences comment_pref;
+
 	public static View dialoglayout5;
 	public static AQuery aq, aq_menu;
 	static Button btn;
@@ -100,14 +97,15 @@ public class AddTask extends FragmentActivity {
 	static Long f2 = null;
 	DaoMaster daoMaster;
 	DaoSession daoSession;
-	static LabelNameDao labelnamedao;
 	ToDoDao tododao;
 	AssignDao assigndao;
 	CheckListDao checklistdao;
 	FriendsDao friendsdao;
 	LabelDao labeldao;
 	ReminderDao reminderdao;
+	RepeatDao repeatdao;
 	ShareDao sharedao;
+	CommentDao commentdao;
 	Cursor cursor;
 	List<ToDo> tod;
 	ProgressDialog dialog;
@@ -117,16 +115,15 @@ public class AddTask extends FragmentActivity {
 	ArrayAdapter<String> adapterTask, adapterEvent, adapterSchedule;
 	SQLiteDatabase db;
 	public static FrameLayout layout_MainMenu;
-	String[] array = { "Assign", "Due date", "Location", "Reminder",
-			"Repeat", "Label", "Subtasks", "Notes","Attachment" };
-
-
+	String[] array = { "Assign", "Due date", "Location", "Reminder", "Repeat",
+			"Label", "Subtasks", "Notes", "Attachment" };
 
 	// *******************ADD DATA
 	String title = null, notes = null, label_name = null, r_location = null,
 			locationtype = "None", start_date = null, end_date = null,
 			checklist_data = null, location = null, before = null,
-			repeat = null, givenDateString = null;
+			repeat = null, givenDateString = null, location_tag = "",
+			repeatdate = null;
 	int MaxId, titlecheck = -1, is_locationtype = -1, Position = 0;
 	public static List<String> comment, commenttime;
 	static SharedPreferences pref, label, attach;
@@ -134,6 +131,7 @@ public class AddTask extends FragmentActivity {
 			is_alertEmail = false, is_alertNotification = false,
 			is_priority = false, repeat_forever = false;
 	long r_time = 0, r_repeat = 0, todo_id = 0, dateInMilliseconds = 0;
+
 	static int priority = 0;
 	HttpClient client;
 	HttpPost post;
@@ -184,7 +182,7 @@ public class AddTask extends FragmentActivity {
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.add_task);
-
+		comment_pref = getSharedPreferences("Comment", 0);
 		dialog = new ProgressDialog(this, ProgressDialog.THEME_HOLO_DARK);
 		dialog.setMessage("Saving...");
 		dialog.setCancelable(true);
@@ -238,25 +236,31 @@ public class AddTask extends FragmentActivity {
 				if (position == 0) {
 					aq.id(R.id.page_title_header).text("Task");
 					btn.setAlpha((float) 0.3);
+					comment_pref.edit().clear().commit();
 				}
 
 				else if (position == 1) {
 					aq.id(R.id.page_title_header).text("Event");
 					btn.setAlpha((float) 0.3);
+					comment_pref.edit().clear().commit();
 				}
 
 				else if (position == 2) {
 					aq.id(R.id.page_title_header).text("Schedule");
 					btn.setAlpha((float) 0.3);
+					comment_pref.edit().clear().commit();
 
 				} else if (position == 3) {
 					aq.id(R.id.page_title_header).text("Appoinment");
 					btn.setAlpha((float) 0.3);
+					comment_pref.edit().clear().commit();
 				}
 
 				else if (position == 4) {
 					aq.id(R.id.page_title_header).text("Project");
 					btn.setAlpha((float) 0.3);
+
+					comment_pref.edit().clear().commit();
 				}
 
 			}
@@ -300,7 +304,6 @@ public class AddTask extends FragmentActivity {
 		TextView tx = (TextView) view.findViewById(R.id.show_hid_text);
 		tx.setTypeface(TypeFaces.get(this, Constants.MED_TYPEFACE));
 
-		
 		ArrayList<String> arrayList = new ArrayList<String>(
 				Arrays.asList(array));
 
@@ -377,6 +380,27 @@ public class AddTask extends FragmentActivity {
 						aq_menu.id(R.id.menu_item2)
 								.textColorId(R.color._4d4d4d);
 					}
+				}else if (Position == 2) {
+					if (AddScheduleFragment.taskTitle.length() > 0) {
+						aq_menu.id(R.id.menu_item1)
+								.textColorId(R.color._4d4d4d);
+						aq_menu.id(R.id.menu_item2)
+								.textColorId(R.color._4d4d4d);
+					}
+				}else if (Position == 3) {
+					if (AddAppoinmentFragment.taskTitle.length() > 0) {
+						aq_menu.id(R.id.menu_item1)
+								.textColorId(R.color._4d4d4d);
+						aq_menu.id(R.id.menu_item2)
+								.textColorId(R.color._4d4d4d);
+					}
+				}else if (Position == 4) {
+					if (AddProjectFragment.taskTitle.length() > 0) {
+						aq_menu.id(R.id.menu_item1)
+								.textColorId(R.color._4d4d4d);
+						aq_menu.id(R.id.menu_item2)
+								.textColorId(R.color._4d4d4d);
+					}
 				}
 				aq.id(R.id.addtask_menu).image(
 						getResources().getDrawable(R.drawable.ic_show_black));
@@ -430,9 +454,8 @@ public class AddTask extends FragmentActivity {
 			}
 		});
 
-		
-		//*******************PoP CUSTOMIZATION CANCEL OK LISNER
-		
+		// *******************PoP CUSTOMIZATION CANCEL OK LISNER
+
 		cancel.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -450,7 +473,7 @@ public class AddTask extends FragmentActivity {
 				popupWindowTask.dismiss();
 			}
 		});
-		
+
 		cancel_event.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -469,7 +492,7 @@ public class AddTask extends FragmentActivity {
 			}
 		});
 		cancel_schedule.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -478,16 +501,15 @@ public class AddTask extends FragmentActivity {
 			}
 		});
 		ok_schedule.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				popupWindowSchedule.dismiss();
-				
+
 			}
 		});
 
-		
 		popupWindowEvent = new PopupWindow(view2, Utils.getDpValue(270, this),
 				WindowManager.LayoutParams.WRAP_CONTENT, true);
 		popupWindowEvent.setBackgroundDrawable(new BitmapDrawable());
@@ -587,6 +609,103 @@ public class AddTask extends FragmentActivity {
 
 		// DONOT Show location at the moment
 		aq.id(R.layout.add_task_location1).gone();
+
+		/*
+		 * AddTask.aq_menu.id(R.id.menu_item2).clicked(new OnClickListener() {
+		 * 
+		 * @Override public void onClick(View arg0) { // TODO Auto-generated
+		 * m111111ethod stub
+		 * 
+		 * 
+		 * title = aq.id(R.id.event_title).getText() .toString();
+		 * AddTask.popupWindowAdd.dismiss(); Fragment fr = new AddTaskComment();
+		 * FragmentManager manager = getSupportFragmentManager();
+		 * FragmentTransaction transaction = manager .beginTransaction(); if
+		 * (Constants.Project_task_check == 1) {
+		 * 
+		 * transaction.replace(R.id.content_task, fr); } else {
+		 * 
+		 * transaction.replace(R.id.main_container, fr); }
+		 * transaction.setCustomAnimations(R.anim.slide_in1, R.anim.slide_out1);
+		 * transaction.addToBackStack(null); transaction.commit();
+		 * 
+		 * } });
+		 */
+
+		aq_menu.id(R.id.menu_item2).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated m111111ethod stub
+				String title = null;
+				if (Position == 0) {
+					if (AddTaskFragment.taskTitle.length() > 0) {
+						title = AddTaskFragment.taskTitle.getText().toString();
+						aq_menu.id(R.id.menu_item1)
+								.textColorId(R.color._4d4d4d);
+						aq_menu.id(R.id.menu_item2)
+								.textColorId(R.color._4d4d4d);
+					}
+				} else if (Position == 1) {
+					if (AddEventFragment.taskTitle.length() > 0) {
+						title = AddEventFragment.taskTitle.getText().toString();
+						aq_menu.id(R.id.menu_item1)
+								.textColorId(R.color._4d4d4d);
+						aq_menu.id(R.id.menu_item2)
+								.textColorId(R.color._4d4d4d);
+					}
+				} else if (Position == 2) {
+					if (AddScheduleFragment.taskTitle.length() > 0) {
+						title = AddScheduleFragment.taskTitle.getText()
+								.toString();
+						aq_menu.id(R.id.menu_item1)
+								.textColorId(R.color._4d4d4d);
+						aq_menu.id(R.id.menu_item2)
+								.textColorId(R.color._4d4d4d);
+					}
+				}else if (Position == 3) {
+					if (AddAppoinmentFragment.taskTitle.length() > 0) {
+						title = AddAppoinmentFragment.taskTitle.getText()
+								.toString();
+						aq_menu.id(R.id.menu_item1)
+								.textColorId(R.color._4d4d4d);
+						aq_menu.id(R.id.menu_item2)
+								.textColorId(R.color._4d4d4d);
+					}
+				}else if (Position == 4) {
+					if (AddProjectFragment.taskTitle.length() > 0) {
+						title = AddProjectFragment.taskTitle.getText()
+								.toString();
+						aq_menu.id(R.id.menu_item1)
+								.textColorId(R.color._4d4d4d);
+						aq_menu.id(R.id.menu_item2)
+								.textColorId(R.color._4d4d4d);
+					}
+				}
+
+				if (title != null && title.length() > 0) {
+					popupWindowAdd.dismiss();
+					Fragment fr = new AddTaskComment();
+					FragmentManager manager = getSupportFragmentManager();
+					FragmentTransaction transaction = manager
+							.beginTransaction();
+					if (Constants.Project_task_check == 1
+							) {
+
+						transaction.replace(R.id.content_task, fr);
+					} else {
+
+						transaction.replace(R.id.main_container, fr);
+					}
+					transaction.setCustomAnimations(R.anim.slide_in1,
+							R.anim.slide_out1);
+					transaction.addToBackStack(null);
+					transaction.commit();
+
+				}
+			}
+		});
+
 	}
 
 	public void inflateLayoutsTasks() {
@@ -782,14 +901,6 @@ public class AddTask extends FragmentActivity {
 
 	public void AddData() {
 
-		/*
-		 * Boolean is_allday = null, is_priority = null, is_alertNotification =
-		 * null, is_alertEmail = null; titlecheck = 0; String before = null,
-		 * before1 = "", location = "", givenDateString, assign_task = "assign",
-		 * share_task = "task"; SimpleDateFormat sdf; Date mDate = null; long
-		 * dateInMilliseconds = 0;
-		 */
-
 		if (Position == 0) {
 			if (!(aq.id(R.id.task_title1).getText().toString().equals(""))) {
 
@@ -814,6 +925,8 @@ public class AddTask extends FragmentActivity {
 					is_location = true;
 					r_location = aq.id(R.id.location_before).getText()
 							.toString();
+					location_tag = ((TextView) AddTaskBeforeFragment.viewP)
+							.getText().toString() + "";
 				}
 
 				if (!(aq.id(R.id.before).getText().toString().equals("") || aq
@@ -826,16 +939,11 @@ public class AddTask extends FragmentActivity {
 
 				repeat_forever = aq.id(R.id.forever_radio).isChecked();
 				repeat = aq.id(R.id.repeat).getText().toString();
+				repeatdate = AddTaskFragment.repeatdate;
 
 				label_name = aq.id(R.id.spinner_labels_task).getText()
 						.toString();
-				if (!label_name.equals("")) {
-					/*
-					 * String label_color = aq.id(R.id.spinner_labels_task)
-					 * .getTextView().getBackground().getConstantState()
-					 * .toString(); Log.v("Log v ", label_color);
-					 */
-				} // location = aq.id(R.id.location_task).getText().toString();
+
 				toggleCheckList(aq.id(R.id.add_sub_task).getView());
 				checklist_data = aq.id(R.id.add_sub_task).getEditText()
 						.getText().toString();
@@ -869,6 +977,9 @@ public class AddTask extends FragmentActivity {
 					is_location = true;
 					r_location = aq.id(R.id.location_before_event).getText()
 							.toString();
+
+					location_tag = ((TextView) AddEventBeforeFragment.viewP)
+							.getText().toString() + "";
 				}
 
 				if (!(aq.id(R.id.before_event).getText().toString().equals("") || aq
@@ -881,16 +992,10 @@ public class AddTask extends FragmentActivity {
 
 				repeat_forever = aq.id(R.id.repeat_forever_radio).isChecked();
 				repeat = aq.id(R.id.repeat_event).getText().toString();
+				repeatdate = AddEventFragment.repeatdate;
 
 				label_name = aq.id(R.id.spinner_labels_event).getText()
 						.toString();
-				if (!label_name.equals("")) {
-					/*
-					 * String label_color = aq.id(R.id.spinner_labels_task)
-					 * .getTextView().getBackground().getConstantState()
-					 * .toString(); Log.v("Log v ", label_color);
-					 */
-				} // location = aq.id(R.id.location_task).getText().toString();
 
 				toggleCheckList(aq.id(R.id.add_sub_event).getView());
 				checklist_data = aq.id(R.id.add_sub_event).getEditText()
@@ -926,6 +1031,9 @@ public class AddTask extends FragmentActivity {
 					is_location = true;
 					r_location = aq.id(R.id.location_before_sch).getText()
 							.toString();
+
+					location_tag = ((TextView) AddScheduleBeforeFragment.viewP)
+							.getText().toString() + "";
 				}
 
 				if (!(aq.id(R.id.before_schedule).getText().toString()
@@ -939,15 +1047,9 @@ public class AddTask extends FragmentActivity {
 
 				repeat_forever = aq.id(R.id.sch_forever_radio).isChecked();
 				repeat = aq.id(R.id.sch_repeat_txt).getText().toString();
+				repeatdate = AddScheduleFragment.repeatdate;
 
 				label_name = aq.id(R.id.sch_label_txt).getText().toString();
-				if (!label_name.equals("")) {
-					/*
-					 * String label_color = aq.id(R.id.spinner_labels_task)
-					 * .getTextView().getBackground().getConstantState()
-					 * .toString(); Log.v("Log v ", label_color);
-					 */
-				} // location = aq.id(R.id.location_task).getText().toString();
 
 				toggleCheckList(aq.id(R.id.add_sub_sch).getView());
 				checklist_data = aq.id(R.id.add_sub_sch).getEditText()
@@ -964,10 +1066,6 @@ public class AddTask extends FragmentActivity {
 
 				title = aq.id(R.id.appoinment_title).getText().toString();
 
-				/*
-				 * ToggleButton switCh = (ToggleButton)
-				 * findViewById(R.id.switch_sch);
-				 */
 				is_allday = false;
 
 				start_date = AddAppoinmentFragment.currentYear + "-"
@@ -977,7 +1075,7 @@ public class AddTask extends FragmentActivity {
 						+ AddAppoinmentFragment.currentMin + ":00";
 				end_date = null;
 
-				location = null; // aq.id(R.id.sch_location).getText().toString();
+				location = null;
 
 				before = aq.id(R.id.before_appoinment).getText().toString();
 				if (before.contains("On Arrive") || before.contains("On Leave")) {
@@ -985,6 +1083,9 @@ public class AddTask extends FragmentActivity {
 					is_location = true;
 					r_location = aq.id(R.id.location_before_appoin).getText()
 							.toString();
+
+					location_tag = ((TextView) AddAppoinmentBeforeFragment.viewP)
+							.getText().toString() + "";
 				}
 
 				if (!(aq.id(R.id.before_appoinment).getText().toString()
@@ -996,17 +1097,12 @@ public class AddTask extends FragmentActivity {
 							.id(R.id.notification_radio_appoin).getCheckBox()
 							.isChecked();
 				}
-				repeat = null; // aq.id(R.id.sch_repeat_txt).getText().toString();
+				repeat = null;
+
+				repeatdate = null;
 
 				label_name = aq.id(R.id.spinner_labels_appoin).getText()
 						.toString();
-				if (!label_name.equals("")) {
-					/*
-					 * String label_color = aq.id(R.id.spinner_labels_task)
-					 * .getTextView().getBackground().getConstantState()
-					 * .toString(); Log.v("Log v ", label_color);
-					 */
-				} // location = aq.id(R.id.location_task).getText().toString();
 
 				toggleCheckList(aq.id(R.id.add_sub_appoinment).getView());
 				checklist_data = aq.id(R.id.add_sub_appoinment).getEditText()
@@ -1023,10 +1119,6 @@ public class AddTask extends FragmentActivity {
 
 				title = aq.id(R.id.project_title).getText().toString();
 
-				/*
-				 * ToggleButton switCh = (ToggleButton)
-				 * findViewById(R.id.switch_sch);
-				 */
 				is_allday = false;
 
 				start_date = AddProjectFragment.currentYear + "-"
@@ -1036,35 +1128,28 @@ public class AddTask extends FragmentActivity {
 						+ AddProjectFragment.currentMin + ":00";
 				end_date = null;
 
-				location = null; // aq.id(R.id.sch_location).getText().toString();
+				location = null;
 
-				before = null; // aq.id(R.id.before_appoinment).getText().toString();
-				// if (before.contains("On Arrive") ||
-				// before.contains("On Leave")) {
+				before = null;
 				is_time = false;
 				is_location = false;
 				r_location = null;
+				location_tag = "";
 				// }
 
 				is_alertEmail = false;
 				is_alertNotification = false;
 
-				repeat = null; // aq.id(R.id.sch_repeat_txt).getText().toString();
+				repeat = null;
+
+				repeatdate = null;
 
 				label_name = aq.id(R.id.spinner_labels_project).getText()
 						.toString();
-				if (!label_name.equals("")) {
-					/*
-					 * String label_color = aq.id(R.id.spinner_labels_task)
-					 * .getTextView().getBackground().getConstantState()
-					 * .toString(); Log.v("Log v ", label_color);
-					 */
-				} // location = aq.id(R.id.location_task).getText().toString();
 
-				checklist_data = null;// aq.id(R.id.add_sub_appoinment).getEditText()
-				// .getText().toString();
+				checklist_data = null;
 
-				notes = null;// aq.id(R.id.notes_appoinment).getText().toString();
+				notes = null;
 
 			}
 		}
@@ -1090,34 +1175,46 @@ public class AddTask extends FragmentActivity {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-if(before!=null){
-			if (is_time == true) {
-				if (before.contains(" Mins") || before.contains(" Min"))
-					r_time = (Integer.parseInt(before.replaceAll("\\D+", "")) * 60 * 1000);
-				else if (before.contains(" Hour") || before.contains(" Hours"))
-					r_time = (Integer.parseInt(before.replaceAll("\\D+", "")) * 60 * 60 * 1000);
-				else if (before.contains(" Day") || before.contains(" Days"))
-					r_time = (Integer.parseInt(before.replaceAll("\\D+", "")) * 24 * 60 * 60 * 1000);
-				else if (before.contains(" Week") || before.contains(" Weeks"))
-					r_time = (Integer.parseInt(before.replaceAll("\\D+", ""))
-							* 7 * 24 * 60 * 60 * 1000);
-				else if (before.contains(" Month")
-						|| before.contains(" Months"))
-					r_time = (Integer.parseInt(before.replaceAll("\\D+", ""))
-							* 31 * 24 * 60 * 60 * 1000);
-				else if (before.contains(" Year") || before.contains(" Years"))
-					r_time = (Integer.parseInt(before.replaceAll("\\D+", ""))
-							* 12 * 31 * 24 * 60 * 60 * 1000);
-			} else {
-				if (before.contains("On Arrive")) {
-					is_locationtype = 0;
-					locationtype = "On Arrive";
-				} else if (before.contains("On Leave")) {
-					is_locationtype = 1;
-					locationtype = "On Leave";
+			if (before != null) {
+				if (is_time == true) {
+					if (before.contains(" Mins") || before.contains(" Min"))
+						r_time = (Integer.parseInt(before
+								.replaceAll("\\D+", "")) * 60 * 1000);
+					else if (before.contains(" Hour")
+							|| before.contains(" Hours"))
+						r_time = (Integer.parseInt(before
+								.replaceAll("\\D+", "")) * 60 * 60 * 1000);
+					else if (before.contains(" Day")
+							|| before.contains(" Days"))
+						r_time = (Integer.parseInt(before
+								.replaceAll("\\D+", "")) * 24 * 60 * 60 * 1000);
+					else if (before.contains(" Week")
+							|| before.contains(" Weeks"))
+						r_time = (Integer.parseInt(before
+								.replaceAll("\\D+", "")) * 7 * 24 * 60 * 60 * 1000);
+					else if (before.contains(" Month")
+							|| before.contains(" Months"))
+						r_time = (Integer.parseInt(before
+								.replaceAll("\\D+", "")) * 31 * 24 * 60 * 60 * 1000);
+					else if (before.contains(" Year")
+							|| before.contains(" Years"))
+						r_time = (Integer.parseInt(before
+								.replaceAll("\\D+", ""))
+								* 12
+								* 31
+								* 24
+								* 60
+								* 60 * 1000);
+				} else {
+					if (before.contains("On Arrive")) {
+						is_locationtype = 0;
+						locationtype = "On Arrive";
+					} else if (before.contains("On Leave")) {
+						is_locationtype = 1;
+						locationtype = "On Leave";
+					}
 				}
 			}
-}
 			if (repeat != null) {
 				if (repeat.contains("once") || repeat.contains("Once")) {
 					r_repeat = 0;
@@ -1142,61 +1239,69 @@ if(before!=null){
 			AlarmManagerBroadcastReceiver alarm = new AlarmManagerBroadcastReceiver();
 
 			ToDo todoset = new ToDo();
+			todoset.setUser_id(Constants.user_id);
+			todoset.setTodo_type_id(titlecheck);
 			todoset.setTitle(title);
 			todoset.setStart_date(dateInMilliseconds);
 			todoset.setEnd_date(dateInMilliseconds);
 			todoset.setIs_allday(is_allday);
-			todoset.setIs_priority(is_priority);
 			todoset.setLocation(location);
 			todoset.setNotes(notes);
+
 			Label label = new Label();
 			label.setLabel_name(label_name);
-			// long f=60;
 			label.setId(f2);
 			labeldao.insert(label);
 			todoset.setLabel(label);
-
-			todoset.setRepeat(r_repeat);
 
 			Reminder reminderr = new Reminder();
 			reminderr.setId(f2);
 			reminderr.setIs_alertEmail(is_alertEmail);
 			reminderr.setIs_alertNotification(is_alertNotification);
-			reminderr.setIs_time(is_time);
+			reminderr.setIs_time_location(is_location);
 			reminderr.setLocation(r_location);
 			reminderr.setLocation_type(is_locationtype);
-			reminderr.setIs_location(is_location);
+			if ((!location_tag.equals("New")) && location_tag != null) {
+				reminderr.setLocation_tag(location_tag);
+			}
+
 			reminderr.setTime(r_time);
 			reminderdao.insert(reminderr);
+			todoset.setReminder(reminderr);
 
-			/*
-			 * for (int i = 0; i < AddEventFragment.checklistCount; i++) {
-			 * CheckBox checklist_checkbox = (CheckBox)
-			 * AddEventFragment.checklistViews
-			 * .get(i).findViewById(R.id.checklist_checkbox);
-			 * 
-			 * CheckList check = new CheckList(); EditText tv = (EditText)
-			 * AddEventFragment.checklistViews.get(i)
-			 * .findViewById(R.id.checklist_edittext); check.setId(f2);
-			 * check.setIschecked(checklist_checkbox.isChecked());
-			 * check.setTodo_id(todo_id);
-			 * check.setTitle(tv.getText().toString());
-			 * checklistdao.insert(check);
-			 * 
-			 * }
-			 */
+			Repeat repeaT = new Repeat();
+			repeaT.setId(f2);
+			repeaT.setRepeat_interval(repeat);
+			repeaT.setRepeat_until(r_repeat);
+			repeaT.setIs_forever(repeat_forever);
+			repeatdao.insert(repeaT);
+			todoset.setRepeat(repeaT);
 
-			Share share = new Share();
-			share.setId(f2);
-			share.setFriends_id(share.getFriends_id());
-			share.setTodo_id(share.getTodo_id());
-			sharedao.insert(share);
+			CheckList checklist = new CheckList();
+			checklist.setId(f2);
+			checklist.setTitle(checklist_data);
+			checklistdao.insert(checklist);
+			todoset.setCheckList(checklist);
 
-			Assign assign = new Assign();
-			assign.setId(f2);
-			assign.setFriends_id(share.getFriends_id());
-			assign.setTodo_id(share.getTodo_id());
-			assigndao.insert(assign);
+			for (int i = 1; i <= MaxId; i++) {
+				pairs.add(new BasicNameValuePair("todo_attachment[" + (i - 1)
+						+ "][attachment_path]", AddTask.attach.getString(
+						titlecheck + "path" + i, null)));
+			}
+
+			MaxId = 0;
+
+			if (comment != null && comment.size() > 0) {
+				for (int i = 0; i < comment.size(); i++) {
+
+					Comment commenT = new Comment();
+					commenT.setId(f2);
+					commenT.setComment(comment.get(i));
+					commenT.setToDo(todoset);
+					commentdao.insert(commenT);
+
+				}
+			}
 
 			Friends friend = new Friends();
 			friend.setId(f2);
@@ -1235,7 +1340,9 @@ if(before!=null){
 		labeldao = daoSession.getLabelDao();
 		sharedao = daoSession.getShareDao();
 		tododao = daoSession.getToDoDao();
-		labelnamedao = daoSession.getLabelNameDao();
+		commentdao = daoSession.getCommentDao();
+		repeatdao = daoSession.getRepeatDao();
+
 		reminderdao = daoSession.getReminderDao();
 
 	}
@@ -1314,85 +1421,7 @@ if(before!=null){
 				asyn.cancel(true);
 			}
 
-			Log.v("Response ", temp);
-			aq.ajax("http://api.heuristix.net/one_todo/v1/tasks/"
-					+ Constants.user_id, JSONObject.class,
-					new AjaxCallback<JSONObject>() {
-						@Override
-						public void callback(String url, JSONObject json,
-								AjaxStatus status) {
-							Log.v("New ", Constants.user_id + "inside");
-							if (json != null) {
-								Gson gson = new Gson();
-								TaskData obj = new TaskData();
-								obj = gson.fromJson(json.toString(),
-										TaskData.class);
-								TaskData.getInstance().setList(obj);
-								Log.v("JSON",
-										TaskData.getInstance().todos.get(0).notes
-												+ "");
-							}
-
-							MainActivity.Today = new ArrayList<Todos>();
-							MainActivity.Tomorrow = new ArrayList<Todos>();
-							MainActivity.Upcoming = new ArrayList<Todos>();
-							MainActivity.CurrentDate = Calendar.getInstance();
-							SimpleDateFormat sdf = new SimpleDateFormat(
-									"yyyy-MM-dd");
-							Date today = null;
-							try {
-								today = sdf.parse(sdf
-										.format(MainActivity.CurrentDate
-												.getTime()));
-							} catch (ParseException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-
-							MainActivity.CurrentDate.add(Calendar.DATE, 1);
-							Date tomorrow = null;
-							try {
-								tomorrow = sdf.parse(sdf
-										.format(MainActivity.CurrentDate
-												.getTime()));
-							} catch (ParseException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-							Date date = null;
-							for (int i = 0; i < TaskData.getInstance().todos
-									.size(); i++) {
-								if (TaskData.getInstance().todos.get(i).start_date != null) {
-									try {
-										date = sdf.parse(TaskData.getInstance().todos
-												.get(i).start_date);
-									} catch (ParseException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-
-									if (date.equals(today)) {
-										MainActivity.Today.add((TaskData
-												.getInstance().todos.get(i)));
-									} else if (date.equals(tomorrow)) {
-										MainActivity.Tomorrow.add((TaskData
-												.getInstance().todos.get(i)));
-									} else if (date.after(tomorrow)) {
-										MainActivity.Upcoming.add((TaskData
-												.getInstance().todos.get(i)));
-									}
-								}
-							}
-							dialog.dismiss();
-							Log.v("today+  tomorw+ upcoming ",
-									MainActivity.Today.size() + " "
-											+ MainActivity.Tomorrow.size()
-											+ " "
-											+ MainActivity.Upcoming.size());
-							finish();
-
-						}
-					});
+			finish();
 
 		}
 
@@ -1423,31 +1452,24 @@ if(before!=null){
 						"2014-11-02 04:05:05"));
 			}
 
-			/*
-			 * if (titlecheck == 1 || titlecheck == 4) pairs.add(new
-			 * BasicNameValuePair("todo[priority]", priority + ""));
-			 */
-
 			if (notes != null)
 				pairs.add(new BasicNameValuePair("todo[notes]", notes));
 
-			if(before!=null){
-			if (is_location == false) {
-				pairs.add(new BasicNameValuePair("todo_reminder[time]", r_time
-						+ ""));
-			} else {
-				pairs.add(new BasicNameValuePair("todo_reminder[location]",
-						r_location));
-				if (!((TextView) AddTaskBeforeFragment.viewP).getText()
-						.toString().equals("New")) {
+			if (before != null) {
+				if (is_location == false) {
+					pairs.add(new BasicNameValuePair("todo_reminder[time]",
+							r_time + ""));
+				} else {
+					pairs.add(new BasicNameValuePair("todo_reminder[location]",
+							r_location));
+
+					if (!location_tag.equals("New")) {
+						pairs.add(new BasicNameValuePair(
+								"todo_reminder[location_tag]", location_tag));
+					}
 					pairs.add(new BasicNameValuePair(
-							"todo_reminder[location_tag]",
-							((TextView) AddTaskBeforeFragment.viewP).getText()
-									.toString()));
+							"todo_reminder[location_type]", locationtype));
 				}
-				pairs.add(new BasicNameValuePair(
-						"todo_reminder[location_type]", locationtype));
-			}
 			}
 			if (repeat != null) {
 				pairs.add(new BasicNameValuePair(
@@ -1455,11 +1477,9 @@ if(before!=null){
 
 				if (repeat_forever != true)
 					pairs.add(new BasicNameValuePair(
-							"todo_repeat[repeat_until]",
-							AddTaskFragment.repeatdate));
+							"todo_repeat[repeat_until]", repeatdate));
 			}
 			for (int i = 1; i <= MaxId; i++) {
-				// AddTask.attach.getString(1 + "path" + i, null);
 				pairs.add(new BasicNameValuePair("todo_attachment[" + (i - 1)
 						+ "][attachment_path]", AddTask.attach.getString(
 						titlecheck + "path" + i, null)));
@@ -1543,6 +1563,13 @@ if(before!=null){
 			// not supported
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		comment_pref.edit().clear().commit();
 	}
 
 }

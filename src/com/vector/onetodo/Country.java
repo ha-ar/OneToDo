@@ -92,10 +92,7 @@ public class Country extends Fragment {
 				aq.id(R.id.search).getEditText().requestFocus();
 				if (imm != null) {
 					imm.showSoftInput(aq.id(R.id.search).getEditText(), InputMethodManager.SHOW_IMPLICIT);
-				}
-				/*Ehour.setFocusable(true);
-				Ehour.requestFocus();*/
-				/*aq.id(R.id.search).getEditText().setFocusable(true);*/
+				} 
 			}
 		});
 		/**
@@ -124,21 +121,7 @@ public class Country extends Fragment {
 				
 			}
 		});
-		/*inputSearch.setOnQueryTextListener(new OnQueryTextListener() {
-			
-			@Override
-			public boolean onQueryTextSubmit(String arg0) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-			@Override
-			public boolean onQueryTextChange(String arg0) {
-				// TODO Auto-generated method stub
-				adapter.filter(arg0);
-				return false;
-			}
-		});*/
+		 
 	}
 
 	public class Adapter extends BaseAdapter {
@@ -230,9 +213,7 @@ public class Country extends Fragment {
 	
 	public void country() {
 
-		// code.add("+   ");
-
-		// country.add("Select country");
+ 
 		country.add("Canada");
 		code.add("+1");
 		country.add("East Timor");

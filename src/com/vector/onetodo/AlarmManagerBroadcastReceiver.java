@@ -54,26 +54,6 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
         	 msgStr.append("One time Timer : ");
          }
          
-         //SimpleDateFormat formatter = new SimpleDateFormat();
-         // Create a calendar object that will convert the date and time value in milliseconds to date. 
-         /*Format formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS");
-         Calendar calendar = Calendar.getInstance();
-          calendar.setTimeInMillis(MainActivity.todo_obj.get(0).getStart_date()+MainActivity.todo_obj.get(0).getStart_date());
-
-          */
-          //formatter.format(calendar.getTime());
-          
-        // Format formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-         //msgStr.append(todo_obj.get(d).getTitle());
-         /*d=d+1;
-         if(d==todo_obj.size()-1){
- 			d=0;
- 		}*/
-         //alrammmm(MainActivity.this);
-         //Toast.makeText(context, msgStr+""/*MainActivity.todo_obj.get(0).getStart_date().toString()*/, Toast.LENGTH_LONG).show();
-         //MainActivity.alrammmm(context,,);
-
-         //Toast.makeText(context, todo_Qlist.get(Constants.AlaramIndex).getTitle(), Toast.LENGTH_LONG).show();
          
          
          //************ NOTIFICATIONS
@@ -118,8 +98,7 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 		QueryBuilder<ToDo> todo_queary;
 		todo_queary=tododao.queryBuilder().where(Properties.Start_date.ge(date)).orderAsc(Properties.Start_date);
 		
-		todo_Qlist=todo_queary.list();
-		//todo_Qlist=tododao.loadAll();
+		todo_Qlist=todo_queary.list(); 
 		Constants.AlaramSize=todo_Qlist.size();
 		AlarmManager mgrAlarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         ArrayList<PendingIntent> intentArray = new ArrayList<PendingIntent>();

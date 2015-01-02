@@ -3,28 +3,27 @@ package com.vector.onetodo;
 import it.feio.android.checklistview.ChecklistManager;
 import it.feio.android.checklistview.exceptions.ViewNotSupportedException;
 import it.feio.android.checklistview.interfaces.CheckListChangedListener;
-
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import uk.me.lewisdeane.ldialogs.CustomDialog;
+import uk.me.lewisdeane.ldialogs.CustomListDialog;
+import uk.me.lewisdeane.ldialogs.BaseDialog.Alignment;
+import uk.me.lewisdeane.ldialogs.CustomDialog.ClickListener;
+import uk.me.lewisdeane.ldialogs.CustomListDialog.ListClickListener;
 import net.simonvt.datepicker.DatePicker;
 import net.simonvt.datepicker.DatePicker.OnDateChangedListener;
 import net.simonvt.timepicker.TimePicker;
 import net.simonvt.timepicker.TimePicker.OnTimeChangedListener;
-import uk.me.lewisdeane.ldialogs.BaseDialog.Alignment;
-import uk.me.lewisdeane.ldialogs.CustomDialog;
-import uk.me.lewisdeane.ldialogs.CustomDialog.ClickListener;
-import uk.me.lewisdeane.ldialogs.CustomListDialog;
-import uk.me.lewisdeane.ldialogs.CustomListDialog.ListClickListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -54,7 +53,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -62,12 +63,14 @@ import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.androidquery.AQuery;
 import com.astuetz.PagerSlidingTabStrip;
 import com.devspark.appmsg.AppMsg;
+import com.google.android.gms.internal.bt;
 import com.vector.onetodo.utils.Constants;
 import com.vector.onetodo.utils.ScaleAnimToHide;
 import com.vector.onetodo.utils.ScaleAnimToShow;
@@ -75,7 +78,6 @@ import com.vector.onetodo.utils.TypeFaces;
 import com.vector.onetodo.utils.Utils;
 
 public class AddAppoinmentFragment extends Fragment {
-	// appoinment_attachment edittext appoinment_comment
 	public static AQuery aq, popupAQ, aqloc, aqd, aq_del, aq_edit;
 
 	static List<java.lang.Object> names;
@@ -85,7 +87,8 @@ public class AddAppoinmentFragment extends Fragment {
 	int pposition = -1;
 	int itempos = -1;
 	int MaxId = -1;
-	EditText taskTitle;
+	private int lastCheckedId = -1;
+	public static EditText taskTitle;
 
 	Editor editor;
 	View label_view, viewl;
@@ -119,12 +122,7 @@ public class AddAppoinmentFragment extends Fragment {
 			"Work", "New", "New", "New", "New", "New", "New" };
 
 	EditText label_field = null;
-	String[] itemsForLables = { "Edit", "Delete" };
-	CustomDialog.Builder dialogbuilder;
-	CustomListDialog.Builder listbuilder;
-	CustomListDialog label_edit;
-	CustomDialog location_del;
-	AlertDialog date_time_alert, add_new_label_alert;
+	AlertDialog date_time_alert, add_new_label_alert,location_del,label_edit;
 
 	protected static final int RESULT_CODE = 123;
 
@@ -157,6 +155,7 @@ public class AddAppoinmentFragment extends Fragment {
 		return view;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
@@ -214,22 +213,21 @@ public class AddAppoinmentFragment extends Fragment {
 	}
 
 	void main() {
+		LayoutInflater inflater5 = getActivity().getLayoutInflater();
 
-//		LayoutInflater inflater5 = getActivity().getLayoutInflater();
-//
-//		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
-//				false);
-//		aq_edit = new AQuery(dialoglayout6);
-//		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
-//		builder6.setView(dialoglayout6);
-//		label_edit = builder6.create();
-//
-//		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
-//				null, false);
-//		aq_del = new AQuery(dialoglayout7);
-//		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
-//		builder7.setView(dialoglayout7);
-//		location_del = builder7.create();
+		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
+				false);
+		aq_edit = new AQuery(dialoglayout6);
+		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
+		builder6.setView(dialoglayout6);
+		label_edit = builder6.create();
+
+		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
+				null, false);
+		aq_del = new AQuery(dialoglayout7);
+		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
+		builder7.setView(dialoglayout7);
+		location_del = builder7.create();
 		// ****************Title
 		aq.id(R.id.appoinment_title)
 				.typeface(
@@ -347,6 +345,7 @@ public class AddAppoinmentFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				// TODO Auto-generated method stub
 
 				ImageView img = (ImageView) view;
 				if (last != null) {
@@ -371,6 +370,8 @@ public class AddAppoinmentFragment extends Fragment {
 
 			@Override
 			public void onDismiss(DialogInterface arg0) {
+				// TODO Auto-generated method stub
+
 				label_text.setText("");
 			}
 		});
@@ -481,13 +482,60 @@ public class AddAppoinmentFragment extends Fragment {
 
 		aq.id(R.id.label_grid_view).getGridView()
 				.setOnItemLongClickListener(new LabelEditClickListener());
+		aq_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
 
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				location_del.dismiss();
+			}
+		});
+
+		aq_del.id(R.id.edit_del).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Remove(viewl.getId() + "" + itempos);
+				((TextView) viewl).setText("New");
+				GradientDrawable mDrawable = (GradientDrawable) getResources()
+						.getDrawable(R.drawable.label_simple);
+				((TextView) viewl).setBackground(mDrawable);
+				((TextView) viewl).setTextColor(R.color.mountain_mist);
+
+				location_del.dismiss();
+			}
+		});
+
+		aq_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				label_edit.dismiss();
+				location_del.show();
+			}
+		});
+
+		aq_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method
+				aqd.id(R.id.label_title).text("Edit");
+				aqd.id(R.id.save).text("Save");
+				label_view = viewl;
+				label_edit.dismiss();
+				add_new_label_alert.show();
+			}
+		});
 
 		aq.id(R.id.spinner_label_layout).clicked(new GeneralOnClickListner());
 
 		View switchView = aq.id(R.id.add_sub_appoinment).getView();
 		toggleCheckList(switchView);
 
+	
 	}
 
 	// ***************Main End**********************
@@ -768,7 +816,6 @@ public class AddAppoinmentFragment extends Fragment {
 						@Override
 						public void onClick(View v) {
 							item.removeView(child);
-							// child.setVisibility(View.GONE);
 						}
 					});
 			item.addView(child);
@@ -838,92 +885,21 @@ public class AddAppoinmentFragment extends Fragment {
 		@Override
 		public boolean onItemLongClick(AdapterView<?> arg0, final View arg1,
 				int position, long arg3) {
+			// TODO Auto-generated method stub
 			if (((TextView) arg1).getText().toString().equals("New")
 					|| position < 3) {
 
 			} else {
+				aqd.id(R.id.add_label_text).text(
+						((TextView) arg1).getText().toString());
+				aq_del.id(R.id.body).text(
+						"Label " + ((TextView) arg1).getText().toString()
+								+ " will be deleted");
+				aq_edit.id(R.id.add_task_edit_title).text(
+						"Label: " + ((TextView) arg1).getText().toString());
 				viewl = arg1;
 				itempos = position;
-				listbuilder = new CustomListDialog.Builder(getActivity(),
-						"Label: " + ((TextView) arg1).getText().toString(),
-						itemsForLables);
-				listbuilder.darkTheme(false);
-				listbuilder.titleAlignment(Alignment.LEFT);
-				listbuilder.itemAlignment(Alignment.LEFT);
-				listbuilder.titleColor(getResources().getColor(
-						android.R.color.holo_blue_dark));
-				listbuilder.itemColor(Color.BLACK);
-				listbuilder.titleTextSize(22);
-				listbuilder.itemTextSize(18);
-				label_edit = listbuilder.build();
 				label_edit.show();
-				label_edit.setListClickListener(new ListClickListener() {
-
-					@Override
-					public void onListItemSelected(int position,
-							String[] items, String item) {
-						if (position == 0) {
-							viewl = arg1;
-							itempos = position;
-							label_edit.dismiss();
-
-							add_new_label_alert
-									.getWindow()
-									.setBackgroundDrawable(
-											new ColorDrawable(
-													android.graphics.Color.TRANSPARENT));
-							add_new_label_alert.show();
-						}
-						if (position == 1) {
-							label_edit.dismiss();
-							dialogbuilder = new CustomDialog.Builder(
-									getActivity(), "Delete", "Ok");
-
-							// Now we can any of the following methods.
-							dialogbuilder.content("Label "
-									+ ((TextView) arg1).getText().toString()
-									+ " will be deleted");
-							dialogbuilder.negativeText("Cancel");
-							dialogbuilder.darkTheme(false);
-							dialogbuilder.rightToLeft(true);
-							dialogbuilder.titleTextSize(22);
-							dialogbuilder.contentTextSize(18);
-							dialogbuilder.buttonTextSize(14);
-							dialogbuilder.titleAlignment(Alignment.LEFT);
-							dialogbuilder.buttonAlignment(Alignment.RIGHT);
-							dialogbuilder.titleColor(getResources().getColor(
-									android.R.color.holo_blue_light));
-							dialogbuilder.contentColor(Color.BLACK);
-							dialogbuilder.positiveColor(getResources()
-									.getColor(android.R.color.holo_blue_light));
-							location_del = dialogbuilder.build();
-							location_del.show();
-							location_del.setClickListener(new ClickListener() {
-
-								@Override
-								public void onConfirmClick() {
-									// TODO Auto-generated method stub
-									Remove(viewl.getId() + "" + itempos);
-									((TextView) viewl).setText("New");
-									GradientDrawable mDrawable = (GradientDrawable) getResources()
-											.getDrawable(
-													R.drawable.label_simple);
-									((TextView) viewl).setBackground(mDrawable);
-									((TextView) viewl)
-											.setTextColor(R.color.mountain_mist);
-
-									location_del.dismiss();
-								}
-
-								@Override
-								public void onCancelClick() {
-									// TODO Auto-generated method stub
-									location_del.dismiss();
-								}
-							});
-						}
-					}
-				});
 			}
 			return false;
 		}

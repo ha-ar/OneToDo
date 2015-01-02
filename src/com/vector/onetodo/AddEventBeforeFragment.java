@@ -1,10 +1,10 @@
 package com.vector.onetodo;
 
-import net.simonvt.numberpicker.NumberPicker;
-import uk.me.lewisdeane.ldialogs.BaseDialog.Alignment;
 import uk.me.lewisdeane.ldialogs.CustomDialog;
-import uk.me.lewisdeane.ldialogs.CustomDialog.ClickListener;
 import uk.me.lewisdeane.ldialogs.CustomListDialog;
+import uk.me.lewisdeane.ldialogs.BaseDialog.Alignment;
+import uk.me.lewisdeane.ldialogs.CustomDialog.ClickListener;
+import net.simonvt.numberpicker.NumberPicker;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -23,6 +23,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -39,10 +40,7 @@ public class AddEventBeforeFragment extends Fragment {
 	TextView before;
 	Editor editor;
 	String padress = null, pname = null;
-	String[] items = {"Edit","Delete"};
-	CustomListDialog.Builder listbuilder;CustomDialog.Builder dialogbuilder;
-	CustomListDialog location_edit;CustomDialog location_del;
-	AlertDialog alert, location;
+	AlertDialog alert, location, location_del, location_edit;
 	View temp, viewl;
 
 	public static View viewP;
@@ -80,6 +78,21 @@ public class AddEventBeforeFragment extends Fragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		LayoutInflater inflater5 = getActivity().getLayoutInflater();
+
+		View dialoglayout7 = inflater5.inflate(R.layout.add_task_edit_delete,
+				null, false);
+		aq_del = new AQuery(dialoglayout7);
+		AlertDialog.Builder builder7 = new AlertDialog.Builder(getActivity());
+		builder7.setView(dialoglayout7);
+		location_del = builder7.create();
+
+		View dialoglayout6 = inflater5.inflate(R.layout.add_task_edit, null,
+				false);
+		aq_edit = new AQuery(dialoglayout6);
+		AlertDialog.Builder builder6 = new AlertDialog.Builder(getActivity());
+		builder6.setView(dialoglayout6);
+		location_edit = builder6.create();
 
 		if (position == 0) {
 
@@ -123,7 +136,8 @@ public class AddEventBeforeFragment extends Fragment {
 					.getGridView()
 					.setAdapter(
 							new ArrayAdapter<String>(getActivity(),
-									R.layout.grid_layout_textview, Constants.beforeArray) {
+									R.layout.grid_layout_textview,
+									Constants.beforeArray) {
 
 								@Override
 								public View getView(int position,
@@ -146,7 +160,6 @@ public class AddEventBeforeFragment extends Fragment {
 												.setTextColor(getResources()
 														.getColor(
 																R.color._4d4d4d));
-									// convertView.setSelected(true);
 									return textView;
 								}
 
@@ -197,7 +210,8 @@ public class AddEventBeforeFragment extends Fragment {
 							((TextView) view).setTextColor(Color.WHITE);
 							view.setSelected(true);
 							previousSelected = view;
-							if (Constants.beforeArray[position].equals("Custom")) {
+							if (Constants.beforeArray[position]
+									.equals("Custom")) {
 								alert.show();
 
 							} else {
@@ -205,15 +219,9 @@ public class AddEventBeforeFragment extends Fragment {
 								if (Constants.beforeArray[position] == "On Time") {
 									before.setText(Constants.beforeArray[position]);
 								} else {
-									before.setText(Constants.beforeArray[position]+ " Before");
+									before.setText(Constants.beforeArray[position]
+											+ " Before");
 								}
-								/*before.setTextColor(getResources().getColor(
-										R.color.active));
-								ImageView reminderImage = (ImageView) getActivity()
-										.findViewById(R.id.reminder_image);
-
-								reminderImage.setBackground(getResources()
-										.getDrawable(R.drawable.reminder_blue));*/
 							}
 
 						}
@@ -238,8 +246,9 @@ public class AddEventBeforeFragment extends Fragment {
 					TextView before = (TextView) AddEventFragment.allView
 							.findViewById(R.id.before_event);
 					before.setVisibility(View.VISIBLE);
-					before.setText(numberPicker.getValue()
-							+ " " + Constants.beforevalues[customDays.getValue()]+" Before" );
+					before.setText(numberPicker.getValue() + " "
+							+ Constants.beforevalues[customDays.getValue()]
+							+ " Before");
 					numberPicker.getValue();
 					alert.dismiss();
 				}
@@ -284,7 +293,8 @@ public class AddEventBeforeFragment extends Fragment {
 					((TextView) viewP).setTextColor(Color.parseColor("#000000"));
 					// ((TextView)
 					// viewP).setBackgroundColor(Color.parseColor("#999999"));
-					aq.id(R.id.location_before_event).text(aqd.id(R.id.adress).getText());
+					aq.id(R.id.location_before_event).text(
+							aqd.id(R.id.adress).getText());
 					((TextView) viewP).setText(aqd.id(R.id.home).getText());
 					viewP.setBackgroundResource(R.drawable.button_shadow);
 					if (button != null) {
@@ -347,114 +357,73 @@ public class AddEventBeforeFragment extends Fragment {
 									+ aq.id(checkedId).getText().toString());
 							previousSelectedLocation = group
 									.findViewById(checkedId);
-							/*before.setTextColor(getResources().getColor(
-									R.color.deep_sky_blue));*/
-							/*ImageView reminderImage = (ImageView) getActivity()
-									.findViewById(R.id.reminder_image);
-							reminderImage.setBackground(getResources()
-									.getDrawable(R.drawable.reminder_blue));*/
 						}
 					});
-			 aq.id(R.id.pre_defined_21).getTextView() .setOnLongClickListener(new
-					  LocationEditClickListener());
-					 aq.id(R.id.pre_defined_31).getTextView() .setOnLongClickListener(new
-					  LocationEditClickListener());
-					  aq.id(R.id.pre_defined_41).getTextView() .setOnLongClickListener(new
-					 LocationEditClickListener());
-					 
+			aq.id(R.id.pre_defined_21).getTextView()
+					.setOnLongClickListener(new LocationEditClickListener());
+			aq.id(R.id.pre_defined_31).getTextView()
+					.setOnLongClickListener(new LocationEditClickListener());
+			aq.id(R.id.pre_defined_41).getTextView()
+					.setOnLongClickListener(new LocationEditClickListener());
 
-					
-					  aq.id(R.id.pre_defined_11).getTextView() .setOnLongClickListener(new
-					  LocationEditClickListener());
-					 
+			aq.id(R.id.pre_defined_11).getTextView()
+					.setOnLongClickListener(new LocationEditClickListener());
 
-					temp = aq.id(R.id.pre_defined_11).getView();
-					aq.id(R.id.pre_defined_11).clicked(new LocationTagClickListener());
-					aq.id(R.id.pre_defined_21).clicked(new LocationTagClickListener());
-					aq.id(R.id.pre_defined_31).clicked(new LocationTagClickListener());
-					aq.id(R.id.pre_defined_41).clicked(new LocationTagClickListener());
+			temp = aq.id(R.id.pre_defined_11).getView();
+			aq.id(R.id.pre_defined_11).clicked(new LocationTagClickListener());
+			aq.id(R.id.pre_defined_21).clicked(new LocationTagClickListener());
+			aq.id(R.id.pre_defined_31).clicked(new LocationTagClickListener());
+			aq.id(R.id.pre_defined_41).clicked(new LocationTagClickListener());
+			aq_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					location_del.dismiss();
+				}
+			});
+
+			aq_del.id(R.id.edit_del).clicked(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					((TextView) viewl).setText("New");
+					((TextView) viewl).setTextColor(R.color.grey);
+					((TextView) viewl)
+							.setBackgroundResource(R.color.light_grey_color);
+					remove(viewl.getId());
+					aq.id(R.id.location_before_event).text("");
+					location_del.dismiss();
+				}
+			});
+
+			aq_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub
+					aqd.id(R.id.adress).text("");
+					aqd.id(R.id.home).text("");
+					location_edit.dismiss();
+					location_del.show();
+				}
+			});
+
+			aq_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// TODO Auto-generated method stub=
+					aqd.id(R.id.add_location_title).text("Edit");
+					aqd.id(R.id.save).text("Save");
+					location_edit.dismiss();
+					location.show();
+				}
+			});
+
 		}
 
-		
-
-
-//		aq_del.id(R.id.edit_cencel).clicked(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//				location_del.dismiss();
-//			}
-//		});
-//
-//		aq_del.id(R.id.edit_del).clicked(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//				((TextView) viewl).setText("New");
-//				((TextView) viewl).setTextColor(R.color.grey);
-//				((TextView) viewl)
-//						.setBackgroundResource(R.color.light_grey_color);
-//				remove(viewl.getId());
-//				aq.id(R.id.location_before_event).text("");
-//				location_del.dismiss();
-//			}
-//		});
-//
-//		aq_edit.id(R.id.add_task_delete).clicked(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//				aqd.id(R.id.adress).text("");
-//				aqd.id(R.id.home).text("");
-//				location_edit.dismiss();
-//				location_del.show();
-//			}
-//		});
-//
-//		aq_edit.id(R.id.add_task_edit).clicked(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub=
-//				aqd.id(R.id.add_location_title).text("Edit");
-//				aqd.id(R.id.save).text("Save");
-//				location_edit.dismiss();
-//				location.show();
-//			}
-//		});
-//
-		// aq.id(R.id.pre_defined_new).clicked(new
-		// LocationTagClickListener());
-
-		/*
-		 * aq.id(R.id.arrive_leave_checkbox_layout).visible();
-		 * 
-		 * AutoCompleteTextView locationTextView = (AutoCompleteTextView) aq
-		 * .id(R.id.location_before).getView();
-		 * 
-		 * locationTextView.setAdapter(new PlacesAutoCompleteAdapter(
-		 * getActivity(), android.R.layout.simple_spinner_dropdown_item));
-		 * 
-		 * ((RadioGroup) aq.id(R.id.leave_arrive_radio).getView())
-		 * .setOnCheckedChangeListener(new OnCheckedChangeListener() {
-		 * 
-		 * @Override public void onCheckedChanged(RadioGroup group, int
-		 * checkedId) { if (previousSelectedLocation != null) { ((RadioButton)
-		 * previousSelectedLocation) .setTextColor(getResources().getColor(
-		 * R.color.deep_sky_blue)); } ((RadioButton)
-		 * group.findViewById(checkedId)) .setTextColor(Color.WHITE); TextView
-		 * before = (TextView) getActivity() .findViewById(R.id.before);
-		 * before.setText("On " + aq.id(checkedId).getText().toString());
-		 * previousSelectedLocation = group .findViewById(checkedId);
-		 * before.setTextColor(getResources().getColor( R.color.deep_sky_blue));
-		 * ImageView reminderImage = (ImageView) getActivity()
-		 * .findViewById(R.id.reminder_image);
-		 * reminderImage.setBackground(getResources()
-		 * .getDrawable(R.drawable.reminder_blue)); } });
-		 */
 	}
 
 	private class LocationTagClickListener implements OnClickListener {
@@ -497,92 +466,21 @@ public class AddEventBeforeFragment extends Fragment {
 				load(view.getId());
 				aqd.id(R.id.adress).text(padress);
 				aqd.id(R.id.home).text(((TextView) view).getText().toString());
-//				aq_del.id(R.id.body).text(
-//						"Location tag "
-//								+ ((TextView) view).getText().toString()
-//								+ " will be deleted");
-//				aq_edit.id(R.id.add_task_edit_title).text(
-//						"Location tag:"
-//								+ ((TextView) view).getText().toString());
+				aq_del.id(R.id.body).text(
+						"Location tag "
+								+ ((TextView) view).getText().toString()
+								+ " will be deleted");
+				aq_edit.id(R.id.add_task_edit_title).text(
+						"Location tag:"
+								+ ((TextView) view).getText().toString());
 				viewl = view;
-				listbuilder = new CustomListDialog.Builder(getActivity(), "Location tag:"
-				+ ((TextView) view).getText().toString(),items);
-				Log.e("ok", "Location tag:"
-						+ ((TextView) view).getText().toString());
-				listbuilder.darkTheme(false);				
-				listbuilder.titleAlignment(Alignment.LEFT); 
-				listbuilder.itemAlignment(Alignment.LEFT); 
-				listbuilder.titleColor(getResources().getColor(android.R.color.holo_blue_dark)); 
-				listbuilder.itemColor(Color.BLACK);
-				listbuilder.titleTextSize(22);
-				listbuilder.itemTextSize(18);
-				location_edit = listbuilder.build();
 				location_edit.show();
-				location_edit.setListClickListener(new CustomListDialog.ListClickListener() {
-		            @Override
-		            public void onListItemSelected(int pos, String[] strings, String s) {
-		                // i is the position clicked.
-		                // strings is the array of items in the list.
-		                // s is the item selected.
-		            	if(pos == 0)
-		            	{
-		            		aqd.id(R.id.add_location_title).text("Edit");
-							aqd.id(R.id.save).text("SAVE");
-							location_edit.dismiss();
-							location.show();
-		            	}
-		            	if(pos == 1)
-		            	{
-		            		aqd.id(R.id.adress).text("");
-							aqd.id(R.id.home).text("");
-							location_edit.dismiss();
-		            		dialogbuilder = new CustomDialog.Builder(getActivity(), "Delete", "Ok");
-
-		            		// Now we can any of the following methods.
-		            		dialogbuilder.content("Location tag "
-									+ ((TextView) view).getText().toString()
-									+ " will be deleted");
-		            		dialogbuilder.negativeText("Cancel");
-		            		dialogbuilder.darkTheme(false);
-		            		dialogbuilder.rightToLeft(true);
-		            		dialogbuilder.titleTextSize(22);
-		            		dialogbuilder.contentTextSize(18);
-		            		dialogbuilder.buttonTextSize(14);
-		            		dialogbuilder.titleAlignment(Alignment.LEFT); 
-		            		dialogbuilder.buttonAlignment(Alignment.RIGHT);
-		            		dialogbuilder.titleColor(getResources().getColor(android.R.color.holo_blue_light)); 
-		            		dialogbuilder.contentColor(Color.BLACK); 
-		            		dialogbuilder.positiveColor(getResources().getColor(android.R.color.holo_blue_light)); 
-		            		location_del = dialogbuilder.build();
-		            		location_del.show();
-		            		location_del.setClickListener(new ClickListener() {
-								
-								@Override
-								public void onConfirmClick() {
-									// TODO Auto-generated method stub
-									((TextView) viewl).setText("New");
-									((TextView) viewl).setTextColor(Color.GRAY);
-									((TextView) viewl)
-											.setBackgroundColor(Color.parseColor("#eeeeee"));
-									remove(viewl.getId());
-									aq.id(R.id.location_before).text("");
-									location_del.dismiss();
-								}
-								
-								@Override
-								public void onCancelClick() {
-									// TODO Auto-generated method stub
-									location_del.dismiss();
-								}
-							});
-		            	}
-		            }
-		        });
 			}
 			return false;
 		}
 
 	}
+
 	public void save(long id, String name, String location) {
 		// 0 - for private mode
 		editor.putString(2 + "key_name" + id, name); // Storing integer

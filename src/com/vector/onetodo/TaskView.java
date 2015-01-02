@@ -88,20 +88,10 @@ public class TaskView extends Fragment {
 		});
 		if (TaskData.getInstance().todos.get(Position).location != null)
 			aq.id(R.id.location).text(strDate);
-		/*
-		 * if(TaskData.getInstance().todos.get(Position).!=null)
-		 */
+	 
 		aq.id(R.id.location).text("Reminde before ");
 
-		/*
-		 * if(TaskData.getInstance().todos.get(Position).repeat_interval!=null)
-		 * aq.id(R.id.repeat).text(TaskData.getInstance().todos.get(Position).
-		 * repeat_interval);
-		 * 
-		 * if(TaskData.getInstance().todos.get(Position).repeat_interval!=null)
-		 * aq.id(R.id.repeat).text(TaskData.getInstance().todos.get(Position).
-		 * repeat_interval);
-		 */
+	 
 		final View view1 = getActivity().getLayoutInflater().inflate(
 				R.layout.landing_menu, null, false);
 
@@ -158,8 +148,7 @@ public class TaskView extends Fragment {
 
 				if (popupWindowTask.isShowing())
 					popupWindowTask.dismiss();
-				else {
-					// layout_MainMenu.getForeground().setAlpha(150);
+				else { 
 					popupWindowTask.showAsDropDown(aq.id(R.id.imageView4)
 							.getView(), 5, 10);
 				}
@@ -167,10 +156,7 @@ public class TaskView extends Fragment {
 		});
 
 		parallax.setImageViewToParallax(image);
-
-		// parallax.setViewsBounds(2);
-		// parallax.set
-		/* parallax.setViewsBounds(1); */
+ 
 	}
 
 }

@@ -63,7 +63,7 @@ public class GcmIntentService extends IntentService {
 				  NotificationHandler nHandler;
 			 	   	 nHandler = NotificationHandler.getInstance(getApplicationContext());
 			 	   	nHandler.createSimpleNotification2(getApplicationContext(),extras.getString("title"),extras.getString("message"));
-				//sendNotification("Received: " + extras.toString());
+ 
 				Log.v("Message 3", "Received: " + extras.toString());
 			}
 		}
@@ -105,12 +105,7 @@ public class GcmIntentService extends IntentService {
 		// Pending intent to the notification manager
 		PendingIntent resultPending = stackBuilder
 				.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-/*	[{message=just checking, title=Title, 
-			smallIcon=small_icon, tickerText=Ticker text here...Ticker text
-			here...Ticker text here, 
-			collapse_key=do_not_collapse, sound=1, subtitle=Subtitle, 
-			vibrate=1, android.support.content.wakelockid=2, 
-			largeIcon=large_icon, from=184279149655}]*/
+ 
 
 		// Building the notification
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)

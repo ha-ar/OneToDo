@@ -70,12 +70,7 @@ public class NotificationHandler {
 		// Pending intent to the notification manager
 		PendingIntent resultPending = stackBuilder
 				.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-/*	[{message=just checking, title=Title, 
-			smallIcon=small_icon, tickerText=Ticker text here...Ticker text
-			here...Ticker text here, 
-			collapse_key=do_not_collapse, sound=1, subtitle=Subtitle, 
-			vibrate=1, android.support.content.wakelockid=2, 
-			largeIcon=large_icon, from=184279149655}]*/
+ 
 
 		// Building the notification
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
@@ -89,20 +84,7 @@ public class NotificationHandler {
 		// mId allows you to update the notification later on.
 		mNotificationManager.notify(1, mBuilder.build());
 		
-		/*int notifyID = 1;
-		mNotifyBuilder = new NotificationCompat.Builder(this)
-		    .setContentTitle("New Message")
-		    .setContentText("You've received new messages.")
-		    .setSmallIcon(R.drawable.ic_notify_status)
-		numMessages = 0;
-		// Start of a loop that processes data and then notifies the user
-
-		
-		    // Because the ID remains unchanged, the existing notification is
-		    // updated.
-		    mNotificationManager.notify(
-		            notifyID,
-		            mNotifyBuilder.build());*/
+		 
 
 	}
 }

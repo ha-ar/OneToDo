@@ -88,14 +88,9 @@ public class Invitations extends Fragment implements InvitationScrollHolder {
 		// Bind the tabs to the ViewPager
 		final PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) aq.id(
 				R.id.tabs_invit).getView();
-		/*
-		 * android.widget.LinearLayout.LayoutParams defaultTabLayoutParams = new
-		 * LinearLayout.LayoutParams(size.x/2, LayoutParams.MATCH_PARENT);
-		 * tabs.setLayoutParams(defaultTabLayoutParams);
-		 */
+	 
 		tabs.setShouldExpand(false);
-		tabs.setDividerColorResource(android.R.color.transparent);
-		// tabs.setIndicatorColorResource(R.color.graytab);
+		tabs.setDividerColorResource(android.R.color.transparent); 
 		tabs.setUnderlineColorResource(android.R.color.transparent);
 		tabs.setTextSize(Utils.getPxFromDp(getActivity(), 14));
 		tabs.setIndicatorHeight(Utils.getPxFromDp(getActivity(), 3));
@@ -105,11 +100,9 @@ public class Invitations extends Fragment implements InvitationScrollHolder {
 		tabs.setIndicatorColor(Color.parseColor("#ffffff"));
 		tabs.setTextColor(Color.parseColor("#ffffff"));
 		tabs.setSmoothScrollingEnabled(true);
-		tabs.setShouldExpand(false);
-		// tabs.setTextColorResource(R.color.graytab);
+		tabs.setShouldExpand(false); 
 		tabs.setAllCaps(false);
-		tabs.setTypeface(null, Typeface.NORMAL);
-		//tabs.setOnPageChangeListener(new OnPageChangeListener(getActivity()));
+		tabs.setTypeface(null, Typeface.NORMAL); 
 
 		tabs.setViewPager(pager);
 		tabPagerAdapter.notifyDataSetChanged();

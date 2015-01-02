@@ -8,8 +8,6 @@ public class CheckList {
 
     private Long id;
     private String title;
-    private Boolean ischecked;
-    private long todo_id;
 
     public CheckList() {
     }
@@ -18,11 +16,9 @@ public class CheckList {
         this.id = id;
     }
 
-    public CheckList(Long id, String title, Boolean ischecked, long todo_id) {
+    public CheckList(Long id, String title) {
         this.id = id;
         this.title = title;
-        this.ischecked = ischecked;
-        this.todo_id = todo_id;
     }
 
     public Long getId() {
@@ -39,22 +35,6 @@ public class CheckList {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public Boolean getIschecked() {
-        return ischecked;
-    }
-
-    public void setIschecked(Boolean ischecked) {
-        this.ischecked = ischecked;
-    }
-
-    public long getTodo_id() {
-        return todo_id;
-    }
-
-    public void setTodo_id(long todo_id) {
-        this.todo_id = todo_id;
     }
 
 }
