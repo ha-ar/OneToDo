@@ -40,6 +40,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -1412,9 +1413,10 @@ public class AddTask extends FragmentActivity {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 			String temp = null;
-
+			dialog.dismiss();
 			try {
 				temp = EntityUtils.toString(response.getEntity());
+				Log.e("Task Added?", temp);
 			} catch (org.apache.http.ParseException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

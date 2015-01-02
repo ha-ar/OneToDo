@@ -11,6 +11,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,18 +74,21 @@ public class TaskListFragment extends ScrollTabHolderFragment implements
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+			public void onItemClick(AdapterView<?> arg0, View arg1, int pos,
 					long arg3) {
 				// TODO Auto-generated method stub
 				int id = -1;
+				Log.e("Size", String.valueOf(MainActivity.Today.size()));
+				if(MainActivity.Today.size() >0)
+				{
 				if (position == 0) {
-					id = Integer.parseInt(MainActivity.Today.get((arg2 - 1)).id);
+					id = Integer.parseInt(MainActivity.Today.get((pos - 1)).id);
 				} else if (position == 1) {
-					id = Integer.parseInt(MainActivity.Tomorrow.get((arg2 - 1)).id);
+					id = Integer.parseInt(MainActivity.Tomorrow.get((pos - 1)).id);
 				} else if (position == 2) {
-					id = Integer.parseInt(MainActivity.Upcoming.get((arg2 - 1)).id);
+					id = Integer.parseInt(MainActivity.Upcoming.get((pos - 1)).id);
 				}
-
+				}
 				if (id != -1) {
 
 					for (int i = 0; i < TaskData.getInstance().todos.size(); i++) {

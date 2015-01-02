@@ -49,16 +49,16 @@ import com.vector.onetodo.utils.Utils;
 public class CountrySelector extends Fragment {
 
 	// http://api.heuristix.net/one_todo/v1/user/addContacts
-	/* $data = array(
-    'user_id' => '6',  
-    'contacts' => array('+447589567876', '+447589567897', '+447589517897')
-    );*/
+	/*
+	 * $data = array( 'user_id' => '6', 'contacts' => array('+447589567876',
+	 * '+447589567897', '+447589517897') );
+	 */
 	// private Button loginButton;
 	AQuery aq;
 	TextView skip;
 	HttpClient client;
 	HttpPost post;
-	List<NameValuePair> pairs,pair;
+	List<NameValuePair> pairs, pair;
 	HttpResponse response = null;
 	Boolean message;
 	AlertDialog alert;
@@ -67,12 +67,11 @@ public class CountrySelector extends Fragment {
 	public static View view;
 	InputMethodManager imm;
 
-
 	// ************** Phone COntacts
 
-		String phoneNumber = null;
-		Cursor cursor;
-		
+	String phoneNumber = null;
+	Cursor cursor;
+
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
@@ -111,9 +110,9 @@ public class CountrySelector extends Fragment {
 
 		// ******* Phone contact , name list
 
-				Constants.Name = new ArrayList<String>();
-				Constants.Contact = new ArrayList<String>();
-				new Phone_contact().execute();
+		Constants.Name = new ArrayList<String>();
+		Constants.Contact = new ArrayList<String>();
+		new Phone_contact().execute();
 
 		String html = "ONE" + "<br />" + "todo";
 		aq.id(R.id.title).text(Html.fromHtml(html));
@@ -150,10 +149,9 @@ public class CountrySelector extends Fragment {
 				// TODO Auto-generated method stub
 				if (!(aq.id(R.id.country).getText().length() < 4
 						|| aq.id(R.id.country).getText().equals("") || position == 0)) {
-
 					if (Constants.RegId != null) {
 
-						AddRegister();
+						new AddRegister().execute();
 					} else {
 						Toast.makeText(getActivity(), "Try Again...",
 								Toast.LENGTH_LONG).show();
@@ -208,8 +206,11 @@ public class CountrySelector extends Fragment {
 		getActivity()
 				.overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
 	}
-
-	public void AddRegister() {
+	class AddRegister extends AsyncTask<String, Void, String> {
+		@Override
+		    protected String doInBackground(String... params) {
+		try{
+	
 		pairs = new ArrayList<NameValuePair>();
 		Random r = new Random();
 		int i1 = r.nextInt(100000 - 1 + 1) + 1;
@@ -279,14 +280,14 @@ public class CountrySelector extends Fragment {
 					}
 				});
 
-
 		client = new DefaultHttpClient();
 		post = new HttpPost(
 				"http://api.heuristix.net/one_todo/v1/user/addContacts");
 		pair = new ArrayList<NameValuePair>();
 		pair.add(new BasicNameValuePair("user_id", "3223"));
-		for(int i=0;i<Constants.Contact.size();i++){
-		pair.add(new BasicNameValuePair("contacts["+i+"]", Constants.Contact.get(i)));
+		for (int i = 0; i < Constants.Contact.size(); i++) {
+			pair.add(new BasicNameValuePair("contacts[" + i + "]",
+					Constants.Contact.get(i)));
 		}
 
 		try {
@@ -305,7 +306,7 @@ public class CountrySelector extends Fragment {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
+		Log.v("Response", response.toString());
 		String temp = null;
 		try {
 			temp = EntityUtils.toString(response.getEntity());
@@ -314,9 +315,17 @@ public class CountrySelector extends Fragment {
 			e.printStackTrace();
 		}
 		Log.v("Response post ", temp + " new");
-		 
+
+	}catch(Exception e){}
+		         return null;
+		}
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+		}
+
 	}
-	
 
 	public class Phone_contact extends AsyncTask<Void, Void, Void> {
 
@@ -361,7 +370,8 @@ public class CountrySelector extends Fragment {
 								.add(cursor.getString(cursor
 										.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
 						// Query and loop for every phone number of the contact
-						Cursor phoneCursor = getActivity().getContentResolver()
+						Cursor phoneCursor = getActivity()
+								.getContentResolver()
 
 								.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
 										null,
@@ -382,10 +392,8 @@ public class CountrySelector extends Fragment {
 				}
 			}
 
-
-			
 			return null;
 		}
 	}
-	 
+
 }

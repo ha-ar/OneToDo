@@ -284,6 +284,7 @@ public class MainActivity extends BaseActivity implements
 				if (date.equals(today)) {
 					Log.v("Today", date + "   " + today);
 					Today.add((TaskData.getInstance().todos.get(i)));
+					Log.v("Final", Today.toString());
 				} else if (date.equals(tomorrow)) {
 					Log.v("Tomorrow", date + "   " + tomorrow);
 					Tomorrow.add((TaskData.getInstance().todos.get(i)));
