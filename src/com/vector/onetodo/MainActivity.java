@@ -17,13 +17,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -640,11 +637,11 @@ public class MainActivity extends BaseActivity implements
 
 		aq.id(R.id.add_task_button).typeface(
 				TypeFaces.get(this, Constants.ICON_FONT));
-		Intent intent = new Intent(MainActivity.this, AddTask.class);
-		intent.putExtra("position", pager.getCurrentItem());
-		startActivity(intent);
-		overridePendingTransition(R.anim.slide_in1, R.anim.slide_out1);
-		
+//		Intent intent = new Intent(MainActivity.this, AddTask.class);
+//		intent.putExtra("position", pager.getCurrentItem());
+//		startActivity(intent);
+//		overridePendingTransition(R.anim.slide_in1, R.anim.slide_out1);
+//		
 		aq.id(R.id.add_task_button).clicked(new OnClickListener() {
 
 			@Override

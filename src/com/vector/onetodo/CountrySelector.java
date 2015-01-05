@@ -49,16 +49,16 @@ import com.vector.onetodo.utils.Utils;
 public class CountrySelector extends Fragment {
 
 	// http://api.heuristix.net/one_todo/v1/user/addContacts
-	/* $data = array(
-    'user_id' => '6',  
-    'contacts' => array('+447589567876', '+447589567897', '+447589517897')
-    );*/
+	/*
+	 * $data = array( 'user_id' => '6', 'contacts' => array('+447589567876',
+	 * '+447589567897', '+447589517897') );
+	 */
 	// private Button loginButton;
 	AQuery aq;
 	TextView skip;
 	HttpClient client;
 	HttpPost post;
-	List<NameValuePair> pairs,pair;
+	List<NameValuePair> pairs, pair;
 	HttpResponse response = null;
 	Boolean message;
 	AlertDialog alert;
@@ -67,12 +67,11 @@ public class CountrySelector extends Fragment {
 	public static View view;
 	InputMethodManager imm;
 
-
 	// ************** Phone COntacts
 
-		String phoneNumber = null;
-		Cursor cursor;
-		
+	String phoneNumber = null;
+	Cursor cursor;
+
 	@Override
 	public void onResume() {
 		// TODO Auto-generated method stub
@@ -106,14 +105,13 @@ public class CountrySelector extends Fragment {
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onViewCreated(view, savedInstanceState);
 
 		// ******* Phone contact , name list
 
-				Constants.Name = new ArrayList<String>();
-				Constants.Contact = new ArrayList<String>();
-				new Phone_contact().execute();
+		Constants.Name = new ArrayList<String>();
+		Constants.Contact = new ArrayList<String>();
+		new Phone_contact().execute();
 
 		String html = "ONE" + "<br />" + "todo";
 		aq.id(R.id.title).text(Html.fromHtml(html));
@@ -152,7 +150,6 @@ public class CountrySelector extends Fragment {
 						|| aq.id(R.id.country).getText().equals("") || position == 0)) {
 
 					if (Constants.RegId != null) {
-
 						AddRegister();
 					} else {
 						Toast.makeText(getActivity(), "Try Again...",
@@ -242,9 +239,6 @@ public class CountrySelector extends Fragment {
 		try {
 			entity = new UrlEncodedFormEntity(pairs, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			// TODO
-			// Auto-generated
-			// catch block
 			e.printStackTrace();
 		}
 
@@ -279,30 +273,27 @@ public class CountrySelector extends Fragment {
 					}
 				});
 
-
 		client = new DefaultHttpClient();
 		post = new HttpPost(
 				"http://api.heuristix.net/one_todo/v1/user/addContacts");
 		pair = new ArrayList<NameValuePair>();
 		pair.add(new BasicNameValuePair("user_id", "3223"));
-		for(int i=0;i<Constants.Contact.size();i++){
-		pair.add(new BasicNameValuePair("contacts["+i+"]", Constants.Contact.get(i)));
+		for (int i = 0; i < Constants.Contact.size(); i++) {
+			pair.add(new BasicNameValuePair("contacts[" + i + "]",
+					Constants.Contact.get(i)));
 		}
 
 		try {
 			post.setEntity(new UrlEncodedFormEntity(pair));
 		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
 		try {
 			response = client.execute(post);
 		} catch (ClientProtocolException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -310,13 +301,11 @@ public class CountrySelector extends Fragment {
 		try {
 			temp = EntityUtils.toString(response.getEntity());
 		} catch (org.apache.http.ParseException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Log.v("Response post ", temp + " new");
-		 
+
 	}
-	
 
 	public class Phone_contact extends AsyncTask<Void, Void, Void> {
 
@@ -361,7 +350,8 @@ public class CountrySelector extends Fragment {
 								.add(cursor.getString(cursor
 										.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
 						// Query and loop for every phone number of the contact
-						Cursor phoneCursor = getActivity().getContentResolver()
+						Cursor phoneCursor = getActivity()
+								.getContentResolver()
 
 								.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
 										null,
@@ -382,10 +372,8 @@ public class CountrySelector extends Fragment {
 				}
 			}
 
-
-			
 			return null;
 		}
 	}
-	 
+
 }

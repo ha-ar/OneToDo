@@ -4,13 +4,12 @@ import java.io.File;
 
 import uk.me.lewisdeane.ldialogs.BaseDialog.Alignment;
 import uk.me.lewisdeane.ldialogs.CustomDialog;
-import uk.me.lewisdeane.ldialogs.CustomListDialog;
 import uk.me.lewisdeane.ldialogs.CustomDialog.ClickListener;
+import uk.me.lewisdeane.ldialogs.CustomListDialog;
 import uk.me.lewisdeane.ldialogs.CustomListDialog.ListClickListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,7 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.androidquery.AQuery;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -28,8 +26,6 @@ import com.squareup.picasso.Picasso;
 import com.vector.onetodo.utils.Constants;
 import com.vector.onetodo.utils.TypeFaces;
 import com.vector.onetodo.utils.Utils;
-
-import eu.inmite.android.lib.dialogs.SimpleDialogFragment;
 
 public class Accounts extends Fragment {
 
