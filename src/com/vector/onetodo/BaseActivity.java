@@ -8,10 +8,10 @@ import android.support.v7.app.ActionBarActivity;
 
 import com.androidquery.AQuery;
 import com.vector.onetodo.db.gen.DaoMaster;
-import com.vector.onetodo.db.gen.DaoSession;/*
+import com.vector.onetodo.db.gen.DaoSession;
+/*
 import com.vector.onetodo.db.gen.LabelName;
 import com.vector.onetodo.db.gen.LabelNameDao;*/
-import com.vector.onetodo.utils.Constants;
 
 public abstract class BaseActivity extends ActionBarActivity {
 
@@ -25,9 +25,6 @@ public abstract class BaseActivity extends ActionBarActivity {
 			Home = 1, Personal = 2, Studies = 3, Meetups = 4, Games = 5;
 
  
-	public DaoSession daoSession;
-	public DaoMaster daoMaster;
-	SQLiteDatabase db;
 	Long id = null;
 	static int check = 0;
 
@@ -35,7 +32,6 @@ public abstract class BaseActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		aq = new AQuery(this);
-		db_initialize();
  
 		pageName.put(TODAY, "TODAY");
 		pageName.put(TOMORROW, "TOMORROW");
@@ -45,15 +41,5 @@ public abstract class BaseActivity extends ActionBarActivity {
 		typeName.put(1, "Assigned Tasks");
 		typeName.put(2, "Shared Tasks");
 		typeName.put(3, "Delayed Tasks");
-	}
-
-	public void db_initialize() {
-
-		DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this,
-				"OneTodo-db", null);
-		db = helper.getWritableDatabase();
-		daoMaster = new DaoMaster(db);
-		daoSession = daoMaster.newSession(); 
-
 	}
 }

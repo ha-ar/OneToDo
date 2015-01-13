@@ -26,8 +26,6 @@ import org.apache.http.util.EntityUtils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
@@ -40,6 +38,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,8 +66,6 @@ import com.vector.onetodo.db.gen.CheckList;
 import com.vector.onetodo.db.gen.CheckListDao;
 import com.vector.onetodo.db.gen.Comment;
 import com.vector.onetodo.db.gen.CommentDao;
-import com.vector.onetodo.db.gen.DaoMaster;
-import com.vector.onetodo.db.gen.DaoSession;
 import com.vector.onetodo.db.gen.Friends;
 import com.vector.onetodo.db.gen.FriendsDao;
 import com.vector.onetodo.db.gen.Label;
@@ -95,8 +92,6 @@ public class AddTask extends FragmentActivity {
 	static Button btn;
 	int dayPosition;
 	static Long f2 = null;
-	DaoMaster daoMaster;
-	DaoSession daoSession;
 	ToDoDao tododao;
 	AssignDao assigndao;
 	CheckListDao checklistdao;
@@ -106,7 +101,6 @@ public class AddTask extends FragmentActivity {
 	RepeatDao repeatdao;
 	ShareDao sharedao;
 	CommentDao commentdao;
-	Cursor cursor;
 	List<ToDo> tod;
 	ProgressDialog dialog;
 	public static PopupWindow popupWindowAdd;
@@ -117,6 +111,8 @@ public class AddTask extends FragmentActivity {
 	public static FrameLayout layout_MainMenu;
 	String[] array = { "Assign", "Due date", "Location", "Reminder", "Repeat",
 			"Label", "Subtasks", "Notes", "Attachment" };
+	public static String assignedSelectedID = "";
+	protected static String assignedSelectedName = "";
 
 	// *******************ADD DATA
 	String title = null, notes = null, label_name = null, r_location = null,
@@ -207,7 +203,6 @@ public class AddTask extends FragmentActivity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				if (Constants.Project_task_check == 1) {
 					getSupportFragmentManager().popBackStack();
 				} else {
@@ -215,10 +210,6 @@ public class AddTask extends FragmentActivity {
 				}
 			}
 		});
-		convertPixelsToDp(38, this);
-		List<ToDo> ddd = tododao.loadAll();
-		for (int i = 0; i < ddd.size(); i++) {
-		}
 
 		dayPosition = getIntent().getExtras().getInt("position");
 
@@ -267,7 +258,6 @@ public class AddTask extends FragmentActivity {
 
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// TODO Auto-generated method stub
 
 			}
 
@@ -355,7 +345,6 @@ public class AddTask extends FragmentActivity {
 
 			@Override
 			public void onDismiss() {
-				// TODO Auto-generated method stub
 				aq.id(R.id.addtask_menu).image(
 						getResources().getDrawable(R.drawable.ic_show_white));
 			}
@@ -364,8 +353,6 @@ public class AddTask extends FragmentActivity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-
 				if (Position == 0) {
 					if (AddTaskFragment.taskTitle.length() > 0) {
 						aq_menu.id(R.id.menu_item1)
@@ -418,7 +405,6 @@ public class AddTask extends FragmentActivity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 			}
 		});
 		aq_menu.id(R.id.menu_item2).clicked(new OnClickListener() {
@@ -1327,24 +1313,14 @@ public class AddTask extends FragmentActivity {
 	}
 
 	public void db_initialize() {
-		DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this,
-				"OneTodo-db", null);
-
-		db = helper.getWritableDatabase();
-		// db.notifyAll();
-		daoMaster = new DaoMaster(db);
-		daoSession = daoMaster.newSession();
-		assigndao = daoSession.getAssignDao();
-		checklistdao = daoSession.getCheckListDao();
-		friendsdao = daoSession.getFriendsDao();
-		labeldao = daoSession.getLabelDao();
-		sharedao = daoSession.getShareDao();
-		tododao = daoSession.getToDoDao();
-		commentdao = daoSession.getCommentDao();
-		repeatdao = daoSession.getRepeatDao();
-
-		reminderdao = daoSession.getReminderDao();
-
+		checklistdao = App.daoSession.getCheckListDao();
+		friendsdao = App.daoSession.getFriendsDao();
+		labeldao = App.daoSession.getLabelDao();
+		sharedao = App.daoSession.getShareDao();
+		tododao = App.daoSession.getToDoDao();
+		commentdao = App.daoSession.getCommentDao();
+		repeatdao = App.daoSession.getRepeatDao();
+		reminderdao = App.daoSession.getReminderDao();
 	}
 
 	public void Density() {
@@ -1372,34 +1348,23 @@ public class AddTask extends FragmentActivity {
 		}
 	}
 
-	public static void convertPixelsToDp(float px, Context context) {
-
-		Resources resources = context.getResources();
-		DisplayMetrics metrics = resources.getDisplayMetrics();
-		Constants.dp = px / (metrics.densityDpi / Constants.density);
-	}
-
 	public class add extends AsyncTask<String, Integer, Void> {
 
 		@Override
 		protected Void doInBackground(String... params) {
-			// TODO Auto-generated method stub
 
 			try {
 				post.setEntity(new UrlEncodedFormEntity(pairs));
 			} catch (UnsupportedEncodingException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
 			try {
 				response = client.execute(post);
 			} catch (ClientProtocolException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 				asyn.cancel(true);
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 				asyn.cancel(true);
 			}
@@ -1409,14 +1374,13 @@ public class AddTask extends FragmentActivity {
 
 		@Override
 		protected void onPostExecute(Void result) {
-			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 			String temp = null;
-
+			dialog.dismiss();
 			try {
 				temp = EntityUtils.toString(response.getEntity());
+				Log.e("Task Added?", temp);
 			} catch (org.apache.http.ParseException | IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				asyn.cancel(true);
 			}
@@ -1427,7 +1391,6 @@ public class AddTask extends FragmentActivity {
 
 		@Override
 		protected void onPreExecute() {
-			// TODO Auto-generated method stub
 			super.onPreExecute();
 			dialog.show();
 			client = new DefaultHttpClient();
@@ -1500,6 +1463,14 @@ public class AddTask extends FragmentActivity {
 			if (checklist_data != null)
 				pairs.add(new BasicNameValuePair(
 						"todo_checklist[checklist_data]", checklist_data));
+			
+			if(!assignedSelectedName.isEmpty()){
+				Toast.makeText(getApplicationContext(), assignedSelectedID, Toast.LENGTH_SHORT).show();
+				pairs.add(new BasicNameValuePair(
+						"todo_collaborate[assignee_id]", assignedSelectedID));
+				pairs.add(new BasicNameValuePair(
+						"todo_collaborate[invitee_id]", String.valueOf(App.prefs.getUserId())));
+			}
 
 		}
 
@@ -1567,9 +1538,18 @@ public class AddTask extends FragmentActivity {
 
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 		comment_pref.edit().clear().commit();
 	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if( ! assignedSelectedName.isEmpty()){
+			aq.id(R.id.task_assign).text(assignedSelectedName);
+		}
+	}
+	
+	
 
 }

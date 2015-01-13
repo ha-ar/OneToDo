@@ -7,21 +7,20 @@ import java.util.Date;
 import java.util.Locale;
 
 import net.appkraft.parallax.ParallaxScrollView;
-
-import com.androidquery.AQuery;
-import com.vector.model.TaskData;
-import com.vector.onetodo.utils.Utils;
-
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+
+import com.androidquery.AQuery;
+import com.vector.model.TaskData;
+import com.vector.onetodo.utils.Utils;
 
 public class TaskView extends Fragment {
 

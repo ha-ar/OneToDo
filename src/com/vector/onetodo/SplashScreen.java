@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,36 +21,28 @@ import com.vector.onetodo.utils.Constants;
 public class SplashScreen extends BaseActivity {
 
 	AQuery aq;
-	public static Editor editor,Regeditor;
-	static SharedPreferences pref;
-	static SharedPreferences regid;
-	static GoogleCloudMessaging gcm=null;
-	static String regId;
-	public static String country=null,code=null;
+	static GoogleCloudMessaging gcm = null;
+	public static String country = null, code = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
-		regid=this.getSharedPreferences("Registration", 0);
-		pref = this.getSharedPreferences("registration", 0);
 		
-		Regeditor = regid.edit();
 		aq = new AQuery(this);
-		editor = pref.edit();
 		//***************CHeck device registeration for GCM
 		
-		if(regid.getString("reg", null)==null){
+		if(App.prefs.getGcmid() == null){
 			registerInBackground(this);
 		}
 		else{
 
-        	Constants.RegId=regid.getString("reg", null);
+        	Constants.RegId = App.prefs.getGcmid();
 		}
 		
 		
-		if(pref.getInt("userid", -1)!=-1){
-			Constants.user_id=pref.getInt("userid", -1);
+		if(App.prefs.getUserId() != -1){
+			Constants.user_id = App.prefs.getUserId();
 			showUserLandingActivity();
 		}
 		
@@ -95,7 +85,7 @@ public class SplashScreen extends BaseActivity {
 				showUserDetailsActivity();
 			}
 		});
-
+		
 	}
 
 	private void showUserDetailsActivity() {
@@ -110,7 +100,7 @@ public class SplashScreen extends BaseActivity {
 	
 	private void showUserLandingActivity() {
 		InputMethodManager imm = (InputMethodManager) this
-				.getSystemService(this.INPUT_METHOD_SERVICE);
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
 		if (imm != null) {
 			imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
 		}
@@ -131,11 +121,7 @@ public class SplashScreen extends BaseActivity {
 	                    if (gcm == null) {
 	                        gcm = GoogleCloudMessaging.getInstance(context);
 	                    }
-	                    regId = gcm.register(Constants.SENDER_ID);
-	                    Log.d("RegisterActivity", "registerInBackground - regId: "
-	                            + regId);
-	                    msg = "Device registered, registration ID=" + regId;
-
+	                    App.prefs.setGcmid(gcm.register(Constants.SENDER_ID));
 	                } catch (IOException ex) {
 	                    msg = "Error :" + ex.getMessage();
 	                    Log.d("RegisterActivity", "Error: " + msg);
@@ -143,12 +129,9 @@ public class SplashScreen extends BaseActivity {
 	                Log.d("RegisterActivity", "AsyncTask completed: " + msg);
 	                return msg;
 	            }
-
 	            @Override
 	            protected void onPostExecute(String msg) {
-	            	Constants.RegId=regId;
-	                Log.v("REGISTERID","this is my reg id**********"+regId);
-	                Regeditor.putString("reg", regId);
+	                Log.v("REGISTERID","this is my reg id**********"+App.prefs.getGcmid());
 	            }
 	        }.execute(null, null, null);
 	    }

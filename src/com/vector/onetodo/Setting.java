@@ -1,44 +1,76 @@
 package com.vector.onetodo;
 
 import android.app.AlertDialog;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
 import com.androidquery.AQuery;
-import com.vector.onetodo.utils.Constants;
 import com.vector.onetodo.utils.Utils;
 
 public class Setting extends Fragment {
 
-	AQuery aq, aqd;
-	AlertDialog alert;
-	int check = -1;
-	Editor editor;
-	ToggleButton toggle;
-	RadioButton RB, RB1;
+	private AQuery aq, aqd;
+	private AlertDialog alert;
+	private int check = -1;
+	private ToggleButton toggle;
+	private RadioButton RB, RB1;
+	private ActionBar actionBar;
+	private RadioGroup radioGroup;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		View view = inflater.inflate(R.layout.settings, container, false);
 		toggle = (ToggleButton) view.findViewById(R.id.switch_event);
 		aq = new AQuery(getActivity(), view);
-		editor = MainActivity.setting.edit();
+		Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_top);
+		if (toolbar != null)
+			((ActionBarActivity) getActivity()).setSupportActionBar(toolbar);
+		actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
+		actionBar.setTitle("Settings");
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		setHasOptionsMenu(true);
 		return view;
 	}
 
 	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		menu.clear();
+		inflater.inflate(R.menu.plain, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			getActivity().getFragmentManager().popBackStack();
+			break;
+
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onViewCreated(view, savedInstanceState);
 
 		LayoutInflater inf = getActivity().getLayoutInflater();
@@ -47,58 +79,37 @@ public class Setting extends Fragment {
 		aqd = new AQuery(dialog);
 		RB = (RadioButton) dialog.findViewById(R.id.radio_1);
 		RB1 = (RadioButton) dialog.findViewById(R.id.radio_2);
+//		radioGroup = (RadioGroup) view.findViewById(R.id.radio_time_date);
+//		radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+//			
+//			@Override
+//			public void onCheckedChanged(RadioGroup group, int checkedId) {
+//				
+//			}
+//		});
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setView(dialog);
 		alert = builder.create();
-		if (Constants.date == true) {
-
-			aq.id(R.id.dateformat2).text("DD.MM.YYYY");
-		} else {
-
-			aq.id(R.id.dateformat2).text("MM.DD.YYYY");
-		}
-		if (Constants.time == true) {
-
-			aq.id(R.id.timeformat2).text("12 H");
-		} else {
-
-			aq.id(R.id.timeformat2).text("24 H");
-		}
-		if (Constants.week == true) {
-
-			aq.id(R.id.weekstart2).text("Monday");
-		} else {
-
-			aq.id(R.id.weekstart2).text("Saturday");
-		}
-
-		aq.id(R.id.setting_back).clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-
-				getFragmentManager().popBackStack();
-			}
-		});
+		aq.id(R.id.dateformat2).text(App.prefs.getDateFormat());
+		aq.id(R.id.timeformat2).text(App.prefs.getTimeFormat());
+		aq.id(R.id.weekstart2).text(App.prefs.getStartingWeekDay());
 
 		aq.id(R.id.dateformat_lay).clicked(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				check = 1;
-				if (Constants.date == true) {
+				aqd.id(R.id.radio_1).text("     DD.MM.YYYY");
+				aqd.id(R.id.radio_2).text("     MM.DD.YYYY");
+				aqd.id(R.id.time_date_title).text("Date format");
+				if (App.prefs.getDateFormat().equals(RB.getText().toString().trim())) {
 					RB.setChecked(true);
 					RB1.setChecked(false);
 				} else {
 					RB1.setChecked(true);
 					RB.setChecked(false);
 				}
-				aqd.id(R.id.time_date_title).text("Date format");
-				aqd.id(R.id.radio_1).text("     DD.MM.YYYY");
-				aqd.id(R.id.radio_2).text("     MM.DD.YYYY");
 				alert.show();
 			}
 		});
@@ -106,18 +117,17 @@ public class Setting extends Fragment {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				check = 2;
-				if (Constants.time == true) {
+				aqd.id(R.id.time_date_title).text("Time format");
+				aqd.id(R.id.radio_1).text("     12 H");
+				aqd.id(R.id.radio_2).text("     24 H");
+				if (App.prefs.getTimeFormat().equals(RB.getText().toString().trim())) {
 					RB.setChecked(true);
 					RB1.setChecked(false);
 				} else {
 					RB1.setChecked(true);
 					RB.setChecked(false);
 				}
-				aqd.id(R.id.time_date_title).text("Time format");
-				aqd.id(R.id.radio_1).text("     12 H");
-				aqd.id(R.id.radio_2).text("     14 H");
 				alert.show();
 			}
 		});
@@ -125,18 +135,17 @@ public class Setting extends Fragment {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				check = 3;
-				if (Constants.week == true) {
+				aqd.id(R.id.time_date_title).text("Week start");
+				aqd.id(R.id.radio_1).text("     Monday");
+				aqd.id(R.id.radio_2).text("     Saturday");
+				if (App.prefs.getStartingWeekDay().equals(RB.getText().toString().trim())) {
 					RB.setChecked(true);
 					RB1.setChecked(false);
 				} else {
 					RB1.setChecked(true);
 					RB.setChecked(false);
 				}
-				aqd.id(R.id.time_date_title).text("Week start");
-				aqd.id(R.id.radio_1).text("     Monday");
-				aqd.id(R.id.radio_2).text("     Saturday");
 				alert.show();
 			}
 		});
@@ -145,8 +154,6 @@ public class Setting extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
 				check = -1;
 				alert.dismiss();
 			}
@@ -156,45 +163,17 @@ public class Setting extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 
 				if (check == 1) {
-					Constants.date = RB.isChecked();
-					editor.putBoolean("date", Constants.date);
-					editor.commit();
-					if (Constants.date == true) {
-
-						aq.id(R.id.dateformat2).text("DD.MM.YYYY");
-					} else {
-
-						aq.id(R.id.dateformat2).text("MM.DD.YYYY");
-					}
+					App.prefs.setDateFromat(RB.getText().toString().trim());
+					aq.id(R.id.dateformat2).text(RB.getText().toString().trim());
 				} else if (check == 2) {
-
-					Constants.time = RB.isChecked();
-					editor.putBoolean("time", Constants.time);
-					editor.commit();
-					if (Constants.time == true) {
-
-						aq.id(R.id.timeformat2).text("12 H");
-					} else {
-
-						aq.id(R.id.timeformat2).text("24 H");
-					}
+					App.prefs.setTimeFormat(RB.getText().toString().trim());
+					aq.id(R.id.timeformat2).text(RB.getText().toString().trim());
 				} else if (check == 3) {
-
-					Constants.week = RB.isChecked();
-					editor.putBoolean("week", Constants.week);
-					editor.commit();
-					if (Constants.week == true) {
-
-						aq.id(R.id.weekstart2).text("Monday");
-					} else {
-
-						aq.id(R.id.weekstart2).text("Saturday");
-					}
+					App.prefs.setStartingWeekDay(RB.getText().toString().trim());
+						aq.id(R.id.weekstart2).text(RB.getText().toString().trim());
 				}
-
 				check = -1;
 				alert.dismiss();
 			}
@@ -235,7 +214,6 @@ public class Setting extends Fragment {
 		Utils.RobotoRegular(getActivity(), aqd.id(R.id.ok).getTextView());
 		Utils.RobotoRegular(getActivity(), aqd.id(R.id.time_date_title)
 				.getTextView());
-		Utils.RobotoRegular(getActivity(), aq.id(R.id.settings).getTextView());
 		Utils.RobotoRegular(getActivity(), aq.id(R.id.general).getTextView());
 		Utils.RobotoRegular(getActivity(), aq.id(R.id.dateformat).getTextView());
 		Utils.RobotoRegular(getActivity(), aq.id(R.id.timeformat).getTextView());

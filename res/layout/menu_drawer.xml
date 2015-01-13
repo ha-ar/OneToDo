@@ -2,13 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:animationCache="true"
     android:background="@android:color/white"
     android:orientation="vertical" >
 
     <RelativeLayout
         android:id="@+id/user"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="75dp"
         android:background="@drawable/rec" >
 
         <LinearLayout
@@ -49,6 +51,7 @@
             android:layout_alignTop="@+id/user_layout"
             android:layout_marginRight="52dp"
             android:drawableBottom="@drawable/ic_down"
+            android:paddingLeft="10dp"
             android:paddingRight="10dp" />
 
         <TextView
@@ -79,9 +82,9 @@
 
         <ImageView
             android:id="@+id/manage_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/settings" />
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/manage_account" />
 
         <TextView
             android:id="@+id/manage_text"
@@ -105,10 +108,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="clip_vertical"
+        android:padding="15dp"
         android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingLeft="15dp"
-        android:paddingTop="10dp" >
+        android:paddingLeft="15dp">
 
         <ImageView
             android:id="@+id/todo_image"
@@ -133,9 +135,7 @@
         android:layout_height="wrap_content"
         android:gravity="clip_vertical"
         android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingLeft="15dp"
-        android:paddingTop="10dp" >
+        android:padding="15dp">
 
         <ImageView
             android:id="@+id/calendar_image"
@@ -161,9 +161,7 @@
         android:layout_marginBottom="5dp"
         android:gravity="clip_vertical"
         android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingLeft="15dp"
-        android:paddingTop="10dp" >
+        android:padding="15dp">
 
         <ImageView
             android:id="@+id/project_image"
@@ -192,11 +190,10 @@
         android:id="@+id/settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
         android:gravity="center_vertical"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingTop="5dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="15dp"
         android:text="Setting"
         android:textColor="@color/_4d4d4d"
         android:textSize="15.56sp" />
@@ -205,10 +202,10 @@
         android:id="@+id/help"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
         android:gravity="center_vertical"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="15dp"
         android:text="Help"
         android:textColor="@color/_4d4d4d"
         android:textSize="15.56sp" />
@@ -217,10 +214,10 @@
         android:id="@+id/about"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
         android:gravity="center_vertical"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="15dp"
         android:text="About"
         android:textColor="@color/_4d4d4d"
         android:textSize="15.56sp" />

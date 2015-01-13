@@ -11,39 +11,21 @@
         android:background="#ffffff"
         android:orientation="vertical" >
 
-        <RelativeLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_top"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:background="@color/active"
-            android:visibility="visible" >
-
-            <ImageView
-                android:id="@+id/account_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:padding="10dp"
-                android:src="@drawable/back" />
-
-            <TextView
-                android:id="@+id/account"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@+id/account_back"
-                android:text="Manage accounts"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+            android:minHeight="?attr/actionBarSize"
+            app:popupTheme="@style/Theme.AppCompat.Light"
+            app:theme="@style/ThemeToolbarLightOverflow" />
 
         <ScrollView
             android:id="@+id/scrollView1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.30"
+            android:background="@color/light_grey_color"
             android:scrollbars="none" >
 
             <LinearLayout
@@ -61,42 +43,50 @@
                     android:paddingLeft="10dp"
                     android:text="ACCOUNT"
                     android:textColor="@color/active"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:typeface="monospace" />
 
-                <LinearLayout
-                    android:id="@+id/timeformat_lay"
+                <RelativeLayout
+                    android:id="@+id/go_pro"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="10dp" >
 
                     <TextView
-                        android:id="@+id/onetodo"
+                        android:id="@+id/pro_heading"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="GET Onetodo Pro"
+                        android:text="Get ONEtodo Pro"
                         android:textColor="#4d4d4d"
-                        android:textSize="17.78sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/onetodo1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_below="@id/pro_heading"
                         android:paddingTop="2dp"
-                        android:text="Unlimited projects, files, colleboration..."
+                        android:text="Unlimited projects, files, collaboration..."
                         android:textColor="#777777"
-                        android:textSize="13.33sp" />
-                </LinearLayout>
+                        android:textSize="12sp" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="#80e6e6e6" />
+                    <TextView
+                        android:id="@+id/info_gopro"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/name_circle"
+                        android:gravity="center"
+                        android:text="i"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
-                <LinearLayout
-                    android:id="@+id/phone_layout"
+                <RelativeLayout
+                    android:id="@+id/verify_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -108,25 +98,39 @@
                         android:layout_height="wrap_content"
                         android:text="Phone number"
                         android:textColor="#4d4d4d"
-                        android:textSize="17.78sp" />
+                        android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/mynumber1"
+                        android:id="@+id/user_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_below="@id/mynumber"
                         android:paddingTop="2dp"
-                        android:text="+49 1781237132123"
+                        android:text="Set phone number"
                         android:textColor="#777777"
-                        android:textSize="13.33sp" />
-                </LinearLayout>
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/info_number"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/name_circle"
+                        android:gravity="center"
+                        android:text="i"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:background="#80e6e6e6" />
 
-                <LinearLayout
-                    android:id="@+id/dateformat_lay"
+                <RelativeLayout
+                    android:id="@+id/email_account"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -138,17 +142,78 @@
                         android:layout_height="wrap_content"
                         android:text="Email"
                         android:textColor="#4d4d4d"
-                        android:textSize="17.78sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/email1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_below="@id/email"
                         android:paddingTop="2dp"
                         android:text="Set email account"
                         android:textColor="#777777"
-                        android:textSize="13.33sp" />
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/info_email"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/name_circle"
+                        android:gravity="center"
+                        android:text="i"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#80e6e6e6" />
+
+                <!--
+                <LinearLayout
+                    android:id="@+id/timeformat_lay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp" >
+
+                    <TextView
+                        android:id="@+id/facebook"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Facebook"
+                        android:textColor="#4d4d4d"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/facebook1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="2dp"
+                        android:text="Connect facebook account"
+                        android:textColor="#777777"
+                        android:textSize="12sp" />
                 </LinearLayout>
+                -->
+
+
+                <!--
+                     <TextView
+                    android:id="@+id/phonenumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/underline_textview"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:text="PHONE NUMBERS"
+                    android:textColor="@color/active"
+                    android:textSize="16sp" />
+                -->
 
                 <TextView
                     android:id="@+id/personal"
@@ -160,10 +225,10 @@
                     android:paddingLeft="10dp"
                     android:text="PERSONAL DETAILS"
                     android:textColor="@color/active"
-                    android:textSize="17.78sp" />
+                    android:textSize="16sp" />
 
                 <LinearLayout
-                    android:id="@+id/sound_lay"
+                    android:id="@+id/name_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -175,16 +240,16 @@
                         android:layout_height="wrap_content"
                         android:text="Name"
                         android:textColor="#4d4d4d"
-                        android:textSize="17.78sp" />
+                        android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/name1"
+                        android:id="@+id/user_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="2dp"
-                        android:text="Usman Ameer"
+                        android:text="Guest User"
                         android:textColor="#767676"
-                        android:textSize="13.33sp" />
+                        android:textSize="12sp" />
                 </LinearLayout>
 
                 <View
@@ -193,7 +258,6 @@
                     android:background="#80e6e6e6" />
 
                 <RelativeLayout
-                    android:id="@+id/image_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:animateLayoutChanges="true"
@@ -201,7 +265,7 @@
                     android:padding="10dp" >
 
                     <LinearLayout
-                        android:id="@+id/review"
+                        android:id="@+id/display_pic"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical" >
@@ -215,34 +279,48 @@
                             android:singleLine="true"
                             android:text="Display Picture"
                             android:textColor="#4d4d4d"
-                            android:textSize="17.78sp" />
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/display1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
-                            android:paddingRight="5dp"
+                            android:paddingRight="45dp"
                             android:paddingTop="2dp"
                             android:singleLine="true"
                             android:text="This picture is used in your shared projects."
-                            android:textColor="#4d4d4d"
-                            android:textSize="13.33sp" />
+                            android:textColor="#767676"
+                            android:textSize="12sp" />
                     </LinearLayout>
 
-                    <com.mikhaellopez.circularimageview.CircularImageView
-                        android:id="@+id/image_event"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                    <TextView
+                        android:id="@+id/initials"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="2dp"
-                        android:layout_toLeftOf="@id/review"
+                        android:layout_toLeftOf="@id/display_pic"
+                        android:background="@drawable/name_circle"
+                        android:gravity="center"
+                        android:text="GU"
+                        android:textColor="#4d4d4d"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <com.mikhaellopez.circularimageview.CircularImageView
+                        android:id="@+id/image_event"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="2dp"
                         android:adjustViewBounds="true"
-                        android:background="@drawable/round_photobutton"
+                        android:background="@drawable/name_circle"
                         android:gravity="center"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/button_login"
+                        android:visibility="gone"
                         app:border_color="#EEEEEE"
                         app:border_width="1dp"
                         app:shadow="true" />

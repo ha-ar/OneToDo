@@ -2,12 +2,15 @@ package com.vector.onetodo;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -20,6 +23,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.vector.onetodo.db.gen.Assign;
+import com.vector.onetodo.db.gen.AssignDao;
 import com.vector.onetodo.utils.Utils;
 
 public class AssignListFragment extends ProjectsTabHolder implements
@@ -28,11 +33,10 @@ public class AssignListFragment extends ProjectsTabHolder implements
 	private ListView listView;
 	private int position;
 	private static long[] Currentdate;
-	RelativeLayout last = null;
-	int position__list = -1;
-
-	ImageView img;
- 
+	private RelativeLayout last;
+	private AssignDao dao;
+	private List<Assign> contactsList = new ArrayList<Assign>();
+	private ImageView img;
 
 	public static AssignListFragment newInstance(int position) {
 		AssignListFragment myFragment = new AssignListFragment();
@@ -78,16 +82,16 @@ public class AssignListFragment extends ProjectsTabHolder implements
 		super.onViewCreated(view, savedInstanceState);
 		position = getArguments().getInt("position");
 		setadapter(getActivity(), position);
+		dao = App.daoSession.getAssignDao();
+		contactsList = dao.loadAll();
 		listView.setOnScrollListener(this);
-		listView.setAdapter(new LandingAdapter(getActivity()));
+		listView.setAdapter(new ContactsAdapter(getActivity()));
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View container,
 					int arg2, long arg3) {
-				// TODO Auto-generated method stub
-				position__list = arg2;
 				LinearLayout linearLayoutParent = (LinearLayout) container;
 				RelativeLayout linearLayoutChild = (RelativeLayout) linearLayoutParent
 						.getChildAt(1);
@@ -97,27 +101,37 @@ public class AssignListFragment extends ProjectsTabHolder implements
 				}
 				last = linearLayoutChild;
 				ImageView tvCountry = (ImageView) linearLayoutChild
-						.getChildAt(2); 
+						.getChildAt(2);
 				tvCountry.setVisibility(View.VISIBLE);
 				img.setAlpha((float) 1);
+				AddTask.assignedSelectedID = String.valueOf(contactsList.get(position).getFriends_id());
+				AddTask.assignedSelectedName = contactsList.get(position).getName();
+			}
+		});
+
+		img.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (img.getAlpha() == 1) {
+					getActivity().getSupportFragmentManager().popBackStack();
+				}
 			}
 		});
 
 	}
 
- 
-
-	public class LandingAdapter extends BaseAdapter {
+	public class ContactsAdapter extends BaseAdapter {
 
 		Context context;
 
-		public LandingAdapter(Context context) {
+		public ContactsAdapter(Context context) {
 			this.context = context;
 		}
 
 		@Override
 		public int getCount() {
-			return 3;
+			return contactsList.size();
 		}
 
 		@Override
@@ -141,16 +155,20 @@ public class AssignListFragment extends ProjectsTabHolder implements
 						false);
 				holder = new Holder();
 				holder.title = (TextView) view.findViewById(R.id.assign_name);
+				holder.number = (TextView) view
+						.findViewById(R.id.assign_contact);
 				view.setTag(holder);
 			} else {
 				holder = (Holder) view.getTag();
-			} 
+			}
+			holder.title.setText(contactsList.get(position).getName());
+			// holder.title.setText(contactsList.get(position).get);
 			return view;
 		}
 	}
 
 	class Holder {
-		TextView title, location, time, icon;
+		TextView title, number, time, icon;
 	}
 
 	@Override
@@ -175,8 +193,8 @@ public class AssignListFragment extends ProjectsTabHolder implements
 		// nothing
 	}
 
-	private void setadapter(Context context, int position) { 
-		LandingAdapter adapter = new LandingAdapter(getActivity());
+	private void setadapter(Context context, int position) {
+		ContactsAdapter adapter = new ContactsAdapter(getActivity());
 		listView.setAdapter(adapter);
 	}
 }

@@ -10,17 +10,21 @@ import java.util.Locale;
 
 import net.simonvt.datepicker.DatePicker;
 import net.simonvt.datepicker.DatePicker.OnDateChangedListener;
+
+import org.json.JSONObject;
+
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -54,7 +58,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxCallback;
+import com.androidquery.callback.AjaxStatus;
 import com.astuetz.PagerSlidingTabStrip;
+import com.google.gson.Gson;
 import com.vector.model.TaskData;
 import com.vector.model.TaskData.Todos;
 import com.vector.onetodo.db.gen.DaoMaster;
@@ -62,6 +69,7 @@ import com.vector.onetodo.db.gen.DaoMaster.DevOpenHelper;
 import com.vector.onetodo.db.gen.DaoSession;
 import com.vector.onetodo.db.gen.Label;
 import com.vector.onetodo.db.gen.LabelDao;
+import com.vector.onetodo.db.gen.LabelNameDao;
 import com.vector.onetodo.db.gen.ToDo;
 import com.vector.onetodo.db.gen.ToDoDao;
 import com.vector.onetodo.utils.Constants;
@@ -73,38 +81,33 @@ import de.greenrobot.dao.query.QueryBuilder;
 public class MainActivity extends BaseActivity implements
 		ViewPager.OnPageChangeListener, OnItemClickListener {
 
-	public static SharedPreferences setting;
-	Editor setting_editor;
 	public static Calendar CurrentDate;
 	static int check = -1, check1 = 0;;
 	public static int menuchange = 0;
 	private PopupWindow popupWindowTask;
 	public static RelativeLayout layout_MainMenu;
-	InputMethodManager inputMethodManager;
-	AlertDialog date_time_alert;
-	LinearLayout itemadded;
-	public static DevOpenHelper ex_database_helper_obj;
-	public static SQLiteDatabase ex_db;
-	public static DaoSession daoSession;
-	public static DaoMaster daoMaster;
+	private InputMethodManager inputMethodManager;
+	private AlertDialog date_time_alert;
 	public static List<ToDo> todos;
 	public static int pager_number = 0;
 	private AlarmManagerBroadcastReceiver alarm;
-	private SQLiteDatabase db;
 	static ToDoDao tododao;
+	static LabelNameDao labelnamedao;
 	static LabelDao labeldao;
-	static List<ToDo> todo_obj; 
+	static List<ToDo> todo_obj;
 	public ViewPager pager;
 	public TabPagerAdapter tabPagerAdapter;
-	PagerSlidingTabStrip tabs;
-	static QueryBuilder<Label> label1, label2, label3, label4, label5, label6; 
-
+	private PagerSlidingTabStrip tabs;
+	public static QueryBuilder<Label> label1, label2, label3, label4, label5,
+			label6;
 	public static List<Todos> Today, Tomorrow, Upcoming;
 	private ActionBarDrawerToggle actionBarDrawerToggle;
 	private DrawerLayout drawerLayout;
 
-	
-	
+	// ************** Phone COntacts
+
+	String phoneNumber = null;
+	Cursor cursor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -112,8 +115,8 @@ public class MainActivity extends BaseActivity implements
 		setContentView(R.layout.activity_main);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_top);
-		if(toolbar != null)
-		setSupportActionBar(toolbar);
+		if (toolbar != null)
+			setSupportActionBar(toolbar);
 
 		getSupportActionBar().setTitle(R.string.close_drawer);
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -121,17 +124,14 @@ public class MainActivity extends BaseActivity implements
 				toolbar, R.string.close_drawer, R.string.open_drawer);
 		drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
-		
+		// ******* Phone contact , name list
+		Constants.Name = new ArrayList<String>();
+		Constants.Contact = new ArrayList<String>();
+		// new Phone_contact().execute();
 
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
-
-		// ***** Initializinf Setting shared prefrences**********//
-		setting = this.getSharedPreferences("setting", 0);
-		Constants.date = setting.getBoolean("date", true);
-		Constants.time = setting.getBoolean("time", true);
-		Constants.week = setting.getBoolean("week", true);
 
 		db_initialize();
 		todo_obj = tododao.loadAll();
@@ -139,9 +139,33 @@ public class MainActivity extends BaseActivity implements
 		startRepeatingTimer();
 
 		// ***** Initializinf Registration shared prefrences**********//
-		SharedPreferences pref = this.getSharedPreferences("registration", 0);
-		Constants.user_id = pref.getInt("userid", -1);
-		init();
+		Constants.user_id = App.prefs.getUserId();
+
+		// **************************Api Call for Landing data
+		if (Constants.user_id != -1) {
+			aq.ajax("http://api.heuristix.net/one_todo/v1/tasks/"
+					+ Constants.user_id, JSONObject.class,
+					new AjaxCallback<JSONObject>() {
+						@Override
+						public void callback(String url, JSONObject json,
+								AjaxStatus status) {
+							if (json != null) {
+								Gson gson = new Gson();
+								TaskData obj = new TaskData();
+								obj = gson.fromJson(json.toString(),
+										TaskData.class);
+								TaskData.getInstance().setList(obj);
+								Log.v("JSON",
+										TaskData.getInstance().todos.get(0).notes
+												+ "");
+							}
+							init();
+						}
+					});
+		} else {
+			init();
+		}
+
 	}
 
 	Menu menu;
@@ -149,6 +173,7 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
+		menu.clear();
 		getMenuInflater().inflate(R.menu.main, menu);
 
 		this.menu = menu;
@@ -175,7 +200,6 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public boolean onQueryTextSubmit(String arg0) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 
@@ -190,10 +214,28 @@ public class MainActivity extends BaseActivity implements
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
+		switch (id) {
+		case R.id.action_notification:
+			toggleRightDrawer();
+			break;
+
+		default:
+			break;
+		}
 		if (id == R.id.action_settings) {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void toggleRightDrawer() {
+		if (drawerLayout.isDrawerVisible(Gravity.RIGHT)) {
+			drawerLayout.closeDrawer(Gravity.RIGHT);
+			getSupportActionBar().setTitle(R.string.close_drawer);
+		} else {
+			drawerLayout.openDrawer(Gravity.RIGHT);
+			getSupportActionBar().setTitle("Notifications");
+		}
 	}
 
 	@Override
@@ -212,14 +254,19 @@ public class MainActivity extends BaseActivity implements
 
 	private void init() {
 
- 
+		// ListView notif_list = (ListView) findViewById(R.id.notif_list);
+		// Notify_adapter adapter = new Notify_adapter(this);
+		// notif_list.setAdapter(adapter);
 
 		// ***** LeftMenudrawer Mange Account feld**********//
-		if (Constants.user_id == -1) { 
+		if (App.prefs.getUserId() == -1) {
+			aq.id(R.id.manage_img).image(R.drawable.verify_number);
 			aq.id(R.id.manage_text).text("Verify number");
 		} else {
-			aq.id(R.id.username).text("Registered User");
-			aq.id(R.id.imageView1).text("RU");
+			aq.id(R.id.manage_img).image(R.drawable.manage_account);
+			aq.id(R.id.manage_text).text("Manage Account");
+			aq.id(R.id.username).text(App.prefs.getUserName());
+			aq.id(R.id.imageView1).text(App.prefs.getInitials());
 		}
 
 		aq.id(R.id.manage_account).clicked(new OnClickListener() {
@@ -293,16 +340,9 @@ public class MainActivity extends BaseActivity implements
 
 		inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
-		 
 		// ***** left drawer open close**********//
-		aq.id(R.id.right_back).clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// mDrawerr.closeMenu();
-			}
-		});
-		layout_MainMenu = (RelativeLayout) findViewById(R.id.container); 
+		layout_MainMenu = (RelativeLayout) findViewById(R.id.container);
+		// layout_MainMenu.getForeground().setAlpha(0);
 		final View view = getLayoutInflater().inflate(R.layout.landing_menu,
 				null, false);
 		aq_menu = new AQuery(this, view);
@@ -311,26 +351,13 @@ public class MainActivity extends BaseActivity implements
 
 		popupWindowTask.setBackgroundDrawable(getResources().getDrawable(
 				android.R.drawable.dialog_holo_light_frame));
-		popupWindowTask.setOutsideTouchable(true); 
+		popupWindowTask.setOutsideTouchable(true);
+		// popupWindowTask.setAnimationStyle(R.style.Animation);
 
 		popupWindowTask.setOnDismissListener(new OnDismissListener() {
 
 			@Override
 			public void onDismiss() {
-			}
-		});
-
-		aq.id(R.id.menu).clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				if (popupWindowTask.isShowing()) {
-					popupWindowTask.dismiss();
-
-				} else { 
-					popupWindowTask.showAsDropDown(aq.id(R.id.menu).getView(),
-							5, 10);
-				}
 			}
 		});
 
@@ -355,7 +382,6 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 
 			}
 		});
@@ -437,20 +463,11 @@ public class MainActivity extends BaseActivity implements
 				inputMethodManager.toggleSoftInput(
 						InputMethodManager.SHOW_FORCED, 0);
 
-				aq.id(R.id.search_layout).getView().setVisibility(View.VISIBLE); 
+				aq.id(R.id.search_layout).getView().setVisibility(View.VISIBLE);
+				// aq.id(R.id.header_layout).getView().setVisibility(View.GONE);
 				aq.id(R.id.search_text).getEditText().setFocusable(true);
 			}
 		});
-		aq.id(R.id.search_back).clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				inputMethodManager.toggleSoftInput(
-						InputMethodManager.SHOW_FORCED, 0);
-				aq.id(R.id.search_layout).getView().setVisibility(View.GONE); 
-			}
-		});
-
 
 		// Menu Drawer on click change items
 
@@ -476,19 +493,19 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-				if (Constants.user_id == -1) {
-
-				} else {
-					getSupportFragmentManager().popBackStack("SETTING",
-							FragmentManager.POP_BACK_STACK_INCLUSIVE);
-					Fragment fr = new Accounts();
-					FragmentTransaction transaction = getSupportFragmentManager()
-							.beginTransaction();
-					transaction.replace(R.id.container, fr);
-					transaction.addToBackStack("ACCOUNTS");
-					transaction.commit();
-					drawerLayout.closeDrawer(Gravity.LEFT);
-				}
+				// if (Constants.user_id == -1) {
+				//
+				// } else {
+				getSupportFragmentManager().popBackStack("SETTING",
+						FragmentManager.POP_BACK_STACK_INCLUSIVE);
+				Fragment fr = new Accounts();
+				FragmentTransaction transaction = getSupportFragmentManager()
+						.beginTransaction();
+				transaction.replace(R.id.container, fr);
+				transaction.addToBackStack("ACCOUNTS");
+				transaction.commit();
+				drawerLayout.closeDrawer(Gravity.LEFT);
+				// }
 
 			}
 		});
@@ -496,8 +513,12 @@ public class MainActivity extends BaseActivity implements
 		aq.id(R.id.todo_layout).clicked(new OnClickListener() {
 
 			@Override
-			public void onClick(View arg0) { 
+			public void onClick(View arg0) {
+				// // TextView title = (TextView) findViewById(R.id.weather);
+				// title.setText("To-do's");
 				getSupportFragmentManager().popBackStack();
+
+				refreshMenu();
 				drawerLayout.closeDrawer(Gravity.LEFT);
 				arg0.setBackgroundColor(Color.parseColor("#F2F2F2"));
 
@@ -549,7 +570,10 @@ public class MainActivity extends BaseActivity implements
 				Fragment fr = new Calender();
 				FragmentTransaction transaction = getSupportFragmentManager()
 						.beginTransaction(); //
-			 
+				/*
+				 * transaction.setCustomAnimations(R.anim.slide_in,
+				 * R.anim.slide_out, R.anim.slide_in, R.anim.slide_out);
+				 */
 				transaction.replace(R.id.container_inner, fr);
 				transaction.addToBackStack("CALENDAR");
 				transaction.commit();
@@ -561,7 +585,9 @@ public class MainActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-				getSupportFragmentManager().popBackStack(); 
+				getSupportFragmentManager().popBackStack();
+				// TextView title = (TextView) findViewById(R.id.weather);
+				// title.setText("Projects");
 
 				drawerLayout.closeDrawer(Gravity.LEFT);
 				arg0.setBackgroundColor(Color.parseColor("#F2F2F2"));
@@ -582,8 +608,11 @@ public class MainActivity extends BaseActivity implements
 
 				Fragment fr = new Projects();
 				FragmentTransaction transaction = getSupportFragmentManager()
-						.beginTransaction();  
-			 
+						.beginTransaction(); //
+				/*
+				 * transaction.setCustomAnimations(R.anim.slide_in,
+				 * R.anim.slide_out, R.anim.slide_in, R.anim.slide_out);
+				 */
 
 				transaction.replace(R.id.container_inner, fr);
 				transaction.addToBackStack("PROJECTS");
@@ -598,17 +627,11 @@ public class MainActivity extends BaseActivity implements
 		params.gravity = Gravity.CENTER_VERTICAL;
 		params.gravity = Gravity.CENTER_HORIZONTAL;
 
-		// init database
-		ex_database_helper_obj = new DaoMaster.DevOpenHelper(this,
-				"onetodo.sqlite", null);
-		ex_db = ex_database_helper_obj.getWritableDatabase();
-		daoMaster = new DaoMaster(ex_db);
-		daoSession = daoMaster.newSession();
 
-		if (pager_number == 0) { 
+		if (pager_number == 0) {
 			updateDate(TODAY);
 		}
-		if (pager_number == 1) { 
+		if (pager_number == 1) {
 			updateDate(Work);
 		}
 
@@ -620,13 +643,15 @@ public class MainActivity extends BaseActivity implements
 		// Bind the tabs to the ViewPager
 		tabs = (PagerSlidingTabStrip) aq.id(R.id.tabs).getView();
 		tabs.setShouldExpand(false);
-		tabs.setDividerColorResource(android.R.color.transparent); 
+		tabs.setDividerColorResource(android.R.color.transparent);
+		// tabs.setIndicatorColorResource(R.color.graytab);
 		tabs.setUnderlineColorResource(android.R.color.transparent);
 		tabs.setTextSize(Utils.getPxFromDp(this, 13));
 		tabs.setIndicatorHeight(Utils.getPxFromDp(this, 3));
 		tabs.setIndicatorColor(Color.parseColor("#ffffff"));
 		tabs.setSmoothScrollingEnabled(true);
-		tabs.setShouldExpand(true); 
+		tabs.setShouldExpand(true);
+		// tabs.setTextColorResource(R.color.graytab);
 		tabs.setAllCaps(false);
 		tabs.setTypeface(null, Typeface.NORMAL);
 		tabs.setOnPageChangeListener(this);
@@ -634,14 +659,8 @@ public class MainActivity extends BaseActivity implements
 		tabs.setViewPager(pager);
 		tabPagerAdapter.notifyDataSetChanged();
 
-
 		aq.id(R.id.add_task_button).typeface(
 				TypeFaces.get(this, Constants.ICON_FONT));
-//		Intent intent = new Intent(MainActivity.this, AddTask.class);
-//		intent.putExtra("position", pager.getCurrentItem());
-//		startActivity(intent);
-//		overridePendingTransition(R.anim.slide_in1, R.anim.slide_out1);
-//		
 		aq.id(R.id.add_task_button).clicked(new OnClickListener() {
 
 			@Override
@@ -668,6 +687,15 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
+		if (this.getSupportFragmentManager().getBackStackEntryCount() == 0) {
+			refreshMenu();
+		}
+	}
+
+	public void refreshMenu() {
+		getSupportActionBar().setTitle(R.string.close_drawer);
+		menu.clear();
+		onCreateOptionsMenu(menu);
 	}
 
 	void updateDate(int days) {
@@ -732,8 +760,10 @@ public class MainActivity extends BaseActivity implements
 
 	}
 
-	public void startRepeatingTimer() { 
-		if (alarm != null) { 
+	public void startRepeatingTimer() {
+		// Context context = this.getApplicationContext();
+		if (alarm != null) {
+			// alarm.SetAlarm(this);
 
 		} else {
 			Toast.makeText(this, "Alarm is null", Toast.LENGTH_SHORT).show();
@@ -760,15 +790,8 @@ public class MainActivity extends BaseActivity implements
 	}
 
 	public void db_initialize() {
-		DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this,
-				"OneTodo-db", null);
-
-		db = helper.getWritableDatabase();
-		daoMaster = new DaoMaster(db);
-		daoSession = daoMaster.newSession();
-		tododao = daoSession.getToDoDao();
-		labeldao = daoSession.getLabelDao(); 
-
+		tododao = App.daoSession.getToDoDao();
+		labeldao = App.daoSession.getLabelDao();
 	}
 
 	public static void alrammmm(Context context) {
@@ -855,7 +878,61 @@ public class MainActivity extends BaseActivity implements
 				.show();
 	}
 
-	
-	
+	public class Phone_contact extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			cursor = getContentResolver()
+					.query(ContactsContract.Contacts.CONTENT_URI,
+							null,
+							ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1",
+							null,
+							"UPPER(" + ContactsContract.Contacts.DISPLAY_NAME
+									+ ") ASC");
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+
+			if (cursor.getCount() > 0) {
+				while (cursor.moveToNext()) {
+					int hasPhoneNumber = Integer
+							.parseInt(cursor.getString(cursor
+									.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
+					if (hasPhoneNumber > 0) {
+						Constants.Name
+								.add(cursor.getString(cursor
+										.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
+						// Query and loop for every phone number of the contact
+						Cursor phoneCursor = getContentResolver()
+								.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+										null,
+										ContactsContract.CommonDataKinds.Phone.CONTACT_ID
+												+ " = ?",
+										new String[] { cursor.getString(cursor
+												.getColumnIndex(ContactsContract.Contacts._ID)) },
+										null);
+						// while (phoneCursor.moveToNext()) {
+						phoneCursor.moveToNext();
+						phoneNumber = phoneCursor
+								.getString(phoneCursor
+										.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+						Constants.Contact.add(phoneNumber);
+						// }
+						phoneCursor.close();
+					}
+				}
+			}
+
+			return null;
+		}
+
+	}
 
 }

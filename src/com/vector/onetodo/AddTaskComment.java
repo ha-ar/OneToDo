@@ -1,17 +1,8 @@
 package com.vector.onetodo;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
@@ -28,12 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxCallback;
-import com.androidquery.callback.AjaxStatus;
-import com.vector.onetodo.R;
-import com.vector.onetodo.R.id;
-import com.vector.onetodo.R.layout;
-import com.vector.onetodo.utils.Constants;
 import com.vector.onetodo.utils.Utils;
 
 public class AddTaskComment extends Fragment {

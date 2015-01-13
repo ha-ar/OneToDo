@@ -119,11 +119,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="15dp" >
+                android:paddingLeft="20dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp" >
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/calendar_grey" />
 
                 <TextView
@@ -141,12 +144,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="15dp" >
+                android:paddingLeft="20dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp" >
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/location_grey" />
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/location_grey_dark" />
 
                 <TextView
                     android:id="@+id/location"
@@ -163,7 +169,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="15dp" >
+                android:paddingLeft="20dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp" >
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -185,13 +194,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="15dp" >
+                android:paddingLeft="20dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp" >
 
                 <ImageView
                     android:id="@+id/imageView10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/repeat" />
+                    android:src="@drawable/repeat1" />
 
                 <TextView
                     android:id="@+id/repeat_view"
@@ -203,7 +215,33 @@
                     android:textColor="@color/_4d4d4d"
                     android:textSize="13.33sp" />
             </LinearLayout>
+ 			<LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:paddingBottom="2dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp" >
 
+                <TextView
+                    android:id="@+id/imageView10"
+                    android:layout_width="wrap_content"
+                    android:text="INVITEE"
+                    android:textSize="12sp"
+                    android:textColor="#0eafe3"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/repeat_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="60dp"
+                    android:singleLine="true"
+                    android:text="04"
+                    android:textColor="#0eafe3"
+                    android:textSize="12sp" />
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
@@ -234,113 +272,81 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="56dp"
-                android:background="#80e6e6e6" />
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="10dp"
+                android:background="#1ab2e4" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="25dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="25dp"
-                android:visibility="visible" >
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="20dp" >
 
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/invite1" />
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/location_grey_dark" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    android:paddingLeft="23dp"
+                    android:singleLine="true"
+                    android:text="Hasan"
+                    android:textColor="@color/_4d4d4d"
+                    android:textSize="13.33sp" />
+            </LinearLayout>
+             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp" >
 
-                    <TextView
-                        android:id="@+id/textView8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/textView7"
-                        android:layout_marginRight="3dp"
-                        android:layout_toLeftOf="@+id/textView7"
-                        android:gravity="right"
-                        android:paddingLeft="18dp"
-                        android:paddingRight="2dp"
-                        android:text="Yes"
-                        android:textColor="@color/_4bd562green"
-                        android:textSize="13.13sp" />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/location_grey_dark" />
 
-                    <TextView
-                        android:id="@+id/textView7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:gravity="right"
-                        android:paddingLeft="18dp"
-                        android:paddingRight="2dp"
-                        android:text="Maybe"
-                        android:textColor="@color/inactive"
-                        android:textSize="13.13sp" />
-
-                    <TextView
-                        android:id="@+id/textView9"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/textView8"
-                        android:layout_alignParentTop="true"
-                        android:layout_toLeftOf="@+id/textView8"
-                        android:gravity="right"
-                        android:paddingLeft="18dp"
-                        android:paddingRight="2dp"
-                        android:text="No"
-                        android:textColor="@color/_ff3b30red"
-                        android:textSize="13.13sp" />
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    android:paddingLeft="23dp"
+                    android:singleLine="true"
+                    android:text="Hasan"
+                    android:textColor="@color/_4d4d4d"
+                    android:textSize="13.33sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp" >
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/textView7"
-                        android:layout_marginRight="3dp"
-                        android:layout_toLeftOf="@+id/textView7"
-                        android:gravity="right"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="2dp"
-                        android:text="Name"
-                        android:textColor="@color/_4d4d4d"
-                        android:textSize="13.13sp" />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/location_grey_dark" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:gravity="right"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="2dp"
-                        android:text="Name"
-                        android:textColor="@color/_4d4d4d"
-                        android:textSize="13.13sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/textView8"
-                        android:layout_alignParentTop="true"
-                        android:layout_toLeftOf="@+id/textView8"
-                        android:gravity="right"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="2dp"
-                        android:text="Name"
-                        android:textColor="@color/_4d4d4d"
-                        android:textSize="13.13sp" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="23dp"
+                    android:singleLine="true"
+                    android:text="Hasan"
+                    android:textColor="@color/_4d4d4d"
+                    android:textSize="13.33sp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -395,6 +401,21 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
             android:src="@drawable/ic_show_white" />
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="190dp"
+            android:layout_height="55dp"
+            android:gravity="center_vertical|left"
+            android:paddingLeft="30dp"
+            android:textSize="20dp"
+            android:layout_marginTop="5dp"
+            android:background="#ffffff"
+            android:layout_marginRight="7dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/imageView4"
+            android:text="RSVP" />
+
     </RelativeLayout>
 
 </net.appkraft.parallax.ParallaxScrollView>
