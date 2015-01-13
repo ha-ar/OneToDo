@@ -1,9 +1,5 @@
 package com.vector.onetodo;
 
-import uk.me.lewisdeane.ldialogs.BaseDialog.Alignment;
-import uk.me.lewisdeane.ldialogs.CustomDialog;
-import uk.me.lewisdeane.ldialogs.CustomDialog.ClickListener;
-import uk.me.lewisdeane.ldialogs.CustomListDialog;
 import net.simonvt.numberpicker.NumberPicker;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -12,8 +8,6 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.style.BulletSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,7 +24,6 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
-import com.vector.onetodo.R.color;
 import com.vector.onetodo.utils.Constants;
 
 public class AddTaskBeforeFragment extends Fragment {

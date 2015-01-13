@@ -18,7 +18,7 @@
         <RelativeLayout
             android:id="@+id/header"
             android:layout_width="fill_parent"
-            android:layout_height="48dp"
+            android:layout_height="56dp"
             android:background="@color/active" >
 
             <TextView
@@ -61,6 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_margin="10dp"
+                android:layout_centerVertical="true"
                 android:animateLayoutChanges="true"
                 android:src="@drawable/ic_show_white" />
         </RelativeLayout>

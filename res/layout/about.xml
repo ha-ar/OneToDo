@@ -78,6 +78,23 @@
         android:textColor="@color/_4d4d4d"
         android:textColorHint="@color/_999999"
         android:textSize="13.33sp" />
+    <EditText
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/country"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
+        android:hint="Your name"
+        android:inputType="textPersonName"
+        android:paddingLeft="10dp"
+        android:textColor="@color/_4d4d4d"
+        android:textColorHint="@color/_999999"
+        android:textSize="13.33sp" />
 
     <TextView
         android:id="@+id/loginSkip"
@@ -92,10 +109,10 @@
         android:textColor="@color/_28708a" />
 
     <Button
-        android:id="@+id/countryok"
+        android:id="@+id/save_profile"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@+id/country"
+        android:layout_below="@+id/user_name"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"

@@ -3,23 +3,28 @@ package com.vector.onetodo.utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -29,6 +34,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.vector.onetodo.App;
 
 public class Utils {
 	public static final Calendar currentDateCal = Calendar
@@ -238,7 +245,8 @@ public class Utils {
 
 		final int color = 0xff424242;
 		final Paint paint = new Paint();
-		final Rect rect = new Rect(0, 0, (int) (bitmap.getHeight()*0.9), (bitmap.getHeight()));
+		final Rect rect = new Rect(0, 0, (int) (bitmap.getHeight() * 0.9),
+				(bitmap.getHeight()));
 		final RectF rectF = new RectF(rect);
 		final float roundPx = pixels;
 
@@ -271,9 +279,47 @@ public class Utils {
 		view.setTypeface(Typeface.createFromAsset(context.getAssets(),
 				"Roboto-Medium.ttf"));
 	}
+
 	public static void RobotoRegular(Context context, TextView view) {
 		view.setTypeface(Typeface.createFromAsset(context.getAssets(),
 				"Roboto-Regular.ttf"));
+	}
+
+	public static String getUserName(Context ctx) {
+		Cursor c = ctx.getContentResolver().query(
+				ContactsContract.Profile.CONTENT_URI, null, null, null, null);
+		c.moveToFirst();
+		String name = "Guest User";
+		try {
+			name = c.getString(c.getColumnIndex("display_name"));
+		} catch (CursorIndexOutOfBoundsException cioe) {
+			name = "Guest User";
+		}
+		c.close();
+		return name;
+	}
+
+	public static ArrayList<String> getContactsList(Context ctx) {
+		ArrayList<String> contactsList = new ArrayList<String>();
+		Cursor phones = ctx.getContentResolver().query(
+				ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null,
+				null, null);
+		while (phones.moveToNext()) {
+			 String name = phones
+			 .getString(phones
+			 .getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+			String phoneNumber = phones
+					.getString(phones
+							.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+			if (!phoneNumber.contains("+")) {
+				phoneNumber = App.prefs.getCountryCode()
+						+ phoneNumber.substring(1, phoneNumber.length());
+			}
+			Log.e(name,phoneNumber);
+			contactsList.add(phoneNumber);
+		}
+		phones.close();
+		return contactsList;
 	}
 
 }

@@ -1,32 +1,24 @@
 package com.vector.onetodo;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.provider.Settings.Secure;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -43,38 +35,29 @@ import android.widget.Toast;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
+import com.google.gson.Gson;
+import com.vector.model.ContactsData;
+import com.vector.onetodo.db.gen.Assign;
+import com.vector.onetodo.db.gen.AssignDao;
 import com.vector.onetodo.utils.Constants;
 import com.vector.onetodo.utils.Utils;
 
 public class CountrySelector extends Fragment {
 
-	// http://api.heuristix.net/one_todo/v1/user/addContacts
-	/*
-	 * $data = array( 'user_id' => '6', 'contacts' => array('+447589567876',
-	 * '+447589567897', '+447589517897') );
-	 */
-	// private Button loginButton;
-	AQuery aq;
-	TextView skip;
-	HttpClient client;
-	HttpPost post;
-	List<NameValuePair> pairs, pair;
-	HttpResponse response = null;
-	Boolean message;
-	AlertDialog alert;
-	TextView confirm, save;
-	int position = 0;
+	private AQuery aq;
+	private TextView skip;
+	private Boolean message;
+	private AlertDialog alert;
+	private TextView confirm, save;
+	private int position = 0;
 	public static View view;
-	InputMethodManager imm;
-
-	// ************** Phone COntacts
-
+	private InputMethodManager imm;
+	private ArrayList<String> contactsList = new ArrayList<String>();
+	private AssignDao assignDao;
 	String phoneNumber = null;
-	Cursor cursor;
 
 	@Override
 	public void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		if (SplashScreen.country != null) {
 			aq.id(R.id.country).getEditText().setText(SplashScreen.code);
@@ -94,25 +77,27 @@ public class CountrySelector extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		view = inflater.inflate(R.layout.about, container, false);
 		aq = new AQuery(getActivity(), view);
+		getActivity();
 		imm = (InputMethodManager) getActivity().getSystemService(
-				getActivity().INPUT_METHOD_SERVICE);
+				Context.INPUT_METHOD_SERVICE);
 		return view;
 
 	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onViewCreated(view, savedInstanceState);
 
 		// ******* Phone contact , name list
 
 		Constants.Name = new ArrayList<String>();
 		Constants.Contact = new ArrayList<String>();
-		new Phone_contact().execute();
+
+		contactsList = Utils.getContactsList(getActivity());
+//		addContacts();
+		// new Phone_contact().execute();
 
 		String html = "ONE" + "<br />" + "todo";
 		aq.id(R.id.title).text(Html.fromHtml(html));
@@ -132,7 +117,6 @@ public class CountrySelector extends Fragment {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				Fragment fr = new Country();
 				FragmentTransaction trans = getFragmentManager()
 						.beginTransaction();
@@ -142,18 +126,21 @@ public class CountrySelector extends Fragment {
 			}
 		});
 
-		aq.id(R.id.countryok).clicked(new OnClickListener() {
+		aq.id(R.id.save_profile).clicked(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				if (!(aq.id(R.id.country).getText().length() < 4
 						|| aq.id(R.id.country).getText().equals("") || position == 0)) {
 					if (Constants.RegId != null) {
+						registerUser();
+						contactsList = Utils.getContactsList(getActivity());
+						Toast.makeText(getActivity(), "Syncing contacts",
+								Toast.LENGTH_SHORT).show();
+						addContacts();
 
-						new AddRegister().execute();
 					} else {
-						Toast.makeText(getActivity(), "Try Again...",
+						Toast.makeText(getActivity(), "Please wait...",
 								Toast.LENGTH_LONG).show();
 						SplashScreen.registerInBackground(getActivity());
 					}
@@ -169,7 +156,6 @@ public class CountrySelector extends Fragment {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				alert.show();
 			}
 		});
@@ -177,7 +163,6 @@ public class CountrySelector extends Fragment {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				alert.dismiss();
 			}
 		});
@@ -185,17 +170,19 @@ public class CountrySelector extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				alert.dismiss();
 				showUserDetailsActivity();
 			}
 		});
 
+		if (!Utils.getUserName(getActivity()).isEmpty())
+			aq.id(R.id.user_name).text(Utils.getUserName(getActivity()));
+
 	}
 
 	private void showUserDetailsActivity() {
 		InputMethodManager imm = (InputMethodManager) getActivity()
-				.getSystemService(getActivity().INPUT_METHOD_SERVICE);
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
 		if (imm != null) {
 			imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
 		}
@@ -206,59 +193,46 @@ public class CountrySelector extends Fragment {
 		getActivity()
 				.overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
 	}
-	class AddRegister extends AsyncTask<String, Void, String> {
-		@Override
-		    protected String doInBackground(String... params) {
-		try{
-	
-		pairs = new ArrayList<NameValuePair>();
-		Random r = new Random();
-		int i1 = r.nextInt(100000 - 1 + 1) + 1;
-		pairs.add(new BasicNameValuePair("email", "example" + i1 + "@gmail.com"));
-		pairs.add(new BasicNameValuePair("password", "eyspasd"));
-		pairs.add(new BasicNameValuePair("registration_type", Constants.RegId));
 
-		pairs.add(new BasicNameValuePair("registration_type_id", "3"));
+	private void registerUser() {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("user[email]", System.nanoTime()+"");
+		params.put("user[password]", "");
+		params.put("user[gcm_id]", App.prefs.getGcmid());
+		params.put("user[registration_type]", "not using yet");
+		params.put("user[registration_type_id]", "not using yet");
+		params.put(
+				"user[device_type_id]",
+				Secure.getString(getActivity().getContentResolver(),
+						Secure.ANDROID_ID).toString());
 
-		pairs.add(new BasicNameValuePair("device_type_id", Secure.getString(
-				getActivity().getContentResolver(), Secure.ANDROID_ID) + ""));
+		params.put("user[device_type]", Build.MODEL + "");
+		params.put("user[mobile_no]", aq.id(R.id.country).getText().toString());
+		params.put("user[country]", SplashScreen.country);
+		params.put(
+				"user[date_created]",
+				Utils.getCurrentYear(1) + "-" + Utils.getCurrentMonthDigit(1)
+						+ "-" + Utils.getCurrentDayDigit(1) + " "
+						+ Utils.getCurrentHours() + ":"
+						+ Utils.getCurrentMins() + ":00");
+		String[] name = Utils.getUserName(getActivity()).split(" ");
+		App.prefs.setInitials(name[0].substring(0, 1).toUpperCase()
+				+ name[1].substring(0, 1).toUpperCase());
+		App.prefs.setUserName(Utils.getUserName(getActivity()));
+		params.put("user_profile[first_name]", name[0]);
+		params.put("user_profile[last_name]", name[1]);
+		params.put("user_profile[gender]", "male");
+		params.put("user_profile[birthday]", "27");
+		params.put("user_profile[profile_image]", "//comingsoon");
 
-		pairs.add(new BasicNameValuePair("device_type", Build.MODEL + ""));
-		pairs.add(new BasicNameValuePair("mobile_no", aq.id(R.id.country)
-				.getText().toString()
-				+ ""));
-		pairs.add(new BasicNameValuePair("country", SplashScreen.country + ""));
-		pairs.add(new BasicNameValuePair("date_created", Utils
-				.getCurrentYear(1)
-				+ "-"
-				+ Utils.getCurrentMonthDigit(1)
-				+ "-"
-				+ Utils.getCurrentDayDigit(1)
-				+ " "
-				+ Utils.getCurrentHours()
-				+ ":" + Utils.getCurrentMins() + ":00"));
-
-		HttpEntity entity = null;
-
-		try {
-			entity = new UrlEncodedFormEntity(pairs, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			// TODO
-			// Auto-generated
-			// catch block
-			e.printStackTrace();
-		}
-
-		Map<String, HttpEntity> param = new HashMap<String, HttpEntity>();
-		param.put(AQuery.POST_ENTITY, entity);
-
-		aq.ajax("http://api.heuristix.net/one_todo/v1/user/register", param,
+		ProgressDialog dialog = new ProgressDialog(getActivity());
+		dialog.setMessage("Registering...Please wait.");
+		aq.progress(dialog).ajax(
+				"http://api.heuristix.net/one_todo/v1/user/register", params,
 				JSONObject.class, new AjaxCallback<JSONObject>() {
 					@Override
 					public void callback(String url, JSONObject json,
 							AjaxStatus status) {
-						// dismis();
-
 						int id = -1;
 						try {
 
@@ -270,130 +244,150 @@ public class CountrySelector extends Fragment {
 						}
 						if (id != -1) {
 							Constants.user_id = id;
-							SplashScreen.editor.putInt("userid", id);
-							SplashScreen.editor.commit();
+							App.prefs.setUserId(id);
 						}
-						Log.v("Response", json.toString() + message + "");
+						Log.v("Response", json.toString());
 						if (message == false) {
 							showUserDetailsActivity();
 						}
 					}
 				});
+	}
 
-		client = new DefaultHttpClient();
-		post = new HttpPost(
-				"http://api.heuristix.net/one_todo/v1/user/addContacts");
-		pair = new ArrayList<NameValuePair>();
-		pair.add(new BasicNameValuePair("user_id", "3223"));
-		for (int i = 0; i < Constants.Contact.size(); i++) {
-			pair.add(new BasicNameValuePair("contacts[" + i + "]",
-					Constants.Contact.get(i)));
+	private void addContacts() {
+		HttpEntity entity = null;
+		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+		pairs.add(new BasicNameValuePair("user_id", String.valueOf(App.prefs
+				.getUserId())));
+		for (int i = 0; i < contactsList.size(); i++) {
+			pairs.add(new BasicNameValuePair("contacts[" + i + "]",
+					contactsList.get(i)));
 		}
-
 		try {
-			post.setEntity(new UrlEncodedFormEntity(pair));
-		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		try {
-			response = client.execute(post);
-		} catch (ClientProtocolException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		Log.v("Response", response.toString());
-		String temp = null;
-		try {
-			temp = EntityUtils.toString(response.getEntity());
-		} catch (org.apache.http.ParseException | IOException e) {
-			// TODO Auto-generated catch block
+			entity = new UrlEncodedFormEntity(pairs, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		Log.v("Response post ", temp + " new");
-
-	}catch(Exception e){}
-		         return null;
-		}
-		@Override
-		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-		}
-
-	}
-
-	public class Phone_contact extends AsyncTask<Void, Void, Void> {
-
-		@Override
-		protected void onPostExecute(Void result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-			if (Constants.Name.size() > 0)
-				Toast.makeText(getActivity(), Constants.Name.get(0),
-						Toast.LENGTH_LONG);
-			else
-				Toast.makeText(getActivity(), "Not", Toast.LENGTH_LONG);
-
-		}
-
-		@Override
-		protected void onPreExecute() {
-			// TODO Auto-generated method stub
-			super.onPreExecute();
-
-			cursor = getActivity()
-					.getContentResolver()
-					.query(ContactsContract.Contacts.CONTENT_URI,
-							null,
-							ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1",
-							null,
-							"UPPER(" + ContactsContract.Contacts.DISPLAY_NAME
-									+ ") ASC");
-		}
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			// TODO Auto-generated method stub
-
-			if (cursor.getCount() > 0) {
-				while (cursor.moveToNext()) {
-					int hasPhoneNumber = Integer
-							.parseInt(cursor.getString(cursor
-									.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
-					if (hasPhoneNumber > 0) {
-						Constants.Name
-								.add(cursor.getString(cursor
-										.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
-						// Query and loop for every phone number of the contact
-						Cursor phoneCursor = getActivity()
-								.getContentResolver()
-
-								.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-										null,
-										ContactsContract.CommonDataKinds.Phone.CONTACT_ID
-												+ " = ?",
-										new String[] { cursor.getString(cursor
-												.getColumnIndex(ContactsContract.Contacts._ID)) },
-										null);
-
-						phoneCursor.moveToNext();
-						phoneNumber = phoneCursor
-								.getString(phoneCursor
-										.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-						Constants.Contact.add(phoneNumber);
-
-						phoneCursor.close();
+		Map<String, java.lang.Object> params = new HashMap<String, java.lang.Object>();
+		params.put(AQuery.POST_ENTITY, entity);
+		aq.ajax("http://api.heuristix.net/one_todo/v1/user/addContacts",
+				params, JSONObject.class, new AjaxCallback<JSONObject>() {
+					@Override
+					public void callback(String url, JSONObject json,
+							AjaxStatus status) {
+						Toast.makeText(getActivity(), "Syncing done.",
+								Toast.LENGTH_SHORT).show();
+						try {
+							if(!json.getBoolean("error") && json.getBoolean("result")){
+								Toast.makeText(getActivity(), "Contacts Synced!", Toast.LENGTH_SHORT).show();
+								getAssignAbleFriendsList();
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
 					}
-				}
-			}
+				});
 
-			return null;
-		}
 	}
 
+	private void getAssignAbleFriendsList() {
+		aq.ajax("http://api.heuristix.net/one_todo/v1/contacts/"+App.prefs.getUserId(),
+				String.class, new AjaxCallback<String>() {
+					@Override
+					public void callback(String url, String json,
+							AjaxStatus status) {
+						if (json != null) {
+							Gson gson = new Gson();
+							ContactsData obj = new ContactsData();
+							obj = gson.fromJson(json.toString(),
+									ContactsData.class);
+							ContactsData.getInstance().setList(obj);
+							Log.v("Contact",
+									ContactsData.getInstance().contactsList
+											.get(0).id);
+							populateAssignAbleFriends();
+						}
+					}
+				});
+	}
+
+	private void populateAssignAbleFriends() {
+		assignDao = App.daoSession.getAssignDao();
+		assignDao.deleteAll();
+		for (int i = 0; i < ContactsData.getInstance().contactsList.size(); i++) {
+			Assign assign = new Assign(
+					null,
+					ContactsData.getInstance().contactsList.get(i).firstName
+							+ " "
+							+ ContactsData.getInstance().contactsList.get(i).lastName,
+					Long.valueOf(ContactsData.getInstance().contactsList.get(i).id));
+			assignDao.insert(assign);
+		}
+
+	}
+
+	// public class getPhoneContacts extends AsyncTask<Void, Void, Void> {
+	//
+	// @Override
+	// protected void onPostExecute(Void result) {
+	// super.onPostExecute(result);
+	// if (Constants.Name.size() > 0)
+	// Toast.makeText(getActivity(), Constants.Name.get(0),
+	// Toast.LENGTH_LONG);
+	// else
+	// Toast.makeText(getActivity(), "Not", Toast.LENGTH_LONG);
+	//
+	// }
+	//
+	// @Override
+	// protected void onPreExecute() {
+	// super.onPreExecute();
+	//
+	// cursor = getActivity()
+	// .getContentResolver()
+	// .query(ContactsContract.Contacts.CONTENT_URI,
+	// null,
+	// ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1",
+	// null,
+	// "UPPER(" + ContactsContract.Contacts.DISPLAY_NAME
+	// + ") ASC");
+	// }
+	//
+	// @Override
+	// protected Void doInBackground(Void... params) {
+	// if (cursor.getCount() > 0) {
+	// while (cursor.moveToNext()) {
+	// int hasPhoneNumber = Integer
+	// .parseInt(cursor.getString(cursor
+	// .getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)));
+	// if (hasPhoneNumber > 0) {
+	// Constants.Name
+	// .add(cursor.getString(cursor
+	// .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
+	// // Query and loop for every phone number of the contact
+	// Cursor phoneCursor = getActivity()
+	// .getContentResolver()
+	//
+	// .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+	// null,
+	// ContactsContract.CommonDataKinds.Phone.CONTACT_ID
+	// + " = ?",
+	// new String[] { cursor.getString(cursor
+	// .getColumnIndex(ContactsContract.Contacts._ID)) },
+	// null);
+	//
+	// phoneCursor.moveToNext();
+	// phoneNumber = phoneCursor
+	// .getString(phoneCursor
+	// .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+	// Constants.Contact.add(phoneNumber);
+	//
+	// phoneCursor.close();
+	// }
+	// }
+	// }
+	//
+	// return null;
+	// }
+	// }
 }

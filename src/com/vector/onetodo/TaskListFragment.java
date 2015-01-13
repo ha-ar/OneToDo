@@ -2,10 +2,7 @@ package com.vector.onetodo;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -18,14 +15,10 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.vector.model.TaskData;
-import com.vector.model.TaskData.Todos;
 import com.vector.onetodo.db.gen.ToDo;
 import com.vector.onetodo.db.gen.ToDoDao.Properties;
 import com.vector.onetodo.utils.Utils;
@@ -39,11 +32,11 @@ public class TaskListFragment extends ScrollTabHolderFragment implements
 	private ListView listView;
 	public static QueryBuilder<ToDo> todayQuery, tomorrowQuery, upcommingQuery;
  
-	public static LandingAdapter todayAdapter, tomorrowAdapter,
+	public static TaskListAdapter todayAdapter, tomorrowAdapter,
 			upComingAdapter;
 	private int position;
 	private View mFakeHeader;
-	private static long[] Currentdate;	 
+	private static long[] Currentdate;
 
 	public static TaskListFragment newInstance(int position) {
 		TaskListFragment myFragment = new TaskListFragment();
@@ -137,87 +130,6 @@ public class TaskListFragment extends ScrollTabHolderFragment implements
 
 	}
 
-	 
-
-	public class LandingAdapter extends BaseAdapter {
- 
-		Context context;
-		List<ToDo> listToShow;
-
-		public LandingAdapter(Context context, List<ToDo> whichList) {
-			this.context = context;
-			this.listToShow = whichList;
-		}
-
-		@Override
-		public int getCount() {
-			return listToShow.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return null;
-		}
-
-		@Override
-		public long getItemId(int ID) {
-			return ID;
-		}
-
-		@Override
-		public View getView(int position, View view1, ViewGroup parent) {
-			View view = view1;
-			Holder holder = null;
-			if (view == null) {
-				LayoutInflater inflater = (LayoutInflater) context
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = inflater.inflate(R.layout.list_item, parent, false);
-				holder = new Holder();
-				holder.icon = (TextView) view.findViewById(R.id.list_icon);
-				holder.title = (TextView) view.findViewById(R.id.list_title);
-				holder.location = (TextView) view
-						.findViewById(R.id.list_location);
-				holder.time = (TextView) view.findViewById(R.id.list_time);
-				holder.time1 = (TextView) view.findViewById(R.id.list_time1);
-				holder.type = (TextView) view.findViewById(R.id.type);
-				view.setTag(holder);
-			} else {
-				holder = (Holder) view.getTag();
-			}
-
-			if(listToShow.get(position).getTodo_type_id()==1)
-				holder.type.setText("TASK");
-			else if(listToShow.get(position).getTodo_type_id()==2)
-				holder.type.setText("EVENT");
-			else if(listToShow.get(position).getTodo_type_id()==3)
-				holder.type.setText("SCHEDULE");
-			else if(listToShow.get(position).getTodo_type_id()==4)
-				holder.type.setText("APPOINMENT");
-			else if(listToShow.get(position).getTodo_type_id()==5)
-				holder.type.setText("PROJECT");
-			
-			holder.title.setText(listToShow.get(position).getTitle());
-			SimpleDateFormat formatter = new SimpleDateFormat(
-					"dd-MM-yyyy hh:mm");
-			Calendar calendar = Calendar.getInstance(); 
-			
-			holder.time.setText(calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT,
-					Locale.US)+" "+calendar.get(Calendar.DAY_OF_MONTH)+" "+calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT,
-									Locale.US)+" "+calendar.get(Calendar.YEAR));
-			holder.time1.setText(String.format("%02d",calendar.get(Calendar.HOUR))+":"+
-					String.format("%02d",calendar.get(Calendar.MINUTE))+" "+
-									calendar.getDisplayName(Calendar.AM_PM, Calendar.SHORT,
-											Locale.US));
-			holder.location.setText(listToShow.get(position).getLocation());
-			
-			return view;
-		}
-
-	}
-
-	class Holder {
-		TextView title, location, time, icon, time1, type;
-	}
 
 	@Override
 	public void adjustScroll(int scrollHeight) {
@@ -264,18 +176,18 @@ public class TaskListFragment extends ScrollTabHolderFragment implements
 		switch (position) {
 		case 0:
 			todayQuery();
-			todayAdapter = new LandingAdapter(getActivity(), todayQuery.list());
+			todayAdapter = new TaskListAdapter(getActivity(), todayQuery.list());
 			listView.setAdapter(todayAdapter);
 			break;
 		case 1:
 			tomorrowQuery();
-			tomorrowAdapter = new LandingAdapter(getActivity(),
+			tomorrowAdapter = new TaskListAdapter(getActivity(),
 					tomorrowQuery.list());
 			listView.setAdapter(tomorrowAdapter);
 			break;
 		case 2:
 			upComingQuery();
-			upComingAdapter = new LandingAdapter(getActivity(),
+			upComingAdapter = new TaskListAdapter(getActivity(),
 					upcommingQuery.list());
 			listView.setAdapter(upComingAdapter);
 			break;
