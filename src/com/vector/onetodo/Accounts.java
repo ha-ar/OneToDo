@@ -274,6 +274,38 @@ public class Accounts extends Fragment {
 				nameinfo.dismiss();
 			}
 		});
+		aq_changeemail.id(R.id.ok_event).clicked(new  OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				changeemail.dismiss();
+			}
+		});
+		aq_changeemail.id(R.id.cancel_event).clicked(new  OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				changeemail.dismiss();
+			}
+		});
+		aq_changephone.id(R.id.ok_event).clicked(new  OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				changephone.dismiss();
+			}
+		});
+		aq_changephone.id(R.id.cancel_event).clicked(new  OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				changephone.dismiss();
+			}
+		});
 	}
 	
 	@Override

@@ -33,6 +33,14 @@
         android:id="@+id/action_visible_calendars"
         android:title="Visible Calendars"
         app:showAsAction="never"/>
+     <item
+        android:id="@+id/action_facebook"
+        android:title="Sync With Facebook"
+        app:showAsAction="never"/>
+      <item
+        android:id="@+id/action_gmail"
+        android:title="Sync With Gmail"
+        app:showAsAction="never"/>
     <item
         android:id="@+id/action_goto"
         android:title="Go to"

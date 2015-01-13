@@ -43,10 +43,7 @@ public class TaskListFragment extends ScrollTabHolderFragment implements
 			upComingAdapter;
 	private int position;
 	private View mFakeHeader;
-	private static long[] Currentdate;
-	private String[] ToDoName = { "Task", "Event", "Schedule", "Appoinment",
-			"Project" };
-	 
+	private static long[] Currentdate;	 
 
 	public static TaskListFragment newInstance(int position) {
 		TaskListFragment myFragment = new TaskListFragment();
@@ -79,16 +76,14 @@ public class TaskListFragment extends ScrollTabHolderFragment implements
 				// TODO Auto-generated method stub
 				int id = -1;
 				Log.e("Size", String.valueOf(MainActivity.Today.size()));
-				if(MainActivity.Today.size() >0)
-				{
-				if (position == 0) {
-					id = Integer.parseInt(MainActivity.Today.get((pos - 1)).id);
-				} else if (position == 1) {
-					id = Integer.parseInt(MainActivity.Tomorrow.get((pos - 1)).id);
-				} else if (position == 2) {
-					id = Integer.parseInt(MainActivity.Upcoming.get((pos - 1)).id);
-				}
-				}
+
+//				if (position == 0) {
+//					id = Integer.parseInt(MainActivity.Today.get((pos - 1)).id);
+//				} else if (position == 1) {
+//					id = Integer.parseInt(MainActivity.Tomorrow.get((pos - 1)).id);
+//				} else if (position == 2) {
+//					id = Integer.parseInt(MainActivity.Upcoming.get((pos - 1)).id);
+//				}
 				if (id != -1) {
 
 					for (int i = 0; i < TaskData.getInstance().todos.size(); i++) {

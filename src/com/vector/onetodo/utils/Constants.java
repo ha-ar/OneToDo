@@ -5,9 +5,11 @@ import java.util.List;
 import com.vector.onetodo.db.gen.LabelName;*/
 
 public class Constants {
-
+	
+	
+	public static String Google_APP_ID = "AIzaSyDTqjUgfxT3ysmPCX-tewvfDSfyWbf-WoI";
+	public static String FB_APP_ID = "830264356984345";
 	public final static String ICON_FONT = "onetodo.ttf";
-
 	public static int user_id=-1;
 	public static boolean date,time,week;/*
 	public static List<LabelName> label_name;*/

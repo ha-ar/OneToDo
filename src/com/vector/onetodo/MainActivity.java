@@ -1,8 +1,13 @@
 package com.vector.onetodo;
 
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -10,20 +15,27 @@ import java.util.Locale;
 
 import net.simonvt.datepicker.DatePicker;
 import net.simonvt.datepicker.DatePicker.OnDateChangedListener;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -58,6 +70,21 @@ import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.astuetz.PagerSlidingTabStrip;
+import com.facebook.HttpMethod;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.Session.OpenRequest;
+import com.facebook.SessionLoginBehavior;
+import com.facebook.SessionState;
+import com.facebook.model.GraphUser;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.Plus.PlusOptions;
 import com.vector.model.TaskData;
 import com.vector.model.TaskData.Todos;
 import com.vector.onetodo.db.gen.DaoMaster;
@@ -74,8 +101,17 @@ import com.vector.onetodo.utils.Utils;
 import de.greenrobot.dao.query.QueryBuilder;
 
 public class MainActivity extends BaseActivity implements
-		ViewPager.OnPageChangeListener, OnItemClickListener {
-
+		ViewPager.OnPageChangeListener, OnItemClickListener, ConnectionCallbacks, OnConnectionFailedListener {
+	public static GoogleApiClient mGoogleApiClient;
+	public static final int RC_SIGN_IN = 0;
+	public boolean mIntentInProgress;
+	public ConnectionResult mConnectionResult;
+	public boolean mSignInClicked;
+	ProgressDialog progressDialog;
+	final List<String> Permissions = Arrays.asList("public_profile", "email",
+			"user_likes", "user_status", "offline_access", "read_stream", 
+            "publish_stream","create_event","user_events","friends_events",
+            "publish_checkins", "friends_checkins","read_friendlists");
 	public static SharedPreferences setting;
 	Editor setting_editor;
 	public static Calendar CurrentDate;
@@ -108,12 +144,17 @@ public class MainActivity extends BaseActivity implements
 
 	
 	
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+				////////////////////////////////////////////////////////////////////
+		PlusOptions plus = new PlusOptions.Builder().build();
+		mGoogleApiClient = new GoogleApiClient.Builder(this)
+		.addConnectionCallbacks(this)
+		.addOnConnectionFailedListener(this).addApi(Plus.API, plus)
+		.addScope(Plus.SCOPE_PLUS_PROFILE).build();
+				//////////////////////////////////////////////////////////////////
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_top);
 		if(toolbar != null)
 		setSupportActionBar(toolbar);
@@ -196,9 +237,235 @@ public class MainActivity extends BaseActivity implements
 		if (id == R.id.action_settings) {
 			return true;
 		}
+		if (id == R.id.action_gmail) {
+			if (!mGoogleApiClient.isConnected())
+			{
+				g_plus_LogIn();					
+			}
+			return true;
+		}
+		if (id == R.id.action_facebook) {
+			{
+				Fb_Clicked();
+			}
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
+	public void Fb_Clicked() {
+		 Session currentSession = Session.getActiveSession();
+		    if (currentSession == null || currentSession.getState().isClosed()) {
+		        Session session = new Session.Builder(this).build();
+		        Session.setActiveSession(session);
+		        currentSession = session;
+		    }
 
+		    if (currentSession.isOpened()) {
+		        // Do whatever u want. User has logged in
+
+		    } else if (!currentSession.isOpened()) {
+		        // Ask for username and password
+		        OpenRequest op = new Session.OpenRequest(this);
+
+		        op.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
+		        op.setCallback(null);
+		        op.setPermissions(Permissions);
+
+		        Session session = new Session(MainActivity.this);
+		        Session.setActiveSession(session);
+		        session.openForPublish(op);
+		    }
+		}
+	public void g_plus_LogIn() {
+		if (!mGoogleApiClient.isConnecting()) {
+			progressDialog = new ProgressDialog(
+					MainActivity.this);
+			progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			progressDialog.setMessage("Please wait. . .");
+			progressDialog.setIndeterminate(true);
+			progressDialog.setCancelable(true);
+			progressDialog.show();
+			mSignInClicked = true;
+			resolveSignInError();
+		}
+	}
+	private void resolveSignInError() {
+		try {
+			if (mConnectionResult.hasResolution()) {
+				try {
+					mIntentInProgress = true;
+					mConnectionResult
+							.startResolutionForResult(this, RC_SIGN_IN);
+				} catch (SendIntentException e) {
+					mIntentInProgress = false;
+					mGoogleApiClient.connect();
+				}
+			}
+		} catch (Exception e) {
+		}
+	}
+	@Override
+	public void onConnectionFailed(ConnectionResult result) {
+		if (!result.hasResolution()) {
+			GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this,
+					0).show();
+			return;
+		}
+		if (!mIntentInProgress) {
+			mConnectionResult = result;
+			if (mSignInClicked) {
+				resolveSignInError();
+			}
+		}
+	}
+
+	protected void onStart() {
+		super.onStart();
+		//mGoogleApiClient.connect();
+	}
+
+	@Override
+	public void onConnected(Bundle arg0) {
+		Log.e("Conn", "Conn");
+		mSignInClicked = false;	
+		new GetGoogleCalendarEvents().execute();
+		try{
+		progressDialog.dismiss();
+		}catch(Exception e){}
+	}
+	@Override
+	public void onConnectionSuspended(int arg0) {
+		//mGoogleApiClient.connect();
+	}
+	
+	public String getProfileInformation() {
+		String name = null;
+		try {			
+			if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
+				com.google.android.gms.plus.model.people.Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
+				name=  currentPerson.getId().toString();
+				Log.e("Name","//"+name);
+			}
+			mGoogleApiClient.disconnect();
+			mSignInClicked = false;	
+			mIntentInProgress = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return name;
+	}
+	
+	class GetGoogleCalendarEvents extends AsyncTask<Void, Void, String> {
+		String ok  = getProfileInformation();
+		String url = "https://www.googleapis.com/calendar/v3/users/me/calendarList?userId="+ok;
+		        String sResponse;
+
+		        // private ProgressDialog dialog;
+		        private ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+
+		        @Override
+		        protected void onPreExecute() {
+		            dialog.setMessage("Please wait...");
+		            dialog.show();
+		        }
+
+		        @Override
+		        protected String doInBackground(Void... params) {
+		            try {
+		                HttpClient httpclient = new DefaultHttpClient();
+		                HttpGet httppost = new HttpGet(url);		               
+		                HttpResponse response = httpclient.execute(httppost);
+		                BufferedReader reader = new BufferedReader(
+		                        new InputStreamReader(
+		                                response.getEntity().getContent(), "UTF-8"));
+		                Log.e("Request", "executing request " + httppost.getRequestLine());
+		                sResponse = reader.readLine();
+
+		                return sResponse;
+		            } catch (Exception e) {
+		                // something went wrong. connection with the server error
+		            }
+		            return null;
+		        }
+
+		        @Override
+		        protected void onPostExecute(String result) {
+		            this.dialog.dismiss();
+		            Log.e("result", result);
+		            if (this.sResponse != null) {
+		                
+		            }
+		        }
+		    }
+@Override
+protected void onActivityResult(int requestCode, int responseCode,
+		Intent intent) {
+	 if (Session.getActiveSession() != null)
+	        Session.getActiveSession().onActivityResult(this, requestCode, responseCode,intent);
+
+	    Session currentSession = Session.getActiveSession();
+	    if (currentSession == null || currentSession.getState().isClosed()) {
+	        Session session = new Session.Builder(this).build();
+	        Session.setActiveSession(session);
+	        currentSession = session;
+	    }
+
+	    if (currentSession.isOpened()) {
+	        Session.openActiveSession(this, true, new Session.StatusCallback() {
+
+	            @SuppressWarnings("deprecation")
+				@Override
+	            public void call(final Session session, SessionState state,
+	                    Exception exception) {
+
+	                if (session.isOpened()) {
+
+	                    Request.executeMeRequestAsync(session,
+	                            new Request.GraphUserCallback() {
+
+									@Override
+									public void onCompleted(GraphUser user,
+											Response response) {
+										// TODO Auto-generated method stub
+										 if (user != null) {
+											 String fqlQuery = "SELECT eid, name, pic, creator, start_time FROM event WHERE eid IN (SELECT eid FROM event_member WHERE uid='"+user.getId()+"')";       
+											 Log.e("Result:" , fqlQuery.toString());      
+											 Bundle params = new Bundle();
+											    params.putString("q", fqlQuery);
+											    Request request = new Request(session, "/fql", params, HttpMethod.GET, 
+											            new Request.Callback() {
+
+											                @Override
+											                public void onCompleted(Response response) {
+											                    Log.e("Result:" ,response.toString());
+											                        try {
+											                            FileWriter file = new FileWriter(Environment.getExternalStorageDirectory().getAbsolutePath() + "/videocvname");
+											                            file.write(response.toString());
+											                            file.flush();
+											                            file.close();
+											                        } catch (IOException e) {
+											                            e.printStackTrace();
+											                        }
+											                }
+											            });											    
+											    Request.executeBatchAsync(request);
+		                                    }
+									}
+	                            });
+	                }
+	            }
+	        });
+	    }
+	if (requestCode == RC_SIGN_IN) {
+		if (responseCode != RESULT_OK) {
+			mSignInClicked = false;
+		}
+		mIntentInProgress = false;
+		if (!mGoogleApiClient.isConnecting()) {
+			mGoogleApiClient.connect();
+		}
+	}
+}
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
@@ -212,7 +479,6 @@ public class MainActivity extends BaseActivity implements
 		// Pass any configuration change to the drawer toggls
 		actionBarDrawerToggle.onConfigurationChanged(newConfig);
 	}
-
 	private void init() {
 
  
@@ -282,9 +548,9 @@ public class MainActivity extends BaseActivity implements
 				}
 
 				if (date.equals(today)) {
-					Log.v("Today", date + "   " + today);
+					Log.e("Today", date + "   " + today);
 					Today.add((TaskData.getInstance().todos.get(i)));
-					Log.v("Final", Today.toString());
+					Log.e("Final", Today.toString());
 				} else if (date.equals(tomorrow)) {
 					Log.v("Tomorrow", date + "   " + tomorrow);
 					Tomorrow.add((TaskData.getInstance().todos.get(i)));
@@ -858,8 +1124,5 @@ public class MainActivity extends BaseActivity implements
 		Toast.makeText(MainActivity.this, "asdasdasd", Toast.LENGTH_SHORT)
 				.show();
 	}
-
-	
-	
 
 }
